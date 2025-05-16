@@ -107,47 +107,134 @@ function TransactionTable() {
   const handleDelete = (transactionId) => {
     // Call deleteTransaction hook
     deleteTransaction(transactionId);
+    setEditModalOpen(false);
   };
 
   // Render the edit modal
   const renderEditModal = () => (
-    <Dialog open={editModalOpen} onClose={handleEditClose}>
-      <DialogTitle>Edit Transaction</DialogTitle>
-      <DialogContent>
-        {/* Form fields for editing the transaction */}
-        <TextField
-          label="Title"
-          name="title"
-          value={selectedTransaction?.title || ""}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Amount"
-          name="amount"
-          value={selectedTransaction?.amount || ""}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        {/* Add other fields as necessary */}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleEditClose} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={() => handleEdit(selectedTransaction)} color="primary">
-          Save
-        </Button>
-        <Button
-          onClick={() => handleDeleteClick(selectedTransaction.id)}
-          color="secondary"
+    <Modal open={editModalOpen} onClose={handleEditClose}>
+      <Box component="form" sx={modalStyle}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={2}
         >
-          Delete
-        </Button>
-      </DialogActions>
-    </Dialog>
+          <Typography variant="h6">Edit Transaction</Typography>
+          <IconButton aria-label="close" onClick={handleEditClose}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        <Grid container spacing={2}>
+          <Grid item size={6}>
+            <TextField
+              fullWidth
+              label="Title"
+              name="title"
+              value={selectedTransaction?.title || ""}
+              onChange={handleChange}
+              required
+              margin="normal"
+            />
+          </Grid>
+          <Grid item size={6}>
+            <TextField
+              fullWidth
+              label="Amount"
+              name="amount"
+              value={selectedTransaction?.amount || ""}
+              onChange={handleChange}
+              required
+              margin="normal"
+            />
+          </Grid>
+          {/* Row 2 */}
+          <Grid item size={6}>
+            <TextField
+              fullWidth
+              label="Category"
+              name="category"
+              value={selectedTransaction?.category}
+              onChange={handleChange}
+              required
+              margin="normal"
+            />
+          </Grid>
+          {/* Row 3 */}
+          <Grid item size={6}>
+            <TextField
+              fullWidth
+              label="Account"
+              name="account"
+              value={selectedTransaction?.account}
+              onChange={handleChange}
+              required
+              margin="normal"
+            />
+          </Grid>
+          <Grid item size={6}>
+            <TextField
+              fullWidth
+              select
+              label="Type"
+              name="type"
+              value={selectedTransaction?.type}
+              onChange={handleChange}
+              required
+              margin="normal"
+            >
+              <MenuItem value="income">Income</MenuItem>
+              <MenuItem value="expense">Expense</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item size={6}>
+            <TextField
+              fullWidth
+              name="date"
+              type="date"
+              value={selectedTransaction?.date}
+              onChange={handleChange}
+              margin="normal"
+              placeholder="Date"
+              required
+            />
+          </Grid>
+          {/* Description spans full width */}
+          <Grid item size={12}>
+            <TextField
+              fullWidth
+              label="Description"
+              name="description"
+              value={selectedTransaction?.description}
+              onChange={handleChange}
+              margin="normal"
+              multiline
+              minRows={4}
+              required
+            />
+          </Grid>
+        </Grid>
+        <Grid>
+          <Button
+            onClick={() => handleEdit(selectedTransaction)}
+            variant="contained"
+            sx={{ mt: 2 }}
+            fullWidth
+          >
+            Save
+          </Button>
+          <Button
+            onClick={() => handleDeleteClick(selectedTransaction.id)}
+            variant="contained"
+            color="secondary"
+            sx={{ mt: 2 }}
+            fullWidth
+          >
+            Delete
+          </Button>
+        </Grid>
+      </Box>
+    </Modal>
   );
 
   if (isLoading) return <CircularProgress />;
