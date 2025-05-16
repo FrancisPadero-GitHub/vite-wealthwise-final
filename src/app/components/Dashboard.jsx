@@ -1,14 +1,14 @@
-import React from "react";
+import { Box } from "@mui/material";
 import BalanceCard from "./cards/balance";
 import Transactions from "./cards/transactions"; // Adjust the path based on your folder structure
 
 export default function Dashboard() {
   return (
-    <div style={{ padding: 16 }}>
+    <Box >
       <BalanceCard />
-      <div style={{ marginTop: 32 }}>
+      <Box sx={{ mt: 4 }}>
         <Transactions />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

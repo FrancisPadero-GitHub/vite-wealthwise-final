@@ -53,6 +53,7 @@ function TransactionTable() {
   const { mutate: editTransaction } = useEditTransaction();
   const { mutate: deleteTransaction } = useDeleteTransaction();
 
+  const [searchQuery, setSearchQuery] = useState("");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [addForm, setAddForm] = useState(defaultFormValues);
 
@@ -117,16 +118,29 @@ function TransactionTable() {
   const handleDeleteClick = useCallback(
     (transactionId) => {
       deleteTransaction(transactionId);
-      handleCloseEditModal(); // Close edit modal after deletion
+      handleCloseEditModal();
     },
     [deleteTransaction, handleCloseEditModal]
   );
+
+  const filteredTransactions =
+    transactions?.filter((tx) =>
+      [
+        tx.title,
+        tx.category,
+        tx.description,
+        tx.account,
+        tx.date,
+        tx.type,
+        tx.amount.toString(),
+      ].some((field) => field.toLowerCase().includes(searchQuery.toLowerCase()))
+    ) || [];
 
   if (isLoading) return <CircularProgress />;
   if (error) return <Typography color="error">{error.message}</Typography>;
 
   return (
-    <>
+    <Box>
       <Box
         display="flex"
         justifyContent="space-between"
@@ -139,25 +153,54 @@ function TransactionTable() {
         </Button>
       </Box>
 
-      <TableContainer component={Paper}>
-        <Table>
+      <TextField
+        label="Search transactions"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+
+      <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 3 }}>
+        <Table stickyHeader>
           <TableHead>
-            <TableRow>
-              <TableCell>Title</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Account</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Type</TableCell>
+            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+              <TableCell>
+                <strong>Title</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Amount</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Category</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Description</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Account</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Date</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Type</strong>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {transactions.map((tx) => (
+            {filteredTransactions.map((tx, index) => (
               <TableRow
                 key={tx.id}
+                hover
                 onClick={() => handleOpenEditModal(tx)}
-                style={{ cursor: "pointer" }}
+                sx={{
+                  cursor: "pointer",
+                  backgroundColor: index % 2 === 0 ? "white" : "#fafafa",
+                  transition: "background-color 0.3s",
+                  "&:hover": { backgroundColor: "#e0f7fa" },
+                }}
               >
                 <TableCell>{tx.title}</TableCell>
                 <TableCell>{tx.amount}</TableCell>
@@ -400,7 +443,7 @@ function TransactionTable() {
           </Grid>
         </Box>
       </Modal>
-    </>
+    </Box>
   );
 }
 
