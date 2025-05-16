@@ -1,5 +1,57 @@
 import React from "react";
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+} from "@mui/material";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PersonIcon from "@mui/icons-material/Person";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import { Link, useLocation } from "react-router-dom";
+
+const drawerWidth = 240;
+
+const menuItems = [
+  { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
+  { text: "Profile", icon: <PersonIcon />, path: "/profile" },
+  { text: "Transactions", icon: <ReceiptIcon />, path: "/transactions" },
+];
 
 export default function Sidebar() {
-  return <div>Sidebar</div>;
+  const location = useLocation();
+
+  return (
+    <Drawer
+      variant="permanent"
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        zIndex: (theme) => theme.zIndex.appBar - 1, // sidebar below topbar
+        [`& .MuiDrawer-paper`]: {
+          width: drawerWidth,
+          boxSizing: "border-box",
+          zIndex: (theme) => theme.zIndex.appBar - 1, // make sure drawer paper is behind topbar
+        },
+      }}
+    >
+      <Toolbar />
+      <List>
+        {menuItems.map(({ text, icon, path }) => (
+          <ListItem
+            button
+            key={text}
+            component={Link}
+            to={path}
+            selected={location.pathname === path}
+          >
+            <ListItemIcon>{icon}</ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+    </Drawer>
+  );
 }

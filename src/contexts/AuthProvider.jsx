@@ -27,11 +27,13 @@ export const AuthProvider = ({ children }) => {
         setUser(session?.user ?? null);
       }
     );
-    if (user) {
-      console.log("User ID logged", user);
-    } else {
-      console.log("User ID not found");
-    }
+
+
+    // if (user) {
+    //   console.log("User ID logged", user);
+    // } else {
+    //   console.log("User ID not found");
+    // }
 
     return () => {
       listener.subscription.unsubscribe();

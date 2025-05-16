@@ -1,4 +1,11 @@
 import React, { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase"; // adjust path if needed
 
@@ -20,19 +27,25 @@ export default function Topbar() {
   };
 
   return (
-    <div
-      className="topbar"
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        padding: "1rem",
-        backgroundColor: "#f0f0f0",
-      }}
+    <AppBar
+      position="fixed"
+      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
     >
-      <h3>Topbar</h3>
-      <button onClick={handleSignOut} disabled={isLoggingOut}>
-        {isLoggingOut ? "Logging out..." : "Logout"}
-      </button>
-    </div>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography variant="h6" component="div">
+          WealthWise Barebones
+        </Typography>
+        <Button
+          color="inherit"
+          onClick={handleSignOut}
+          disabled={isLoggingOut}
+          startIcon={
+            isLoggingOut ? <CircularProgress color="inherit" size={18} /> : null
+          }
+        >
+          {isLoggingOut ? "Logging out..." : "Logout"}
+        </Button>
+      </Toolbar>
+    </AppBar>
   );
 }

@@ -1,21 +1,49 @@
-body {
+/* Reset default margin and height */
+body,
+html {
   margin: 0;
-  display: flex;
-  justify-content: center;
-  place-items: center;
+  padding: 0;
+  height: 100%;
   min-width: 320px;
+  /* Use full viewport height */
   min-height: 100vh;
+  /* Use a font color and background that will match your design */
+  color: #213547;
+  background-color: #ffffff;
+  /* Use a font stack you prefer */
+  font-family: "Roboto", sans-serif;
+  /* Prevent horizontal overflow caused by fixed sidebar */
+  overflow-x: hidden;
 }
 
+/* Light mode overrides */
 @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
   a:hover {
     color: #747bff;
   }
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* Main wrapper/container styles if needed */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Main content area */
+main {
+  flex-grow: 1;
+  padding: 24px; /* consistent padding */
+  margin-left: 240px; /* push content right to clear sidebar */
+  margin-top: 64px; /* push content down to clear fixed topbar */
+}
+
+/* You can add footer styles here */
+footer {
+  padding: 16px;
+  background-color: #f0f0f0;
+  text-align: center;
 }

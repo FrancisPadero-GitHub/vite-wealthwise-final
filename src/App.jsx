@@ -5,7 +5,7 @@ import Footer from "./app/structure/Footer";
 import Sidebar from "./app/structure/Sidebar";
 import Topbar from "./app/structure/Topbar";
 
-import SignIn from "./app/auth/SignInSide";
+import SignIn from "./app/auth/SignIn";
 import SignUp from "./app/auth/SignUp";
 
 import ProtectedRoute from "./app/components/ProtectedRoutes";
@@ -15,22 +15,31 @@ import Dashboard from "./app/components/Dashboard";
 import Profile from "./app/components/Profile";
 import Transactions from "./app/components/Transactions";
 
-import "./assets/css/main.css";
+import { Box, CssBaseline } from "@mui/material";
 
 // 🧠 Create React Query client instance
 const queryClient = new QueryClient();
 
+const drawerWidth = 240;
+
 function Layout() {
   return (
     <>
+      <CssBaseline />
       <Topbar />
       <Sidebar />
-      <div className="wrapper">
-        <main>
-          <Outlet />
-        </main>
-        <Footer />
-      </div>
+      <Box
+        component="main"
+        sx={{
+          marginLeft: `${drawerWidth}px`,
+          padding: 3,
+          marginTop: "64px",
+          minHeight: "calc(100vh - 64px - 48px)",
+        }}
+      >
+        <Outlet />
+      </Box>
+      <Footer />
     </>
   );
 }
