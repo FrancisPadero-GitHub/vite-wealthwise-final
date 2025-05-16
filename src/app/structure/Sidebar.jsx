@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Drawer,
   List,
@@ -6,6 +5,7 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
+  Box,
 } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PersonIcon from "@mui/icons-material/Person";
@@ -20,38 +20,40 @@ const menuItems = [
   { text: "Transactions", icon: <ReceiptIcon />, path: "/transactions" },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ open }) {
   const location = useLocation();
 
   return (
     <Drawer
-      variant="permanent"
+      variant="persistent"
+      anchor="left"
+      open={open}
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        zIndex: (theme) => theme.zIndex.appBar - 1, // sidebar below topbar
-        [`& .MuiDrawer-paper`]: {
+        "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
-          zIndex: (theme) => theme.zIndex.appBar - 1, // make sure drawer paper is behind topbar
         },
       }}
     >
       <Toolbar />
-      <List>
-        {menuItems.map(({ text, icon, path }) => (
-          <ListItem
-            button
-            key={text}
-            component={Link}
-            to={path}
-            selected={location.pathname === path}
-          >
-            <ListItemIcon>{icon}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
+      <Box sx={{ overflow: "auto" }}>
+        <List>
+          {menuItems.map(({ text, icon, path }) => (
+            <ListItem
+              button
+              key={text}
+              component={Link}
+              to={path}
+              selected={location.pathname === path}
+            >
+              <ListItemIcon>{icon}</ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+      </Box>
     </Drawer>
   );
 }

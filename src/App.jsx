@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
+import { useState } from "react";
 import Footer from "./app/structure/Footer";
 import Sidebar from "./app/structure/Sidebar";
 import Topbar from "./app/structure/Topbar";
@@ -23,15 +23,22 @@ const queryClient = new QueryClient();
 const drawerWidth = 240;
 
 function Layout() {
+  const [open, setOpen] = useState(true);
+
+  const toggleDrawer = () => {
+    setOpen((prev) => !prev);
+  };
+
   return (
     <>
       <CssBaseline />
-      <Topbar />
-      <Sidebar />
+      <Topbar onDrawerToggle={toggleDrawer} />
+      <Sidebar open={open} />
       <Box
         component="main"
         sx={{
-          marginLeft: `${drawerWidth}px`,
+          transition: "margin 0.3s",
+          marginLeft: open ? `${drawerWidth}px` : 0,
           padding: 3,
           marginTop: "64px",
           minHeight: "calc(100vh - 64px - 48px)",

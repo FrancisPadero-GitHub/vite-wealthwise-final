@@ -5,11 +5,14 @@ import {
   Typography,
   Button,
   CircularProgress,
+  IconButton,
+  Box,
 } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../supabase"; // adjust path if needed
+import { supabase } from "../../supabase";
 
-export default function Topbar() {
+export default function Topbar({ onDrawerToggle }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
 
@@ -32,9 +35,21 @@ export default function Topbar() {
       sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="h6" component="div">
-          WealthWise Barebones
-        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Typography variant="h6" component="div" noWrap sx={{ mr: 15 }}>
+            WealthWise
+          </Typography>
+
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={onDrawerToggle}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Box>
+
         <Button
           color="inherit"
           onClick={handleSignOut}
