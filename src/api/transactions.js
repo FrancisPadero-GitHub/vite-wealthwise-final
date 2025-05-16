@@ -5,7 +5,7 @@ export async function fetchTransactions(userId) {
     .from("TransactionTbl")
     .select("*")
     .eq("user_id", userId)
-    .order("date", { ascending: false });
+    .order("id", { ascending: false });
 
   if (error) {
     throw new Error(error.message);
