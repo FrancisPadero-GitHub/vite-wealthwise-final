@@ -7,34 +7,31 @@ html {
   min-width: 320px;
   min-height: 100vh;
 
-  /* Dark mode colors */
-  color: #e0e0e0;
-  background-color: #121212;
+  /* Light mode colors - muted white like Apple style */
+  color: #213547;
+  background-color: #f5f5f7;
 
   font-family: "Roboto", sans-serif;
 
   overflow-x: hidden;
 }
 
-/* Light mode overrides */
-@media (prefers-color-scheme: light) {
-  body,
-  html {
-    color: #213547;
-    background-color: #f4f4f4;
-  }
+/* Links hover color */
+a:hover {
+  color: #747bff;
+}
 
-  a:hover {
-    color: #747bff;
-  }
+/* Button background color */
+button {
+  background-color: #f9f9f9;
+}
 
-  button {
-    background-color: #f9f9f9;
-  }
-
-  footer {
-    background-color: #f0f0f0;
-  }
+/* Footer background color */
+footer {
+  background-color: #f0f0f0;
+  padding: 16px;
+  text-align: center;
+  color: #555555;
 }
 
 /* Main wrapper/container styles */
@@ -50,12 +47,4 @@ main {
   padding: 24px;
   margin-left: 240px;
   margin-top: 64px;
-}
-
-/* Footer (dark mode) */
-footer {
-  padding: 16px;
-  background-color: #1e1e1e;
-  text-align: center;
-  color: #aaaaaa;
 }
