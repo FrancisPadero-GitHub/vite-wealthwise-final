@@ -1,13 +1,16 @@
-import { Box } from "@mui/material";
-import BalanceCard from "./cards/balance";
-import Transactions from "./cards/transactions"; // Adjust the path based on your folder structure
+import { Box, Grid } from "@mui/material";
+import BalanceCard from "./cards/BalanceCard";
+//import TransactionsTable from "./cards/TransactionsCard"; // Adjust the path based on your folder structure
+import TransactionsTable from "./cards/RecentTransactions";
 
 export default function Dashboard() {
   return (
-    <Box >
+    <Box>
       <BalanceCard />
       <Box sx={{ mt: 4 }}>
-        <Transactions />
+        <Grid container spacing={2}>
+          <TransactionsTable />
+        </Grid>
       </Box>
     </Box>
   );

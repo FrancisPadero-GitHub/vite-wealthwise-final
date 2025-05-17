@@ -267,13 +267,18 @@ function TransactionTable() {
             <Grid item size={6}>
               <TextField
                 fullWidth
+                select
                 label="Account"
                 name="account"
                 value={addForm.account}
                 onChange={handleAddFormChange}
                 required
                 margin="normal"
-              />
+              >
+                <MenuItem value="Cash">Cash</MenuItem>
+                <MenuItem value="Gcash">Gcash</MenuItem>
+                <MenuItem value="Credit">Credit</MenuItem>
+              </TextField>
             </Grid>
             <Grid item size={6}>
               <TextField
@@ -290,6 +295,7 @@ function TransactionTable() {
                 <MenuItem value="expense">Expense</MenuItem>
               </TextField>
             </Grid>
+
             <Grid item size={6}>
               <TextField
                 fullWidth
@@ -299,8 +305,7 @@ function TransactionTable() {
                 onChange={handleAddFormChange}
                 margin="normal"
                 placeholder="Date"
-                size="small"
-                InputLabelProps={{ shrink: true }}
+                required
               />
             </Grid>
             <Grid item size={12}>
@@ -376,13 +381,18 @@ function TransactionTable() {
             <Grid item size={6}>
               <TextField
                 fullWidth
+                select
                 label="Account"
                 name="account"
                 value={editForm.account || ""}
                 onChange={handleEditFormChange}
                 required
                 margin="normal"
-              />
+              >
+                <MenuItem value="Cash">Cash</MenuItem>
+                <MenuItem value="Gcash">Gcash</MenuItem>
+                <MenuItem value="Credit">Credit</MenuItem>
+              </TextField>
             </Grid>
             <Grid item size={6}>
               <TextField
@@ -408,8 +418,6 @@ function TransactionTable() {
                 onChange={handleEditFormChange}
                 margin="normal"
                 placeholder="Date"
-                size="small"
-                InputLabelProps={{ shrink: true }}
                 required
               />
             </Grid>

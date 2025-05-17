@@ -1,7 +1,10 @@
-import React from 'react'
 
+import TransactionsTable from "./cards/TransactionsCard";
+import { Box } from "@mui/material";
 export default function Transactions() {
   return (
-    <div>Transactions</div>
-  )
+    <Box>
+      <TransactionsTable />
+    </Box>
+  );
 }
