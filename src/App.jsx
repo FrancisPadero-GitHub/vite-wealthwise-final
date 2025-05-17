@@ -11,7 +11,6 @@ import SignUp from "./app/auth/SignUp";
 import ProtectedRoute from "./app/components/ProtectedRoutes";
 import { AuthProvider } from "./contexts/AuthProvider";
 
-
 import Dashboard from "./app/components/Dashboard";
 import Profile from "./app/components/Profile";
 import Transactions from "./app/components/Transactions";
@@ -35,7 +34,7 @@ function Layout() {
       <CssBaseline />
       <Topbar onDrawerToggle={toggleDrawer} />
       <Sidebar open={open} />
-      
+
       <Box
         component="main"
         sx={{
