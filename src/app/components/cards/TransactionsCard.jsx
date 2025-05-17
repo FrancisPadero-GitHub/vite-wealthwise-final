@@ -48,9 +48,11 @@ const defaultFormValues = {
 };
 
 function TransactionTable() {
+  const [loading, setLoading] = useState(false);
+
   const { data: transactions, isLoading, error } = useTransactions();
-  const { mutate: addTransaction } = useAddTransaction();
-  const { mutate: editTransaction } = useEditTransaction();
+  const { mutateAsync: addTransaction } = useAddTransaction();
+  const { mutateAsync: editTransaction } = useEditTransaction();
   const { mutate: deleteTransaction } = useDeleteTransaction();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -76,7 +78,7 @@ function TransactionTable() {
     setIsModalOpen(true);
   }, []);
 
-  const closeModal = useCallback(() => {
+  const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
     setSelectedTransaction(null);
     setForm(defaultFormValues);
@@ -90,26 +92,38 @@ function TransactionTable() {
   }, []);
 
   const handleSubmit = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault();
-      if (selectedTransaction) {
-        // Edit mode
-        editTransaction(form);
-      } else {
-        // Add mode
-        addTransaction(form);
+      setLoading(true);
+
+      try {
+        if (selectedTransaction) {
+          await editTransaction(form);
+        } else {
+          await addTransaction(form);
+        }
+        handleCloseModal();
+      } catch (error) {
+        console.error("Transaction failed:", error);
+      } finally {
+        setLoading(false);
       }
-      closeModal();
     },
-    [addTransaction, editTransaction, form, selectedTransaction, closeModal]
+    [
+      selectedTransaction,
+      form,
+      addTransaction,
+      editTransaction,
+      handleCloseModal,
+    ]
   );
 
   const handleDelete = useCallback(() => {
     if (selectedTransaction?.id) {
       deleteTransaction(selectedTransaction.id);
-      closeModal();
+      handleCloseModal();
     }
-  }, [deleteTransaction, selectedTransaction, closeModal]);
+  }, [deleteTransaction, selectedTransaction, handleCloseModal]);
 
   const filteredTransactions =
     transactions?.filter((tx) =>
@@ -204,7 +218,7 @@ function TransactionTable() {
       </TableContainer>
 
       {/* Merged Add/Edit Modal */}
-      <Modal open={isModalOpen} onClose={closeModal}>
+      <Modal open={isModalOpen} onClose={handleCloseModal}>
         <Box component="form" sx={modalStyle} onSubmit={handleSubmit}>
           <Box
             display="flex"
@@ -215,7 +229,7 @@ function TransactionTable() {
             <Typography variant="h6">
               {selectedTransaction ? "Edit Transaction" : "Add Transaction"}
             </Typography>
-            <IconButton aria-label="close" onClick={closeModal}>
+            <IconButton aria-label="close" onClick={handleCloseModal}>
               <CloseIcon />
             </IconButton>
           </Box>
@@ -314,7 +328,16 @@ function TransactionTable() {
           </Grid>
 
           <Grid>
-            <Button type="submit" variant="contained" sx={{ mt: 2 }} fullWidth>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ mt: 2 }}
+              fullWidth
+              disabled={loading}
+              startIcon={
+                loading ? <CircularProgress size={20} color="inherit" /> : null
+              }
+            >
               {selectedTransaction ? "Save" : "Add"}
             </Button>
 
@@ -325,6 +348,12 @@ function TransactionTable() {
                 color="secondary"
                 sx={{ mt: 2 }}
                 fullWidth
+                disabled={loading}
+                startIcon={
+                  loading ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : null
+                }
               >
                 Delete
               </Button>

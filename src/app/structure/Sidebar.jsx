@@ -16,8 +16,8 @@ const drawerWidth = 240;
 
 const menuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
-  { text: "Profile", icon: <PersonIcon />, path: "/profile" },
   { text: "Transactions", icon: <ReceiptIcon />, path: "/transactions" },
+  { text: "Profile", icon: <PersonIcon />, path: "/profile" },
 ];
 
 export default function Sidebar({ open }) {

@@ -80,14 +80,7 @@ export default function BalanceCard() {
     <>
       <Card sx={{ maxWidth: 400, position: "relative" }}>
         <CardHeader
-          title={
-            <Typography variant="h6">
-              Balance{" "}
-              <Typography component="span" color="text.secondary">
-                | Cash
-              </Typography>
-            </Typography>
-          }
+          title={<Typography variant="h6">Balance</Typography>}
           action={
             <>
               <IconButton
@@ -183,7 +176,7 @@ export default function BalanceCard() {
           <DialogActions>
             <Button
               onClick={handleCloseModal}
-              color="secondary"
+              color="primary"
               disabled={updateBalanceMutation.isLoading}
             >
               Cancel

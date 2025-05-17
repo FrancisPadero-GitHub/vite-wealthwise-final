@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -15,6 +15,7 @@ import {
   TextField,
   Button,
   Divider,
+  CircularProgress,
 } from "@mui/material";
 import {
   Add as AddIcon,
@@ -35,6 +36,7 @@ export default function RemindersCard() {
     toggleStatus,
   } = useReminders();
 
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [form, setForm] = useState({ title: "", description: "", date: "" });
@@ -59,16 +61,23 @@ export default function RemindersCard() {
   };
 
   const handleSubmit = async () => {
-    if (editingTask) {
-      await updateTask({ ...form, id: editingTask.id });
-    } else {
-      await addTask(form);
+    setLoading(true);
+    try {
+      if (editingTask) {
+        await updateTask({ ...form, id: editingTask.id });
+      } else {
+        await addTask(form);
+      }
+      handleClose();
+    } catch (error) {
+      console.error("Error submitting task:", error);
+    } finally {
+      setLoading(false);
     }
-    handleClose();
   };
 
   return (
-    <Grid size={6}>
+    <Grid size={5}>
       <Card elevation={3}>
         <CardContent>
           <div className="flex justify-between items-center mb-4">
@@ -163,45 +172,60 @@ export default function RemindersCard() {
             <DialogTitle>
               {editingTask ? "Edit Reminder" : "New Reminder"}
             </DialogTitle>
-            <DialogContent>
-              <TextField
-                margin="dense"
-                label="Title"
-                name="title"
-                value={form.title}
-                onChange={handleChange}
-                fullWidth
-                required
-              />
-              <TextField
-                margin="dense"
-                name="date"
-                type="date"
-                value={form.date}
-                onChange={handleChange}
-                fullWidth
-              />
-              <TextField
-                margin="dense"
-                label="Description"
-                name="description"
-                value={form.description}
-                onChange={handleChange}
-                fullWidth
-                multiline
-                rows={3}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose}>Cancel</Button>
-              <Button
-                onClick={handleSubmit}
-                variant="contained"
-                color="success"
-              >
-                {editingTask ? "Save Changes" : "Add"}
-              </Button>
-            </DialogActions>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault(); // Prevent full page reload
+                handleSubmit();
+              }}
+            >
+              <DialogContent>
+                <TextField
+                  margin="dense"
+                  label="Title"
+                  name="title"
+                  value={form.title}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+                <TextField
+                  margin="dense"
+                  name="date"
+                  type="date"
+                  value={form.date}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+                <TextField
+                  margin="dense"
+                  label="Description"
+                  name="description"
+                  value={form.description}
+                  onChange={handleChange}
+                  fullWidth
+                  multiline
+                  rows={3}
+                  required
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="success"
+                  disabled={loading}
+                  startIcon={
+                    loading ? (
+                      <CircularProgress color="inherit" size={20} />
+                    ) : null
+                  }
+                >
+                  {editingTask ? "Save Changes" : "Add"}
+                </Button>
+              </DialogActions>
+            </form>
           </Dialog>
         </CardContent>
       </Card>

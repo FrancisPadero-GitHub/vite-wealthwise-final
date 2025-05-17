@@ -44,9 +44,11 @@ const defaultFormValues = {
 };
 
 export default function TransactionTable() {
+  const [loading, setLoading] = useState(false);
+
   const { data: transactions, isLoading, error } = useTransactions();
-  const { mutate: addTransaction } = useAddTransaction();
-  const { mutate: editTransaction } = useEditTransaction();
+  const { mutateAsync: addTransaction } = useAddTransaction();
+  const { mutateAsync: editTransaction } = useEditTransaction();
   const { mutate: deleteTransaction } = useDeleteTransaction();
 
   const [searchQuery] = useState("");
@@ -80,14 +82,22 @@ export default function TransactionTable() {
   }, []);
 
   const handleSubmit = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault();
-      if (selectedTransaction) {
-        editTransaction(form);
-      } else {
-        addTransaction(form);
+      setLoading(true);
+
+      try {
+        if (selectedTransaction) {
+          await editTransaction(form);
+        } else {
+          await addTransaction(form);
+        }
+        handleCloseModal();
+      } catch (error) {
+        console.error("Transaction failed:", error);
+      } finally {
+        setLoading(false);
       }
-      handleCloseModal();
     },
     [
       selectedTransaction,
@@ -98,7 +108,7 @@ export default function TransactionTable() {
     ]
   );
 
-  const handleDeleteClick = useCallback(() => {
+  const handleDelete = useCallback(() => {
     if (selectedTransaction?.id) {
       deleteTransaction(selectedTransaction.id);
       handleCloseModal();
@@ -122,7 +132,7 @@ export default function TransactionTable() {
   if (error) return <Typography color="error">{error.message}</Typography>;
 
   return (
-    <Grid size={6}>
+    <Grid size={7}>
       <Box
         display="flex"
         justifyContent="space-between"
@@ -320,16 +330,32 @@ export default function TransactionTable() {
           </Grid>
 
           <Grid>
-            <Button type="submit" variant="contained" sx={{ mt: 2 }} fullWidth>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ mt: 2 }}
+              fullWidth
+              disabled={loading}
+              startIcon={
+                loading ? <CircularProgress size={20} color="inherit" /> : null
+              }
+            >
               {selectedTransaction ? "Save" : "Add"}
             </Button>
+
             {selectedTransaction && (
               <Button
-                onClick={handleDeleteClick}
+                onClick={handleDelete}
                 variant="contained"
                 color="secondary"
                 sx={{ mt: 2 }}
                 fullWidth
+                disabled={loading}
+                startIcon={
+                  loading ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : null
+                }
               >
                 Delete
               </Button>
