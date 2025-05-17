@@ -10,32 +10,14 @@ import {
   Typography,
   CircularProgress,
   Button,
-  Modal,
   Box,
   TextField,
-  MenuItem,
-  Grid,
-  IconButton,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import { useTransactions } from "../../../hooks/useTransactions";
 import { useAddTransaction } from "../../../hooks/useAddTransaction";
 import { useEditTransaction } from "../../../hooks/useEditTransaction";
 import { useDeleteTransaction } from "../../../hooks/useDeleteTransaction";
-
-const modalStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "30%",
-  maxHeight: "80vh",
-  overflowY: "auto",
-  bgcolor: "background.paper",
-  borderRadius: 2,
-  boxShadow: 24,
-  p: 3,
-};
+import TransactionFormModal from "../TransactionFormModal";
 
 const defaultFormValues = {
   title: "",
@@ -219,158 +201,16 @@ function TransactionTable() {
         </Table>
       </TableContainer>
 
-      {/* Single Modal for Add & Edit */}
-      <Modal open={modalOpen} onClose={handleCloseModal}>
-        <Box component="form" sx={modalStyle} onSubmit={handleSubmit}>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2}
-          >
-            <Typography variant="h6">
-              {selectedTransaction ? "Edit Transaction" : "Add Transaction"}
-            </Typography>
-            <IconButton aria-label="close" onClick={handleCloseModal}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-
-          <Grid container spacing={2} columns={12}>
-            <Grid size={6}>
-              <TextField
-                id="transaction-title"
-                fullWidth
-                label="Title"
-                name="title"
-                value={form.title}
-                onChange={handleFormChange}
-                required
-                margin="normal"
-              />
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                id="transaction-amount"
-                fullWidth
-                label="Amount"
-                name="amount"
-                type="number"
-                value={form.amount}
-                onChange={handleFormChange}
-                required
-                margin="normal"
-              />
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                id="transaction-category"
-                fullWidth
-                label="Category"
-                name="category"
-                value={form.category}
-                onChange={handleFormChange}
-                required
-                margin="normal"
-              />
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                id="transaction-account"
-                fullWidth
-                select
-                label="Account"
-                name="account"
-                value={form.account}
-                onChange={handleFormChange}
-                required
-                margin="normal"
-              >
-                <MenuItem value="Cash">Cash</MenuItem>
-                <MenuItem value="Gcash">Gcash</MenuItem>
-                <MenuItem value="Credit">Credit</MenuItem>
-              </TextField>
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                id="transaction-type"
-                fullWidth
-                select
-                label="Type"
-                name="type"
-                value={form.type}
-                onChange={handleFormChange}
-                required
-                margin="normal"
-              >
-                <MenuItem value="income">Income</MenuItem>
-                <MenuItem value="expense">Expense</MenuItem>
-              </TextField>
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                id="transaction-date"
-                fullWidth
-                name="date"
-                type="date"
-                label="Date"
-                InputLabelProps={{ shrink: true }}
-                value={form.date}
-                onChange={handleFormChange}
-                margin="normal"
-                required
-              />
-            </Grid>
-            <Grid size={12}>
-              <TextField
-                id="transaction-description"
-                fullWidth
-                label="Description"
-                name="description"
-                value={form.description}
-                onChange={handleFormChange}
-                margin="normal"
-                multiline
-                minRows={4}
-                required
-              />
-            </Grid>
-          </Grid>
-
-          <Grid>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{ mt: 2 }}
-              fullWidth
-              disabled={loading}
-              startIcon={
-                loading ? <CircularProgress size={20} color="inherit" /> : null
-              }
-            >
-              {selectedTransaction ? "Save" : "Add"}
-            </Button>
-
-            {selectedTransaction && (
-              <Button
-                onClick={handleDelete}
-                variant="contained"
-                color="secondary"
-                sx={{ mt: 2 }}
-                fullWidth
-                disabled={loading}
-                startIcon={
-                  loading ? (
-                    <CircularProgress size={20} color="inherit" />
-                  ) : null
-                }
-              >
-                Delete
-              </Button>
-            )}
-          </Grid>
-        </Box>
-      </Modal>
+      <TransactionFormModal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        form={form}
+        onFormChange={handleFormChange}
+        onSubmit={handleSubmit}
+        onDelete={handleDelete}
+        loading={loading}
+        selectedTransaction={selectedTransaction}
+      />
     </Box>
   );
 }

@@ -11,10 +11,7 @@ import {
   ListItem,
   ListItemText,
   Grid,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
+  Modal,
   TextField,
   Button,
   Divider,
@@ -26,9 +23,26 @@ import {
   DeleteOutline,
   EditOutlined,
   Replay,
+  Close as CloseIcon,
+  Save as SaveIcon,
+  Delete as DeleteIcon,
 } from "@mui/icons-material";
 import { useReminders } from "../../../hooks/useReminders";
 import dayjs from "dayjs";
+
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "30%",
+  maxHeight: "80vh",
+  overflowY: "auto",
+  bgcolor: "background.paper",
+  borderRadius: 2,
+  boxShadow: 24,
+  p: 3,
+};
 
 export default function RemindersCard() {
   const {
@@ -268,70 +282,93 @@ export default function RemindersCard() {
           </Paper>
 
           {/* Dialog for Add/Edit */}
-          <Dialog open={open} onClose={handleClose} fullWidth>
-            <DialogTitle>
-              {editingTask ? "Edit Reminder" : "New Reminder"}
-            </DialogTitle>
-            <form
+          <Modal open={open} onClose={handleClose}>
+            <Box
+              component="form"
+              sx={modalStyle}
               onSubmit={(e) => {
                 e.preventDefault();
                 handleSubmit();
               }}
             >
-              <DialogContent>
-                <TextField
-                  id="reminder-title"
-                  name="title"
-                  margin="dense"
-                  label="Title"
-                  value={form.title}
-                  onChange={handleChange}
-                  fullWidth
-                  required
-                />
-                <TextField
-                  id="reminder-date"
-                  name="date"
-                  margin="dense"
-                  type="date"
-                  label="Due Date"
-                  InputLabelProps={{ shrink: true }}
-                  value={form.date}
-                  onChange={handleChange}
-                  fullWidth
-                  required
-                />
-                <TextField
-                  id="reminder-description"
-                  name="description"
-                  margin="dense"
-                  label="Description"
-                  value={form.description}
-                  onChange={handleChange}
-                  fullWidth
-                  multiline
-                  rows={3}
-                  required
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                mb={2}
+              >
+                <Typography variant="h6">
+                  {editingTask ? "Edit Reminder" : "New Reminder"}
+                </Typography>
+                <IconButton aria-label="close" onClick={handleClose}>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+
+              <Grid container spacing={2} columns={12}>
+                <Grid size={12}>
+                  <TextField
+                    id="reminder-title"
+                    name="title"
+                    label="Title"
+                    value={form.title}
+                    onChange={handleChange}
+                    fullWidth
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid size={12}>
+                  <TextField
+                    id="reminder-date"
+                    name="date"
+                    type="date"
+                    label="Due Date"
+                    InputLabelProps={{ shrink: true }}
+                    value={form.date}
+                    onChange={handleChange}
+                    fullWidth
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid size={12}>
+                  <TextField
+                    id="reminder-description"
+                    name="description"
+                    label="Description"
+                    value={form.description}
+                    onChange={handleChange}
+                    fullWidth
+                    multiline
+                    minRows={4}
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+              </Grid>
+
+              <Grid>
                 <Button
                   type="submit"
                   variant="contained"
                   color="success"
+                  sx={{ mt: 2 }}
+                  fullWidth
                   disabled={loading}
                   startIcon={
                     loading ? (
-                      <CircularProgress color="inherit" size={20} />
-                    ) : null
+                      <CircularProgress size={20} color="inherit" />
+                    ) : (
+                      <SaveIcon />
+                    )
                   }
                 >
                   {editingTask ? "Save Changes" : "Add"}
                 </Button>
-              </DialogActions>
-            </form>
-          </Dialog>
+              </Grid>
+            </Box>
+          </Modal>
         </CardContent>
       </Card>
     </Grid>

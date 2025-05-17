@@ -1,7 +1,8 @@
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
-import { CssBaseline, Box } from "@mui/material";
+import { CssBaseline, Box, ThemeProvider } from "@mui/material";
+import theme from "./theme";
 
 import Footer from "./app/structure/Footer";
 import Sidebar from "./app/structure/Sidebar";
@@ -79,11 +80,13 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <RouterProvider router={router} />
-        </AuthProvider>
-      </QueryClientProvider>
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <RouterProvider router={router} />
+          </AuthProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
     </>
   );
 }
