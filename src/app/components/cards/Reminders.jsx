@@ -7,7 +7,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemSecondaryAction,
   Grid,
   Dialog,
   DialogTitle,
@@ -82,10 +81,27 @@ export default function RemindersCard() {
               <AddIcon />
             </IconButton>
           </div>
+
           <List>
             {tasks.length ? (
               tasks.map((task) => (
-                <ListItem key={task.id} alignItems="flex-start">
+                <ListItem
+                  key={task.id}
+                  alignItems="flex-start"
+                  secondaryAction={
+                    <>
+                      <IconButton onClick={() => toggleStatus(task.id, true)}>
+                        <CheckCircleOutline color="success" />
+                      </IconButton>
+                      <IconButton onClick={() => handleOpen(task)}>
+                        <EditOutlined color="primary" />
+                      </IconButton>
+                      <IconButton onClick={() => deleteTask(task.id)}>
+                        <DeleteOutline color="error" />
+                      </IconButton>
+                    </>
+                  }
+                >
                   <ListItemText
                     primary={task.title}
                     secondary={
@@ -98,17 +114,6 @@ export default function RemindersCard() {
                       </>
                     }
                   />
-                  <ListItemSecondaryAction>
-                    <IconButton onClick={() => toggleStatus(task.id, true)}>
-                      <CheckCircleOutline color="success" />
-                    </IconButton>
-                    <IconButton onClick={() => handleOpen(task)}>
-                      <EditOutlined color="primary" />
-                    </IconButton>
-                    <IconButton onClick={() => deleteTask(task.id)}>
-                      <DeleteOutline color="error" />
-                    </IconButton>
-                  </ListItemSecondaryAction>
                 </ListItem>
               ))
             ) : (
@@ -123,6 +128,18 @@ export default function RemindersCard() {
                   <ListItem
                     key={task.id}
                     style={{ textDecoration: "line-through", color: "#999" }}
+                    secondaryAction={
+                      <>
+                        <IconButton
+                          onClick={() => toggleStatus(task.id, false)}
+                        >
+                          <Replay color="secondary" />
+                        </IconButton>
+                        <IconButton onClick={() => deleteTask(task.id)}>
+                          <DeleteOutline color="error" />
+                        </IconButton>
+                      </>
+                    }
                   >
                     <ListItemText
                       primary={task.title}
@@ -136,19 +153,12 @@ export default function RemindersCard() {
                         </>
                       }
                     />
-                    <ListItemSecondaryAction>
-                      <IconButton onClick={() => toggleStatus(task.id, false)}>
-                        <Replay color="secondary" />
-                      </IconButton>
-                      <IconButton onClick={() => deleteTask(task.id)}>
-                        <DeleteOutline color="error" />
-                      </IconButton>
-                    </ListItemSecondaryAction>
                   </ListItem>
                 ))}
               </>
             )}
           </List>
+
           <Dialog open={open} onClose={handleClose} fullWidth>
             <DialogTitle>
               {editingTask ? "Edit Reminder" : "New Reminder"}
@@ -165,13 +175,11 @@ export default function RemindersCard() {
               />
               <TextField
                 margin="dense"
-                label="Date"
                 name="date"
                 type="date"
                 value={form.date}
                 onChange={handleChange}
                 fullWidth
-                InputLabelProps={{ shrink: true }}
               />
               <TextField
                 margin="dense"
