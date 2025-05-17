@@ -45,7 +45,7 @@ function Layout() {
       >
         <Outlet />
       </Box>
-      <Footer />
+      <Footer/>
     </>
   );
 }

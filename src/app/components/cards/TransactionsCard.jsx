@@ -56,30 +56,24 @@ function TransactionTable() {
   const { mutate: deleteTransaction } = useDeleteTransaction();
 
   const [searchQuery, setSearchQuery] = useState("");
-
-  // Single modal open state
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Single form state for both add/edit
+  const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState(defaultFormValues);
-
-  // selectedTransaction null = add mode, object = edit mode
   const [selectedTransaction, setSelectedTransaction] = useState(null);
 
   const openAddModal = useCallback(() => {
     setSelectedTransaction(null);
     setForm(defaultFormValues);
-    setIsModalOpen(true);
+    setModalOpen(true);
   }, []);
 
   const openEditModal = useCallback((transaction) => {
     setSelectedTransaction(transaction);
     setForm(transaction);
-    setIsModalOpen(true);
+    setModalOpen(true);
   }, []);
 
   const handleCloseModal = useCallback(() => {
-    setIsModalOpen(false);
+    setModalOpen(false);
     setSelectedTransaction(null);
     setForm(defaultFormValues);
   }, []);
@@ -164,7 +158,7 @@ function TransactionTable() {
         onChange={(e) => setSearchQuery(e.target.value)}
       />
 
-      <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 3 }}>
+      <TableContainer component={Paper} sx={{ maxHeight: 300, borderRadius: 2, boxShadow: 3, overflowY: "auto" }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
@@ -198,6 +192,7 @@ function TransactionTable() {
                 hover
                 onClick={() => openEditModal(tx)}
                 sx={{
+                  
                   cursor: "pointer",
                   backgroundColor: index % 2 === 0 ? "white" : "#fafafa",
                   transition: "background-color 0.3s",
@@ -218,7 +213,7 @@ function TransactionTable() {
       </TableContainer>
 
       {/* Merged Add/Edit Modal */}
-      <Modal open={isModalOpen} onClose={handleCloseModal}>
+      <Modal open={modalOpen} onClose={handleCloseModal}>
         <Box component="form" sx={modalStyle} onSubmit={handleSubmit}>
           <Box
             display="flex"

@@ -6,7 +6,7 @@ export default function Dashboard() {
   return (
     <Box>
       <BalanceCard />
-        <Grid container spacing={2} sx={{mt: 4}}>
+        <Grid container spacing={2} sx={{mt: 2}}>
           <TransactionsTable />
           <Reminders />
         </Grid>

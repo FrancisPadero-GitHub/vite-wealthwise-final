@@ -29,8 +29,6 @@ import {
 } from "@mui/icons-material";
 import { useReminders } from "../../../hooks/useReminders";
 
-const fixedHeight = 800; // You can adjust this value
-
 export default function RemindersCard() {
   const {
     tasks,
@@ -95,22 +93,32 @@ export default function RemindersCard() {
 
   return (
     <Grid size={5}>
-      <Card elevation={3}>
+      <Card elevation={2}>
         <CardContent>
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center gap-2">
-              <Typography variant="h6" fontWeight="bold">
-                Reminders
-              </Typography>
-            </div>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={2}
+          >
+            <Typography variant="h6" fontWeight="bold">
+              Reminders
+            </Typography>
+
             <IconButton color="success" onClick={() => handleOpen()}>
               <AddIcon />
             </IconButton>
-          </div>
+          </Box>
 
           <Paper
-            elevation={2}
-            sx={{ borderRadius: 2, maxHeight: fixedHeight, overflow: "hidden" }}
+            elevation={1}
+            sx={{
+              maxHeight: 650,
+              overflowY: "auto",
+              borderRadius: 2,
+              boxShadow: 2,
+              px: 2,
+            }}
           >
             {tasks.length > 0 && (
               <Box>
@@ -121,7 +129,7 @@ export default function RemindersCard() {
                 </Box>
                 <List
                   sx={{
-                    maxHeight: fixedHeight,
+                    maxHeight: 650,
                     overflowY: "auto",
                     overflowX: "hidden",
                     pr: 1, // Prevent vertical scrollbar from overlapping content
@@ -213,7 +221,7 @@ export default function RemindersCard() {
                 </Box>
                 <List
                   sx={{
-                    maxHeight: fixedHeight,
+                    maxHeight: 650,
                     overflowY: "auto",
                     overflowX: "hidden",
                     pr: 1,

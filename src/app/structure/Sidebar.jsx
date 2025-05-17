@@ -12,7 +12,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import { Link, useLocation } from "react-router-dom";
 
-const drawerWidth = 240;
+const drawerWidth = 250;
 
 const menuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/" },

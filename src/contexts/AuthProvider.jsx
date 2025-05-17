@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={{ user, session, loading }}>
       {children}
-      <RealtimeBalanceListener />;
+      <RealtimeBalanceListener />
     </AuthContext.Provider>
   );
 };

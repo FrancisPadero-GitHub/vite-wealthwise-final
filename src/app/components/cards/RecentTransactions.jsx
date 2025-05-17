@@ -44,8 +44,6 @@ const defaultFormValues = {
   description: "",
 };
 
-const fixedHeight = 800; // Adjust as needed
-
 export default function TransactionTable() {
   const [loading, setLoading] = useState(false);
 
@@ -59,15 +57,13 @@ export default function TransactionTable() {
   const [form, setForm] = useState(defaultFormValues);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
 
-  // Open modal in Add mode (no selectedTransaction)
-  const handleOpenAddModal = useCallback(() => {
+  const openAddModal = useCallback(() => {
     setSelectedTransaction(null);
     setForm(defaultFormValues);
     setModalOpen(true);
   }, []);
 
-  // Open modal in Edit mode with existing transaction
-  const handleOpenEditModal = useCallback((transaction) => {
+  const openEditModal = useCallback((transaction) => {
     setSelectedTransaction(transaction);
     setForm(transaction);
     setModalOpen(true);
@@ -136,50 +132,52 @@ export default function TransactionTable() {
 
   return (
     <Grid size={7}>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
-        <Typography variant="h6">Recent Transactions</Typography>
-        <Button variant="contained" onClick={handleOpenAddModal}>
-          Add
-        </Button>
-      </Box>
-
-      <Paper
-        sx={{
-          maxHeight: fixedHeight,
-          overflowY: "auto",
-          borderRadius: 2,
-          boxShadow: 2,
-          pt: 2,
-          paddingX: 2, // Add some padding around the grid
-        }}
-      >
-        <Grid>
-          {filteredTransactions.map((tx) => (
-            <Grid size={12} gap={0.5} key={tx.id}>
-              <Card
-                onClick={() => handleOpenEditModal(tx)}
-                sx={{
-                  borderRadius: 2,
-                  boxShadow: 3,
-                  marginY: 2,
-                  cursor: "pointer",
-                  transition: "transform 0.2s ease-in-out",
-                  "&:hover": {
-                    transform: "scale(1.02)",
-                  },
-                }}
-              >
-                <CardContent>
+      <Card elevation={2}>
+        <CardContent>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={2}
+          >
+            <Typography variant="h6">Recent Transactions</Typography>
+            <Button variant="contained" onClick={openAddModal}>
+              Add
+            </Button>
+          </Box>
+          <Paper
+            sx={{
+              maxHeight: 650,
+              overflowY: "auto",
+              borderRadius: 2,
+              boxShadow: 2,
+              p: 2,
+            }}
+          >
+            <Box display="flex" flexDirection="column" gap={1}>
+              {filteredTransactions.map((tx) => (
+                <Box
+                  key={tx.id}
+                  onClick={() => openEditModal(tx)}
+                  sx={{
+                    p: 2,
+                    backgroundColor: "background.paper",
+                   
+                    cursor: "pointer",
+                    transition: "transform 0.2s ease-in-out",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1,
+                    "&:hover": {
+                      transform: "scale(1.01)",
+                      backgroundColor: "grey.100",
+                    },
+                  }}
+                >
                   <Box
                     display="flex"
                     justifyContent="space-between"
                     alignItems="center"
-                    mb={1}
                   >
                     <Box flexGrow={1}>
                       <Typography variant="h6" gutterBottom>
@@ -196,12 +194,10 @@ export default function TransactionTable() {
                         {tx.description}
                       </Typography>
                     </Box>
-
                     <Box
                       display="flex"
                       flexDirection="column"
                       alignItems="flex-end"
-                      width="auto" // Adjust width as needed
                       gap={1}
                     >
                       <Typography variant="subtitle1">₱ {tx.amount}</Typography>
@@ -215,16 +211,19 @@ export default function TransactionTable() {
                       </Typography>
                     </Box>
                   </Box>
-
-                  <Typography variant="caption" color="textSecondary">
+                  <Typography
+                    variant="caption"
+                    color="textSecondary"
+                    align="right"
+                  >
                     {tx.date}
                   </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Paper>
+                </Box>
+              ))}
+            </Box>
+          </Paper>
+        </CardContent>
+      </Card>
 
       {/* Single Modal for Add & Edit */}
       <Modal open={modalOpen} onClose={handleCloseModal}>
