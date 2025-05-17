@@ -47,8 +47,8 @@ export default function Register() {
       password: password,
       options: {
         data: {
-          first_name: firstname,
-          last_name: lastname,
+          full_name: `${firstname} ${lastname}`,
+          avatar_url: `https://ui-avatars.com/api/?name=${firstname}+${lastname}`,
         },
       },
     });

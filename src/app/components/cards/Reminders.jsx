@@ -28,6 +28,7 @@ import {
   Replay,
 } from "@mui/icons-material";
 import { useReminders } from "../../../hooks/useReminders";
+import dayjs from "dayjs";
 
 export default function RemindersCard() {
   const {
@@ -46,25 +47,13 @@ export default function RemindersCard() {
 
   const handleOpen = (task = null) => {
     setEditingTask(task);
-
-    if (task) {
-      const formattedDate = task.due_date
+    setForm({
+      title: task?.title || "",
+      description: task?.description || "",
+      date: task?.due_date
         ? new Date(task.due_date).toISOString().split("T")[0]
-        : "";
-
-      setForm({
-        title: task.title || "",
-        description: task.description || "",
-        date: formattedDate,
-      });
-    } else {
-      setForm({
-        title: "",
-        description: "",
-        date: "",
-      });
-    }
-
+        : "",
+    });
     setOpen(true);
   };
 
@@ -104,7 +93,6 @@ export default function RemindersCard() {
             <Typography variant="h6" fontWeight="bold">
               Reminders
             </Typography>
-
             <IconButton color="success" onClick={() => handleOpen()}>
               <AddIcon />
             </IconButton>
@@ -121,27 +109,15 @@ export default function RemindersCard() {
             }}
           >
             {tasks.length > 0 && (
-              <Box>
+              <>
                 <Box px={2} py={1} display="flex" justifyContent="center">
                   <Typography variant="overline" color="text.secondary">
                     ⏳ Pending Tasks
                   </Typography>
                 </Box>
-                <List
-                  sx={{
-                    maxHeight: 650,
-                    overflowY: "auto",
-                    overflowX: "hidden",
-                    pr: 1, // Prevent vertical scrollbar from overlapping content
-                  }}
-                >
+                <List sx={{ maxHeight: 650, overflowY: "auto", pr: 1 }}>
                   {tasks.map((task) => (
-                    <ListItem
-                      key={task.id}
-                      alignItems="center"
-                      disableGutters
-                      sx={{ padding: 0 }}
-                    >
+                    <ListItem key={task.id} disableGutters sx={{ padding: 0 }}>
                       <Box
                         sx={{
                           width: "100%",
@@ -149,54 +125,49 @@ export default function RemindersCard() {
                           alignItems: "center",
                           justifyContent: "space-between",
                           padding: 2,
-                          transition:
-                            "transform 0.2s ease-in-out, background-color 0.2s",
+                          transition: "transform 0.2s, background-color 0.2s",
                           "&:hover": {
                             transform: "scale(1.01)",
                             backgroundColor: "action.hover",
                           },
-                          overflowX: "hidden",
                         }}
                       >
                         <ListItemText
                           primary={task.title}
                           secondary={
-                            <Box
-                              display="flex"
-                              flexDirection="column"
-                              gap={0.5}
-                            >
+                            <>
                               <Typography
                                 variant="body2"
                                 color="text.secondary"
+                                component="span"
                               >
                                 {task.description}
                               </Typography>
+                              <br />
                               <Typography
                                 variant="caption"
                                 color="text.secondary"
+                                component="span"
                               >
-                                Due: {new Date(task.due_date).toDateString()}
+                                Due:{" "}
+                                {dayjs(task.due_date).format("MMM D, YYYY")}
                               </Typography>
-                            </Box>
+                            </>
                           }
                         />
                         <Stack direction="row" alignItems="center">
                           <IconButton
-                            aria-label="mark as complete"
                             onClick={() => toggleStatus(task.id, true)}
                           >
                             <CheckCircleOutline color="success" />
                           </IconButton>
                           <IconButton
-                            aria-label="edit"
                             onClick={() => handleOpen(task)}
                             sx={{ ml: 1 }}
                           >
                             <EditOutlined color="primary" />
                           </IconButton>
                           <IconButton
-                            aria-label="delete"
                             onClick={() => deleteTask(task.id)}
                             sx={{ ml: 1 }}
                           >
@@ -207,30 +178,22 @@ export default function RemindersCard() {
                     </ListItem>
                   ))}
                 </List>
-              </Box>
+              </>
             )}
 
             {tasks.length > 0 && completedTasks.length > 0 && <Divider />}
 
             {completedTasks.length > 0 && (
-              <Box>
+              <>
                 <Box px={2} py={1} display="flex" justifyContent="center">
                   <Typography variant="overline" color="text.secondary">
                     ✔️ Completed Tasks
                   </Typography>
                 </Box>
-                <List
-                  sx={{
-                    maxHeight: 650,
-                    overflowY: "auto",
-                    overflowX: "hidden",
-                    pr: 1,
-                  }}
-                >
+                <List sx={{ maxHeight: 650, overflowY: "auto", pr: 1 }}>
                   {completedTasks.map((task) => (
                     <ListItem
                       key={task.id}
-                      alignItems="center"
                       disableGutters
                       sx={{
                         padding: 0,
@@ -245,47 +208,43 @@ export default function RemindersCard() {
                           alignItems: "center",
                           justifyContent: "space-between",
                           padding: 2,
-                          transition:
-                            "transform 0.2s ease-in-out, background-color 0.2s",
+                          transition: "transform 0.2s, background-color 0.2s",
                           "&:hover": {
                             transform: "scale(1.01)",
                             backgroundColor: "action.hover",
                           },
-                          overflowX: "hidden",
                         }}
                       >
                         <ListItemText
                           primary={task.title}
                           secondary={
-                            <Box
-                              display="flex"
-                              flexDirection="column"
-                              gap={0.5}
-                            >
+                            <>
                               <Typography
                                 variant="body2"
                                 color="text.secondary"
+                                component="span"
                               >
                                 {task.description}
                               </Typography>
+                              <br />
                               <Typography
                                 variant="caption"
                                 color="text.secondary"
+                                component="span"
                               >
-                                Due: {new Date(task.due_date).toDateString()}
+                                Due:{" "}
+                                {dayjs(task.due_date).format("MMM D, YYYY")}
                               </Typography>
-                            </Box>
+                            </>
                           }
                         />
                         <Stack direction="row" alignItems="center">
                           <IconButton
-                            aria-label="mark as incomplete"
                             onClick={() => toggleStatus(task.id, false)}
                           >
                             <Replay color="secondary" />
                           </IconButton>
                           <IconButton
-                            aria-label="delete"
                             onClick={() => deleteTask(task.id)}
                             sx={{ ml: 1 }}
                           >
@@ -296,7 +255,7 @@ export default function RemindersCard() {
                     </ListItem>
                   ))}
                 </List>
-              </Box>
+              </>
             )}
 
             {!tasks.length && !completedTasks.length && (
@@ -308,39 +267,45 @@ export default function RemindersCard() {
             )}
           </Paper>
 
+          {/* Dialog for Add/Edit */}
           <Dialog open={open} onClose={handleClose} fullWidth>
             <DialogTitle>
               {editingTask ? "Edit Reminder" : "New Reminder"}
             </DialogTitle>
             <form
               onSubmit={(e) => {
-                e.preventDefault(); // Prevent full page reload
+                e.preventDefault();
                 handleSubmit();
               }}
             >
               <DialogContent>
                 <TextField
+                  id="reminder-title"
+                  name="title"
                   margin="dense"
                   label="Title"
-                  name="title"
                   value={form.title}
                   onChange={handleChange}
                   fullWidth
                   required
                 />
                 <TextField
-                  margin="dense"
+                  id="reminder-date"
                   name="date"
+                  margin="dense"
                   type="date"
+                  label="Due Date"
+                  InputLabelProps={{ shrink: true }}
                   value={form.date}
                   onChange={handleChange}
                   fullWidth
                   required
                 />
                 <TextField
+                  id="reminder-description"
+                  name="description"
                   margin="dense"
                   label="Description"
-                  name="description"
                   value={form.description}
                   onChange={handleChange}
                   fullWidth

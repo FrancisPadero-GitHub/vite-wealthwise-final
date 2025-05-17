@@ -162,7 +162,7 @@ export default function TransactionTable() {
                   sx={{
                     p: 2,
                     backgroundColor: "background.paper",
-                   
+
                     cursor: "pointer",
                     transition: "transform 0.2s ease-in-out",
                     display: "flex",
@@ -242,9 +242,10 @@ export default function TransactionTable() {
             </IconButton>
           </Box>
 
-          <Grid container spacing={2}>
+          <Grid container spacing={2} columns={12}>
             <Grid size={6}>
               <TextField
+                id="transaction-title"
                 fullWidth
                 label="Title"
                 name="title"
@@ -256,6 +257,7 @@ export default function TransactionTable() {
             </Grid>
             <Grid size={6}>
               <TextField
+                id="transaction-amount"
                 fullWidth
                 label="Amount"
                 name="amount"
@@ -268,6 +270,7 @@ export default function TransactionTable() {
             </Grid>
             <Grid size={6}>
               <TextField
+                id="transaction-category"
                 fullWidth
                 label="Category"
                 name="category"
@@ -279,6 +282,7 @@ export default function TransactionTable() {
             </Grid>
             <Grid size={6}>
               <TextField
+                id="transaction-account"
                 fullWidth
                 select
                 label="Account"
@@ -295,6 +299,7 @@ export default function TransactionTable() {
             </Grid>
             <Grid size={6}>
               <TextField
+                id="transaction-type"
                 fullWidth
                 select
                 label="Type"
@@ -310,18 +315,21 @@ export default function TransactionTable() {
             </Grid>
             <Grid size={6}>
               <TextField
+                id="transaction-date"
                 fullWidth
                 name="date"
                 type="date"
+                label="Date"
+                InputLabelProps={{ shrink: true }}
                 value={form.date}
                 onChange={handleFormChange}
                 margin="normal"
                 required
-                placeholder="Date"
               />
             </Grid>
             <Grid size={12}>
               <TextField
+                id="transaction-description"
                 fullWidth
                 label="Description"
                 name="description"

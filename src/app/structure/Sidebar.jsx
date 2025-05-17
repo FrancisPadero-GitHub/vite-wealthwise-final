@@ -6,6 +6,7 @@ import {
   ListItemText,
   Toolbar,
   Box,
+  Tooltip,
 } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PersonIcon from "@mui/icons-material/Person";
@@ -13,6 +14,7 @@ import ReceiptIcon from "@mui/icons-material/Receipt";
 import { Link, useLocation } from "react-router-dom";
 
 const drawerWidth = 250;
+const minimizedDrawerWidth = 65;
 
 const menuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
@@ -27,13 +29,20 @@ export default function Sidebar({ open }) {
     <Drawer
       variant="persistent"
       anchor="left"
-      open={open}
+      open={true}
+      ModalProps={{
+        keepMounted: true,
+        disableAutoFocus: true,
+        disableEnforceFocus: true,
+      }}
       sx={{
-        width: drawerWidth,
+        width: open ? drawerWidth : minimizedDrawerWidth,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-          width: drawerWidth,
+          width: open ? drawerWidth : minimizedDrawerWidth,
           boxSizing: "border-box",
+          transition: "width 0.2s ease-in-out",
+          overflowX: "hidden",
         },
       }}
     >
@@ -41,15 +50,29 @@ export default function Sidebar({ open }) {
       <Box sx={{ overflow: "auto" }}>
         <List>
           {menuItems.map(({ text, icon, path }) => (
-            <ListItemButton
-              key={text}
-              component={Link}
-              to={path}
-              selected={location.pathname === path}
-            >
-              <ListItemIcon>{icon}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
+            <Tooltip title={!open ? text : ""} placement="right" key={text}>
+              <ListItemButton
+                component={Link}
+                to={path}
+                selected={location.pathname === path}
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {icon}
+                </ListItemIcon>
+                {open && <ListItemText primary={text} />}
+              </ListItemButton>
+            </Tooltip>
           ))}
         </List>
       </Box>

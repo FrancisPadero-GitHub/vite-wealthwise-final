@@ -158,7 +158,15 @@ function TransactionTable() {
         onChange={(e) => setSearchQuery(e.target.value)}
       />
 
-      <TableContainer component={Paper} sx={{ maxHeight: 300, borderRadius: 2, boxShadow: 3, overflowY: "auto" }}>
+      <TableContainer
+        component={Paper}
+        sx={{
+          maxHeight: 300,
+          borderRadius: 2,
+          boxShadow: 3,
+          overflowY: "auto",
+        }}
+      >
         <Table stickyHeader>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
@@ -192,7 +200,6 @@ function TransactionTable() {
                 hover
                 onClick={() => openEditModal(tx)}
                 sx={{
-                  
                   cursor: "pointer",
                   backgroundColor: index % 2 === 0 ? "white" : "#fafafa",
                   transition: "background-color 0.3s",
@@ -212,7 +219,7 @@ function TransactionTable() {
         </Table>
       </TableContainer>
 
-      {/* Merged Add/Edit Modal */}
+      {/* Single Modal for Add & Edit */}
       <Modal open={modalOpen} onClose={handleCloseModal}>
         <Box component="form" sx={modalStyle} onSubmit={handleSubmit}>
           <Box
@@ -229,13 +236,14 @@ function TransactionTable() {
             </IconButton>
           </Box>
 
-          <Grid container spacing={2}>
+          <Grid container spacing={2} columns={12}>
             <Grid size={6}>
               <TextField
+                id="transaction-title"
                 fullWidth
                 label="Title"
                 name="title"
-                value={form.title || ""}
+                value={form.title}
                 onChange={handleFormChange}
                 required
                 margin="normal"
@@ -243,11 +251,12 @@ function TransactionTable() {
             </Grid>
             <Grid size={6}>
               <TextField
+                id="transaction-amount"
                 fullWidth
                 label="Amount"
                 name="amount"
                 type="number"
-                value={form.amount || ""}
+                value={form.amount}
                 onChange={handleFormChange}
                 required
                 margin="normal"
@@ -255,10 +264,11 @@ function TransactionTable() {
             </Grid>
             <Grid size={6}>
               <TextField
+                id="transaction-category"
                 fullWidth
                 label="Category"
                 name="category"
-                value={form.category || ""}
+                value={form.category}
                 onChange={handleFormChange}
                 required
                 margin="normal"
@@ -266,11 +276,12 @@ function TransactionTable() {
             </Grid>
             <Grid size={6}>
               <TextField
+                id="transaction-account"
                 fullWidth
                 select
                 label="Account"
                 name="account"
-                value={form.account || ""}
+                value={form.account}
                 onChange={handleFormChange}
                 required
                 margin="normal"
@@ -282,11 +293,12 @@ function TransactionTable() {
             </Grid>
             <Grid size={6}>
               <TextField
+                id="transaction-type"
                 fullWidth
                 select
                 label="Type"
                 name="type"
-                value={form.type || ""}
+                value={form.type}
                 onChange={handleFormChange}
                 required
                 margin="normal"
@@ -297,22 +309,25 @@ function TransactionTable() {
             </Grid>
             <Grid size={6}>
               <TextField
+                id="transaction-date"
                 fullWidth
                 name="date"
                 type="date"
-                value={form.date || ""}
+                label="Date"
+                InputLabelProps={{ shrink: true }}
+                value={form.date}
                 onChange={handleFormChange}
                 margin="normal"
-                placeholder="Date"
                 required
               />
             </Grid>
             <Grid size={12}>
               <TextField
+                id="transaction-description"
                 fullWidth
                 label="Description"
                 name="description"
-                value={form.description || ""}
+                value={form.description}
                 onChange={handleFormChange}
                 margin="normal"
                 multiline

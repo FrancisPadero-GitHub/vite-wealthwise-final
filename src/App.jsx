@@ -19,9 +19,10 @@ import Transactions from "./app/components/Transactions";
 
 const queryClient = new QueryClient();
 const drawerWidth = 240;
+const minimizedDrawerWidth = 60;
 
 function Layout() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const handleToggleDrawer = () => {
     setOpen((prev) => !prev);
@@ -36,7 +37,7 @@ function Layout() {
         component="main"
         sx={{
           transition: "margin 0.2s",
-          marginLeft: open ? `${drawerWidth}px` : 0,
+          marginLeft: open ? `${drawerWidth}px` : `${minimizedDrawerWidth}px`,
           padding: 3,
           marginTop: "64px",
           minHeight: "calc(100vh - 64px - 48px)",
@@ -45,7 +46,7 @@ function Layout() {
       >
         <Outlet />
       </Box>
-      <Footer/>
+      <Footer />
     </>
   );
 }
