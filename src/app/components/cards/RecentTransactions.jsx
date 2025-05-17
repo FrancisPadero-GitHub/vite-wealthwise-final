@@ -48,76 +48,62 @@ export default function TransactionTable() {
   const { mutate: addTransaction } = useAddTransaction();
   const { mutate: editTransaction } = useEditTransaction();
   const { mutate: deleteTransaction } = useDeleteTransaction();
-  // setSearchQuery
-  const [searchQuery] = useState("");
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [addForm, setAddForm] = useState(defaultFormValues);
 
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editForm, setEditForm] = useState(defaultFormValues);
+  const [searchQuery] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [form, setForm] = useState(defaultFormValues);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
 
+  // Open modal in Add mode (no selectedTransaction)
   const handleOpenAddModal = useCallback(() => {
-    setIsAddModalOpen(true);
-    setAddForm(defaultFormValues);
+    setSelectedTransaction(null);
+    setForm(defaultFormValues);
+    setModalOpen(true);
   }, []);
 
-  const handleCloseAddModal = useCallback(() => {
-    setIsAddModalOpen(false);
-    setAddForm(defaultFormValues);
-  }, []);
-
-  const handleAddFormChange = useCallback((e) => {
-    setAddForm((prevForm) => ({
-      ...prevForm,
-      [e.target.name]: e.target.value,
-    }));
-  }, []);
-
-  const handleAddSubmit = useCallback(
-    (e) => {
-      e.preventDefault();
-      addTransaction(addForm);
-      handleCloseAddModal();
-    },
-    [addTransaction, addForm, handleCloseAddModal]
-  );
-
+  // Open modal in Edit mode with existing transaction
   const handleOpenEditModal = useCallback((transaction) => {
     setSelectedTransaction(transaction);
-    setEditForm(transaction);
-    setIsEditModalOpen(true);
+    setForm(transaction);
+    setModalOpen(true);
   }, []);
 
-  const handleCloseEditModal = useCallback(() => {
-    setIsEditModalOpen(false);
+  const handleCloseModal = useCallback(() => {
+    setModalOpen(false);
     setSelectedTransaction(null);
-    setEditForm(defaultFormValues);
+    setForm(defaultFormValues);
   }, []);
 
-  const handleEditFormChange = useCallback((e) => {
-    setEditForm((prevForm) => ({
-      ...prevForm,
-      [e.target.name]: e.target.value,
-    }));
+  const handleFormChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   }, []);
 
-  const handleEditSubmit = useCallback(
+  const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      editTransaction(editForm);
-      handleCloseEditModal();
+      if (selectedTransaction) {
+        editTransaction(form);
+      } else {
+        addTransaction(form);
+      }
+      handleCloseModal();
     },
-    [editTransaction, editForm, handleCloseEditModal]
+    [
+      selectedTransaction,
+      form,
+      addTransaction,
+      editTransaction,
+      handleCloseModal,
+    ]
   );
 
-  const handleDeleteClick = useCallback(
-    (transactionId) => {
-      deleteTransaction(transactionId);
-      handleCloseEditModal();
-    },
-    [deleteTransaction, handleCloseEditModal]
-  );
+  const handleDeleteClick = useCallback(() => {
+    if (selectedTransaction?.id) {
+      deleteTransaction(selectedTransaction.id);
+      handleCloseModal();
+    }
+  }, [selectedTransaction, deleteTransaction, handleCloseModal]);
 
   const filteredTransactions =
     transactions?.filter((tx) =>
@@ -169,10 +155,9 @@ export default function TransactionTable() {
                 <Box
                   display="flex"
                   justifyContent="space-between"
-                  alignItems="center" // center vertically
+                  alignItems="center"
                   mb={1}
                 >
-                  {/* Left Side */}
                   <Box>
                     <Typography variant="h6" gutterBottom>
                       {tx.title}
@@ -189,7 +174,6 @@ export default function TransactionTable() {
                     </Typography>
                   </Box>
 
-                  {/* Right Side */}
                   <Box
                     display="flex"
                     flexDirection="column"
@@ -209,7 +193,6 @@ export default function TransactionTable() {
                       ) : (
                         <Chip label="Expense" size="small" color="error" />
                       )}
-
                       <Typography variant="caption" color="textSecondary">
                         {tx.account}
                       </Typography>
@@ -226,28 +209,31 @@ export default function TransactionTable() {
         ))}
       </Grid>
 
-      {/* Add Transaction Modal */}
-      <Modal open={isAddModalOpen} onClose={handleCloseAddModal}>
-        <Box component="form" sx={modalStyle} onSubmit={handleAddSubmit}>
+      {/* Single Modal for Add & Edit */}
+      <Modal open={modalOpen} onClose={handleCloseModal}>
+        <Box component="form" sx={modalStyle} onSubmit={handleSubmit}>
           <Box
             display="flex"
             justifyContent="space-between"
             alignItems="center"
             mb={2}
           >
-            <Typography variant="h6">Add Transaction</Typography>
-            <IconButton aria-label="close" onClick={handleCloseAddModal}>
+            <Typography variant="h6">
+              {selectedTransaction ? "Edit Transaction" : "Add Transaction"}
+            </Typography>
+            <IconButton aria-label="close" onClick={handleCloseModal}>
               <CloseIcon />
             </IconButton>
           </Box>
+
           <Grid container spacing={2}>
             <Grid size={6}>
               <TextField
                 fullWidth
                 label="Title"
                 name="title"
-                value={addForm.title}
-                onChange={handleAddFormChange}
+                value={form.title}
+                onChange={handleFormChange}
                 required
                 margin="normal"
               />
@@ -258,8 +244,8 @@ export default function TransactionTable() {
                 label="Amount"
                 name="amount"
                 type="number"
-                value={addForm.amount}
-                onChange={handleAddFormChange}
+                value={form.amount}
+                onChange={handleFormChange}
                 required
                 margin="normal"
               />
@@ -269,8 +255,8 @@ export default function TransactionTable() {
                 fullWidth
                 label="Category"
                 name="category"
-                value={addForm.category}
-                onChange={handleAddFormChange}
+                value={form.category}
+                onChange={handleFormChange}
                 required
                 margin="normal"
               />
@@ -281,8 +267,8 @@ export default function TransactionTable() {
                 select
                 label="Account"
                 name="account"
-                value={addForm.account}
-                onChange={handleAddFormChange}
+                value={form.account}
+                onChange={handleFormChange}
                 required
                 margin="normal"
               >
@@ -297,122 +283,8 @@ export default function TransactionTable() {
                 select
                 label="Type"
                 name="type"
-                value={addForm.type}
-                onChange={handleAddFormChange}
-                required
-                margin="normal"
-              >
-                <MenuItem value="income">Income</MenuItem>
-                <MenuItem value="expense">Expense</MenuItem>
-              </TextField>
-            </Grid>
-
-            <Grid size={6}>
-              <TextField
-                fullWidth
-                name="date"
-                type="date"
-                value={addForm.date}
-                onChange={handleAddFormChange}
-                margin="normal"
-                required
-                placeholder="Date"
-              />
-            </Grid>
-            <Grid size={12}>
-              <TextField
-                fullWidth
-                label="Description"
-                name="description"
-                value={addForm.description}
-                onChange={handleAddFormChange}
-                margin="normal"
-                multiline
-                required
-                minRows={4}
-              />
-            </Grid>
-          </Grid>
-          <Grid>
-            <Button type="submit" variant="contained" sx={{ mt: 2 }} fullWidth>
-              Add
-            </Button>
-          </Grid>
-        </Box>
-      </Modal>
-
-      {/* Edit Transaction Modal */}
-      <Modal open={isEditModalOpen} onClose={handleCloseEditModal}>
-        <Box component="form" sx={modalStyle} onSubmit={handleEditSubmit}>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2}
-          >
-            <Typography variant="h6">Edit Transaction</Typography>
-            <IconButton aria-label="close" onClick={handleCloseEditModal}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <Grid container spacing={2}>
-            <Grid size={6}>
-              <TextField
-                fullWidth
-                label="Title"
-                name="title"
-                value={editForm.title || ""}
-                onChange={handleEditFormChange}
-                required
-                margin="normal"
-              />
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                fullWidth
-                label="Amount"
-                name="amount"
-                value={editForm.amount || ""}
-                onChange={handleEditFormChange}
-                required
-                margin="normal"
-              />
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                fullWidth
-                label="Category"
-                name="category"
-                value={editForm.category || ""}
-                onChange={handleEditFormChange}
-                required
-                margin="normal"
-              />
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                fullWidth
-                select
-                label="Account"
-                name="account"
-                value={editForm.account || ""}
-                onChange={handleEditFormChange}
-                required
-                margin="normal"
-              >
-                <MenuItem value="Cash">Cash</MenuItem>
-                <MenuItem value="Gcash">Gcash</MenuItem>
-                <MenuItem value="Credit">Credit</MenuItem>
-              </TextField>
-            </Grid>
-            <Grid size={6}>
-              <TextField
-                fullWidth
-                select
-                label="Type"
-                name="type"
-                value={editForm.type || ""}
-                onChange={handleEditFormChange}
+                value={form.type}
+                onChange={handleFormChange}
                 required
                 margin="normal"
               >
@@ -425,11 +297,11 @@ export default function TransactionTable() {
                 fullWidth
                 name="date"
                 type="date"
-                value={editForm.date || ""}
-                onChange={handleEditFormChange}
+                value={form.date}
+                onChange={handleFormChange}
                 margin="normal"
-                placeholder="Date"
                 required
+                placeholder="Date"
               />
             </Grid>
             <Grid size={12}>
@@ -437,8 +309,8 @@ export default function TransactionTable() {
                 fullWidth
                 label="Description"
                 name="description"
-                value={editForm.description || ""}
-                onChange={handleEditFormChange}
+                value={form.description}
+                onChange={handleFormChange}
                 margin="normal"
                 multiline
                 minRows={4}
@@ -446,19 +318,22 @@ export default function TransactionTable() {
               />
             </Grid>
           </Grid>
+
           <Grid>
             <Button type="submit" variant="contained" sx={{ mt: 2 }} fullWidth>
-              Save
+              {selectedTransaction ? "Save" : "Add"}
             </Button>
-            <Button
-              onClick={() => handleDeleteClick(selectedTransaction?.id)}
-              variant="contained"
-              color="secondary"
-              sx={{ mt: 2 }}
-              fullWidth
-            >
-              Delete
-            </Button>
+            {selectedTransaction && (
+              <Button
+                onClick={handleDeleteClick}
+                variant="contained"
+                color="secondary"
+                sx={{ mt: 2 }}
+                fullWidth
+              >
+                Delete
+              </Button>
+            )}
           </Grid>
         </Box>
       </Modal>
