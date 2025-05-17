@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../supabase";
+import RealtimeBalanceListener from "../api/realTimeBalanceListener";
 
 const AuthContext = createContext({
   user: null,
@@ -28,9 +29,9 @@ export const AuthProvider = ({ children }) => {
       }
     );
 
-
     // if (user) {
-    //   console.log("User ID logged", user);
+
+    //   console.log("User id founded: ", user);
     // } else {
     //   console.log("User ID not found");
     // }
@@ -43,6 +44,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={{ user, session, loading }}>
       {children}
+      <RealtimeBalanceListener />;
     </AuthContext.Provider>
   );
 };

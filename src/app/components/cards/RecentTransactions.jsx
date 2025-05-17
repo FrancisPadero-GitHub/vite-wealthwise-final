@@ -322,8 +322,8 @@ export default function TransactionTable() {
                 value={addForm.date}
                 onChange={handleAddFormChange}
                 margin="normal"
-                placeholder="Date"
                 required
+                placeholder="Date"
               />
             </Grid>
             <Grid size={12}>
@@ -335,8 +335,8 @@ export default function TransactionTable() {
                 onChange={handleAddFormChange}
                 margin="normal"
                 multiline
-                minRows={4}
                 required
+                minRows={4}
               />
             </Grid>
           </Grid>

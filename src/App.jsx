@@ -10,7 +10,7 @@ import SignUp from "./app/auth/SignUp";
 
 import ProtectedRoute from "./app/components/ProtectedRoutes";
 import { AuthProvider } from "./contexts/AuthProvider";
-import RealtimeBalanceListener from "./api/realTimeBalanceListener";
+
 
 import Dashboard from "./app/components/Dashboard";
 import Profile from "./app/components/Profile";
@@ -35,7 +35,7 @@ function Layout() {
       <CssBaseline />
       <Topbar onDrawerToggle={toggleDrawer} />
       <Sidebar open={open} />
-      <RealtimeBalanceListener />
+      
       <Box
         component="main"
         sx={{
