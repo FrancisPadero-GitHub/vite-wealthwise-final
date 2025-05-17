@@ -1,12 +1,5 @@
 import React, { useState, useCallback } from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Chip,
   Typography,
   CircularProgress,
@@ -143,7 +136,7 @@ export default function TransactionTable() {
   if (error) return <Typography color="error">{error.message}</Typography>;
 
   return (
-    <Box>
+    <Grid size={6}>
       <Box
         display="flex"
         justifyContent="space-between"
@@ -469,6 +462,6 @@ export default function TransactionTable() {
           </Grid>
         </Box>
       </Modal>
-    </Box>
+    </Grid>
   );
 }
