@@ -19,6 +19,7 @@ export function useDeleteTransaction() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries(["balance"]); // ✅ Re-fetch balance after adding
     },
   });
 }

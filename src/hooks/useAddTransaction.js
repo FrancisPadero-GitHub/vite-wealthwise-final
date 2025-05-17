@@ -27,6 +27,7 @@ export function useAddTransaction() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries(["balance"]); // ✅ Refresh balance after adding
     },
   });
 }

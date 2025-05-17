@@ -1,7 +1,7 @@
 import {
   Drawer,
   List,
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Toolbar,
@@ -41,8 +41,7 @@ export default function Sidebar({ open }) {
       <Box sx={{ overflow: "auto" }}>
         <List>
           {menuItems.map(({ text, icon, path }) => (
-            <ListItem
-              button
+            <ListItemButton
               key={text}
               component={Link}
               to={path}
@@ -50,7 +49,7 @@ export default function Sidebar({ open }) {
             >
               <ListItemIcon>{icon}</ListItemIcon>
               <ListItemText primary={text} />
-            </ListItem>
+            </ListItemButton>
           ))}
         </List>
       </Box>

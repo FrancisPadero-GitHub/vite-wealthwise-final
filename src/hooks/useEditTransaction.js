@@ -23,6 +23,7 @@ export function useEditTransaction() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries(["balance"]); // ✅ Re-fetch balance after adding
     },
   });
 }

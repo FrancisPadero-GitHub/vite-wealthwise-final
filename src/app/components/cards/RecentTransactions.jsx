@@ -50,7 +50,7 @@ const defaultFormValues = {
   description: "",
 };
 
-function TransactionTable() {
+export default function TransactionTable() {
   const { data: transactions, isLoading, error } = useTransactions();
   const { mutate: addTransaction } = useAddTransaction();
   const { mutate: editTransaction } = useEditTransaction();
@@ -155,15 +155,6 @@ function TransactionTable() {
           Add
         </Button>
       </Box>
-      {/* 
-      <TextField
-        label="Search transactions"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      /> */}
 
       <Grid container spacing={2}>
         {filteredTransactions.map((tx) => (
@@ -220,13 +211,11 @@ function TransactionTable() {
                       gap={1}
                     >
                       <Typography variant="subtitle1">₱ {tx.amount}</Typography>
-                      <Typography variant="body2">
-                        {tx.type === "income" ? (
-                          <Chip label="Income" size="small" color="success" />
-                        ) : (
-                          <Chip label="Expense" size="small" color="error" />
-                        )}
-                      </Typography>
+                      {tx.type === "income" ? (
+                        <Chip label="Income" size="small" color="success" />
+                      ) : (
+                        <Chip label="Expense" size="small" color="error" />
+                      )}
 
                       <Typography variant="caption" color="textSecondary">
                         {tx.account}
@@ -243,6 +232,7 @@ function TransactionTable() {
           </Grid>
         ))}
       </Grid>
+
       {/* Add Transaction Modal */}
       <Modal open={isAddModalOpen} onClose={handleCloseAddModal}>
         <Box component="form" sx={modalStyle} onSubmit={handleAddSubmit}>
@@ -258,7 +248,7 @@ function TransactionTable() {
             </IconButton>
           </Box>
           <Grid container spacing={2}>
-            <Grid item size={6}>
+            <Grid size={6}>
               <TextField
                 fullWidth
                 label="Title"
@@ -269,7 +259,7 @@ function TransactionTable() {
                 margin="normal"
               />
             </Grid>
-            <Grid item size={6}>
+            <Grid size={6}>
               <TextField
                 fullWidth
                 label="Amount"
@@ -281,7 +271,7 @@ function TransactionTable() {
                 margin="normal"
               />
             </Grid>
-            <Grid item size={6}>
+            <Grid size={6}>
               <TextField
                 fullWidth
                 label="Category"
@@ -292,7 +282,7 @@ function TransactionTable() {
                 margin="normal"
               />
             </Grid>
-            <Grid item size={6}>
+            <Grid size={6}>
               <TextField
                 fullWidth
                 select
@@ -308,7 +298,7 @@ function TransactionTable() {
                 <MenuItem value="Credit">Credit</MenuItem>
               </TextField>
             </Grid>
-            <Grid item size={6}>
+            <Grid size={6}>
               <TextField
                 fullWidth
                 select
@@ -324,7 +314,7 @@ function TransactionTable() {
               </TextField>
             </Grid>
 
-            <Grid item size={6}>
+            <Grid size={6}>
               <TextField
                 fullWidth
                 name="date"
@@ -336,7 +326,7 @@ function TransactionTable() {
                 required
               />
             </Grid>
-            <Grid item size={12}>
+            <Grid size={12}>
               <TextField
                 fullWidth
                 label="Description"
@@ -373,7 +363,7 @@ function TransactionTable() {
             </IconButton>
           </Box>
           <Grid container spacing={2}>
-            <Grid item size={6}>
+            <Grid size={6}>
               <TextField
                 fullWidth
                 label="Title"
@@ -384,7 +374,7 @@ function TransactionTable() {
                 margin="normal"
               />
             </Grid>
-            <Grid item size={6}>
+            <Grid size={6}>
               <TextField
                 fullWidth
                 label="Amount"
@@ -395,7 +385,7 @@ function TransactionTable() {
                 margin="normal"
               />
             </Grid>
-            <Grid item size={6}>
+            <Grid size={6}>
               <TextField
                 fullWidth
                 label="Category"
@@ -406,7 +396,7 @@ function TransactionTable() {
                 margin="normal"
               />
             </Grid>
-            <Grid item size={6}>
+            <Grid size={6}>
               <TextField
                 fullWidth
                 select
@@ -422,7 +412,7 @@ function TransactionTable() {
                 <MenuItem value="Credit">Credit</MenuItem>
               </TextField>
             </Grid>
-            <Grid item size={6}>
+            <Grid size={6}>
               <TextField
                 fullWidth
                 select
@@ -437,7 +427,7 @@ function TransactionTable() {
                 <MenuItem value="expense">Expense</MenuItem>
               </TextField>
             </Grid>
-            <Grid item size={6}>
+            <Grid size={6}>
               <TextField
                 fullWidth
                 name="date"
@@ -449,7 +439,7 @@ function TransactionTable() {
                 required
               />
             </Grid>
-            <Grid item size={12}>
+            <Grid size={12}>
               <TextField
                 fullWidth
                 label="Description"
@@ -482,5 +472,3 @@ function TransactionTable() {
     </Box>
   );
 }
-
-export default TransactionTable;
