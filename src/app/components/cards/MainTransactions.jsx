@@ -12,6 +12,7 @@ import {
   Button,
   Box,
   TextField,
+  useTheme,
 } from "@mui/material";
 import { useTransactions } from "../../../hooks/useTransactions";
 import { useAddTransaction } from "../../../hooks/useAddTransaction";
@@ -30,6 +31,7 @@ const defaultFormValues = {
 };
 
 function TransactionTable() {
+  const theme = useTheme();
   const [loading, setLoading] = useState(false);
 
   const { data: transactions, isLoading, error } = useTransactions();
@@ -125,14 +127,14 @@ function TransactionTable() {
         alignItems="center"
         mb={2}
       >
-        <Typography variant="h6">My Transactions</Typography>
+        <Typography variant="h6">💸 My Transactions</Typography>
         <Button variant="contained" onClick={openAddModal}>
           Add Transaction
         </Button>
       </Box>
 
       <TextField
-        label="Search transactions"
+        label="🔍 Search transactions"
         variant="outlined"
         fullWidth
         margin="normal"
@@ -143,34 +145,42 @@ function TransactionTable() {
       <TableContainer
         component={Paper}
         sx={{
-          maxHeight: 300,
+          maxHeight: 650,
           borderRadius: 2,
           boxShadow: 3,
           overflowY: "auto",
+          backgroundColor: theme.palette.background.paper,
         }}
       >
         <Table stickyHeader>
           <TableHead>
-            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-              <TableCell>
+            <TableRow
+              sx={{
+                backgroundColor:
+                  theme.palette.mode === "dark"
+                    ? "rgba(255, 255, 255, 0.05)"
+                    : "#f5f5f5",
+              }}
+            >
+              <TableCell sx={{ color: theme.palette.text.primary }}>
                 <strong>Title</strong>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ color: theme.palette.text.primary }}>
                 <strong>Amount</strong>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ color: theme.palette.text.primary }}>
                 <strong>Category</strong>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ color: theme.palette.text.primary }}>
                 <strong>Description</strong>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ color: theme.palette.text.primary }}>
                 <strong>Account</strong>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ color: theme.palette.text.primary }}>
                 <strong>Date</strong>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ color: theme.palette.text.primary }}>
                 <strong>Type</strong>
               </TableCell>
             </TableRow>
@@ -183,9 +193,22 @@ function TransactionTable() {
                 onClick={() => openEditModal(tx)}
                 sx={{
                   cursor: "pointer",
-                  backgroundColor: index % 2 === 0 ? "white" : "#fafafa",
+                  backgroundColor:
+                    index % 2 === 0
+                      ? theme.palette.background.paper
+                      : theme.palette.mode === "dark"
+                      ? "rgba(255, 255, 255, 0.05)"
+                      : "#fafafa",
                   transition: "background-color 0.3s",
-                  "&:hover": { backgroundColor: "#e0f7fa" },
+                  "&:hover": {
+                    backgroundColor:
+                      theme.palette.mode === "dark"
+                        ? "rgba(255, 255, 255, 0.1)"
+                        : "#e0f7fa",
+                  },
+                  "& td": {
+                    color: theme.palette.text.primary,
+                  },
                 }}
               >
                 <TableCell>{tx.title}</TableCell>

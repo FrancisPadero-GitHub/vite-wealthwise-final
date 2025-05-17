@@ -124,7 +124,7 @@ export default function TransactionTable() {
             alignItems="center"
             mb={2}
           >
-            <Typography variant="h6">Recent Transactions</Typography>
+            <Typography variant="h6">📊 Recent Transactions</Typography>
             <IconButton color="success" onClick={openAddModal}>
               <AddIcon />
             </IconButton>
@@ -153,7 +153,7 @@ export default function TransactionTable() {
                       gap: 1,
                       "&:hover": {
                         transform: "scale(1.01)",
-                        backgroundColor: "grey.100",
+                        backgroundColor: "action.hover",
                       },
                     }}
                   >

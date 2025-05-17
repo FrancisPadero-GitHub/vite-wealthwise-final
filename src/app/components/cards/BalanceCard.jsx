@@ -134,7 +134,7 @@ export default function BalanceCard() {
               <Typography color="error">Error loading balance</Typography>
             ) : (
               <>
-                <Typography variant="h6">₱ {amount.toFixed(2)}</Typography>
+                <Typography variant="h6">💰 ₱ {amount.toFixed(2)}</Typography>
                 <Typography
                   variant="body2"
                   sx={{

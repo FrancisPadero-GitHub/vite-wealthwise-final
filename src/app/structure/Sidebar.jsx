@@ -17,9 +17,9 @@ const drawerWidth = 250;
 const minimizedDrawerWidth = 65;
 
 const menuItems = [
-  { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
-  { text: "Transactions", icon: <ReceiptIcon />, path: "/transactions" },
-  { text: "Profile", icon: <PersonIcon />, path: "/profile" },
+  { text: "📊 Dashboard", icon: <DashboardIcon />, path: "/" },
+  { text: "💸 Transactions", icon: <ReceiptIcon />, path: "/transactions" },
+  { text: "👤 Profile", icon: <PersonIcon />, path: "/profile" },
 ];
 
 export default function Sidebar({ open }) {
@@ -47,7 +47,7 @@ export default function Sidebar({ open }) {
       }}
     >
       <Toolbar />
-      <Box sx={{ overflow: "auto" }}>
+      <Box sx={{ overflowX: "hidden" }}>
         <List>
           {menuItems.map(({ text, icon, path }) => (
             <Tooltip title={!open ? text : ""} placement="right" key={text}>

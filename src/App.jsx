@@ -1,12 +1,12 @@
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
-import { CssBaseline, Box, ThemeProvider } from "@mui/material";
-import theme from "./theme";
+import { Box } from "@mui/material";
 
 import Footer from "./app/structure/Footer";
 import Sidebar from "./app/structure/Sidebar";
 import Topbar from "./app/structure/Topbar";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 import SignIn from "./app/auth/SignIn";
 import SignUp from "./app/auth/SignUp";
@@ -31,7 +31,6 @@ function Layout() {
 
   return (
     <>
-      <CssBaseline />
       <Topbar onDrawerToggle={handleToggleDrawer} />
       <Sidebar open={open} />
       <Box
@@ -42,7 +41,7 @@ function Layout() {
           padding: 3,
           marginTop: "64px",
           minHeight: "calc(100vh - 64px - 48px)",
-          backgroundColor: "#f5f5f7",
+          backgroundColor: (theme) => theme.palette.background.default,
         }}
       >
         <Outlet />
@@ -78,16 +77,13 @@ function App() {
   ]);
 
   return (
-    <>
-      <CssBaseline />
-      <ThemeProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <RouterProvider router={router} />
-          </AuthProvider>
-        </QueryClientProvider>
-      </ThemeProvider>
-    </>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 

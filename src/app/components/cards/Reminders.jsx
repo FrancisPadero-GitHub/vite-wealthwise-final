@@ -201,7 +201,7 @@ export default function RemindersCard() {
               <>
                 <Box px={2} py={1} display="flex" justifyContent="center">
                   <Typography variant="overline" color="text.secondary">
-                    ✔️ Completed Tasks
+                    ✅ Completed Tasks
                   </Typography>
                 </Box>
                 <List sx={{ maxHeight: 650, overflowY: "auto", pr: 1 }}>

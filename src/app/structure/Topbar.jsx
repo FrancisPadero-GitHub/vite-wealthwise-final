@@ -9,12 +9,16 @@ import {
   Box,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase";
+import { useTheme } from "../../contexts/ThemeContext";
 
 export default function Topbar({ onDrawerToggle }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
+  const { toggleColorMode } = useTheme();
 
   const handleSignOut = async () => {
     setIsLoggingOut(true);
@@ -50,16 +54,23 @@ export default function Topbar({ onDrawerToggle }) {
           </IconButton>
         </Box>
 
-        <Button
-          color="inherit"
-          onClick={handleSignOut}
-          disabled={isLoggingOut}
-          startIcon={
-            isLoggingOut ? <CircularProgress color="inherit" size={18} /> : null
-          }
-        >
-          {isLoggingOut ? "Logging out..." : "Logout"}
-        </Button>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <IconButton color="inherit" onClick={toggleColorMode}>
+            <Brightness4Icon />
+          </IconButton>
+          <Button
+            color="inherit"
+            onClick={handleSignOut}
+            disabled={isLoggingOut}
+            startIcon={
+              isLoggingOut ? (
+                <CircularProgress color="inherit" size={18} />
+              ) : null
+            }
+          >
+            {isLoggingOut ? "Logging out..." : "Logout"}
+          </Button>
+        </Box>
       </Toolbar>
     </AppBar>
   );

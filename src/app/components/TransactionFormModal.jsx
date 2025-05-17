@@ -48,7 +48,7 @@ export default function TransactionFormModal({
           mb={2}
         >
           <Typography variant="h6">
-            {selectedTransaction ? "Edit Transaction" : "Add Transaction"}
+            {selectedTransaction ? "✏️ Edit Transaction" : "➕ Add Transaction"}
           </Typography>
           <IconButton aria-label="close" onClick={onClose}>
             <CloseIcon />
@@ -60,7 +60,7 @@ export default function TransactionFormModal({
             <TextField
               id="transaction-title"
               fullWidth
-              label="Title"
+              label="📝 Title"
               name="title"
               value={form.title}
               onChange={onFormChange}
@@ -72,7 +72,7 @@ export default function TransactionFormModal({
             <TextField
               id="transaction-amount"
               fullWidth
-              label="Amount"
+              label="💰 Amount"
               name="amount"
               type="number"
               value={form.amount}
@@ -85,7 +85,7 @@ export default function TransactionFormModal({
             <TextField
               id="transaction-category"
               fullWidth
-              label="Category"
+              label="🏷️ Category"
               name="category"
               value={form.category}
               onChange={onFormChange}
@@ -98,7 +98,7 @@ export default function TransactionFormModal({
               id="transaction-account"
               fullWidth
               select
-              label="Account"
+              label="💳 Account"
               name="account"
               value={form.account}
               onChange={onFormChange}
@@ -132,7 +132,7 @@ export default function TransactionFormModal({
               fullWidth
               name="date"
               type="date"
-              label="Date"
+              label="📅 Date"
               InputLabelProps={{ shrink: true }}
               value={form.date}
               onChange={onFormChange}
@@ -144,7 +144,7 @@ export default function TransactionFormModal({
             <TextField
               id="transaction-description"
               fullWidth
-              label="Description"
+              label="📋 Description"
               name="description"
               value={form.description}
               onChange={onFormChange}

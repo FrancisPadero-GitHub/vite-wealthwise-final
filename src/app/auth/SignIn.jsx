@@ -51,9 +51,15 @@ export default function Login() {
       borderRadius={2}
       component="form"
       onSubmit={handleSubmit}
+      sx={{
+        bgcolor: "background.paper",
+        "& .MuiTextField-root": {
+          bgcolor: "background.paper",
+        },
+      }}
     >
       <Typography variant="h5" mb={3} align="center">
-        Login
+        🔐 Login
       </Typography>
 
       {errorMsg && (
@@ -63,7 +69,7 @@ export default function Login() {
       )}
 
       <TextField
-        label="Email"
+        label="📧 Email"
         type="email"
         fullWidth
         required
@@ -74,7 +80,7 @@ export default function Login() {
       />
 
       <TextField
-        label="Password"
+        label="🔑 Password"
         type={showPassword ? "text" : "password"}
         fullWidth
         required
@@ -108,7 +114,7 @@ export default function Login() {
           size="large"
           startIcon={loading ? <CircularProgress size={20} /> : null}
         >
-          {loading ? "Logging in..." : "Login"}
+          {loading ? "Logging in..." : "Login 🔑"}
         </Button>
       </Box>
 
@@ -121,7 +127,7 @@ export default function Login() {
             size="small"
             sx={{ textTransform: "none", padding: 0 }}
           >
-            Create an account
+            Create an account ✨
           </Button>
         </Typography>
       </Box>

@@ -48,7 +48,7 @@ export default function Register() {
       options: {
         data: {
           full_name: `${firstname} ${lastname}`,
-          avatar_url: `https://ui-avatars.com/api/?name=${firstname}+${lastname}`,
+          avatar_url: "https://static.wikia.nocookie.net/gensin-impact/images/2/2d/Character_Kaedehara_Kazuha_Thumb.png",
         },
       },
     });
@@ -77,9 +77,15 @@ export default function Register() {
       borderRadius={2}
       component="form"
       onSubmit={handleRegistration}
+      sx={{
+        bgcolor: "background.paper",
+        "& .MuiTextField-root": {
+          bgcolor: "background.paper",
+        },
+      }}
     >
       <Typography variant="h5" mb={3} align="center">
-        Create Account
+        ✨ Create Account
       </Typography>
 
       {errorMsg && (
@@ -94,7 +100,7 @@ export default function Register() {
       )}
 
       <TextField
-        label="First Name"
+        label="👤 First Name"
         fullWidth
         required
         value={firstname}
@@ -103,7 +109,7 @@ export default function Register() {
         disabled={loading}
       />
       <TextField
-        label="Last Name"
+        label="👤 Last Name"
         fullWidth
         required
         value={lastname}
@@ -112,7 +118,7 @@ export default function Register() {
         disabled={loading}
       />
       <TextField
-        label="Email"
+        label="📧 Email"
         type="email"
         fullWidth
         required
@@ -122,7 +128,7 @@ export default function Register() {
         disabled={loading}
       />
       <TextField
-        label="Password"
+        label="🔑 Password"
         type={showPassword ? "text" : "password"}
         fullWidth
         required
@@ -178,7 +184,7 @@ export default function Register() {
           size="large"
           startIcon={loading ? <CircularProgress size={20} /> : null}
         >
-          {loading ? "Creating..." : "Register"}
+          {loading ? "Creating..." : "Register ✨"}
         </Button>
       </Box>
 
@@ -191,7 +197,7 @@ export default function Register() {
             size="small"
             sx={{ textTransform: "none", padding: 0 }}
           >
-            Login
+            Login 🔐
           </Button>
         </Typography>
       </Box>
