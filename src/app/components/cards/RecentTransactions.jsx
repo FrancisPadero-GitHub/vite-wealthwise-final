@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import {
   Chip,
+  Paper,
   Typography,
   CircularProgress,
   Button,
@@ -42,6 +43,8 @@ const defaultFormValues = {
   date: "",
   description: "",
 };
+
+const fixedHeight = 800; // Adjust as needed
 
 export default function TransactionTable() {
   const [loading, setLoading] = useState(false);
@@ -145,56 +148,60 @@ export default function TransactionTable() {
         </Button>
       </Box>
 
-      <Grid container spacing={2}>
-        {filteredTransactions.map((tx) => (
-          <Grid size={12} key={tx.id}>
-            <Card
-              onClick={() => handleOpenEditModal(tx)}
-              sx={{
-                borderRadius: 2,
-                boxShadow: 3,
-                cursor: "pointer",
-                transition: "transform 0.2s ease-in-out",
-                "&:hover": {
-                  transform: "scale(1.02)",
-                  backgroundColor: "#e0f7fa",
-                },
-              }}
-            >
-              <CardContent>
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  mb={1}
-                >
-                  <Box>
-                    <Typography variant="h6" gutterBottom>
-                      {tx.title}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      gutterBottom
-                    >
-                      {tx.category}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      {tx.description}
-                    </Typography>
-                  </Box>
-
+      <Paper
+        sx={{
+          maxHeight: fixedHeight,
+          overflowY: "auto",
+          borderRadius: 2,
+          boxShadow: 2,
+          pt: 2,
+          paddingX: 2, // Add some padding around the grid
+        }}
+      >
+        <Grid>
+          {filteredTransactions.map((tx) => (
+            <Grid size={12} gap={0.5} key={tx.id}>
+              <Card
+                onClick={() => handleOpenEditModal(tx)}
+                sx={{
+                  borderRadius: 2,
+                  boxShadow: 3,
+                  marginY: 2,
+                  cursor: "pointer",
+                  transition: "transform 0.2s ease-in-out",
+                  "&:hover": {
+                    transform: "scale(1.02)",
+                  },
+                }}
+              >
+                <CardContent>
                   <Box
                     display="flex"
-                    flexDirection="column"
-                    alignItems="flex-end"
-                    width="50%"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={1}
                   >
+                    <Box flexGrow={1}>
+                      <Typography variant="h6" gutterBottom>
+                        {tx.title}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        gutterBottom
+                      >
+                        {tx.category}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {tx.description}
+                      </Typography>
+                    </Box>
+
                     <Box
                       display="flex"
                       flexDirection="column"
-                      justifyContent="center"
-                      alignItems="center"
+                      alignItems="flex-end"
+                      width="auto" // Adjust width as needed
                       gap={1}
                     >
                       <Typography variant="subtitle1">₱ {tx.amount}</Typography>
@@ -208,16 +215,16 @@ export default function TransactionTable() {
                       </Typography>
                     </Box>
                   </Box>
-                </Box>
 
-                <Typography variant="caption" color="textSecondary">
-                  {tx.date}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+                  <Typography variant="caption" color="textSecondary">
+                    {tx.date}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Paper>
 
       {/* Single Modal for Add & Edit */}
       <Modal open={modalOpen} onClose={handleCloseModal}>

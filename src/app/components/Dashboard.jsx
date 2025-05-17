@@ -6,12 +6,10 @@ export default function Dashboard() {
   return (
     <Box>
       <BalanceCard />
-      <Box sx={{ mt: 4 }}>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{mt: 4}}>
           <TransactionsTable />
           <Reminders />
         </Grid>
-      </Box>
     </Box>
   );
 }

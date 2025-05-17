@@ -1,10 +1,13 @@
 import { useState } from "react";
 import {
   Card,
+  Paper,
+  Stack,
+  Box,
+  List,
   CardContent,
   Typography,
   IconButton,
-  List,
   ListItem,
   ListItemText,
   Grid,
@@ -25,6 +28,8 @@ import {
   Replay,
 } from "@mui/icons-material";
 import { useReminders } from "../../../hooks/useReminders";
+
+const fixedHeight = 800; // You can adjust this value
 
 export default function RemindersCard() {
   const {
@@ -103,80 +108,197 @@ export default function RemindersCard() {
             </IconButton>
           </div>
 
-          <List>
-            {tasks.length ? (
-              tasks.map((task) => (
-                <ListItem
-                  key={task.id}
-                  alignItems="flex-start"
-                  secondaryAction={
-                    <>
-                      <IconButton onClick={() => toggleStatus(task.id, true)}>
-                        <CheckCircleOutline color="success" />
-                      </IconButton>
-                      <IconButton onClick={() => handleOpen(task)}>
-                        <EditOutlined color="primary" />
-                      </IconButton>
-                      <IconButton onClick={() => deleteTask(task.id)}>
-                        <DeleteOutline color="error" />
-                      </IconButton>
-                    </>
-                  }
+          <Paper
+            elevation={2}
+            sx={{ borderRadius: 2, maxHeight: fixedHeight, overflow: "hidden" }}
+          >
+            {tasks.length > 0 && (
+              <Box>
+                <Box px={2} py={1} display="flex" justifyContent="center">
+                  <Typography variant="overline" color="text.secondary">
+                    ⏳ Pending Tasks
+                  </Typography>
+                </Box>
+                <List
+                  sx={{
+                    maxHeight: fixedHeight,
+                    overflowY: "auto",
+                    overflowX: "hidden",
+                    pr: 1, // Prevent vertical scrollbar from overlapping content
+                  }}
                 >
-                  <ListItemText
-                    primary={task.title}
-                    secondary={
-                      <>
-                        {task.description}
-                        <br />
-                        <small>{new Date(task.due_date).toDateString()}</small>
-                      </>
-                    }
-                  />
-                </ListItem>
-              ))
-            ) : (
-              <Typography align="center" color="text.secondary">
-                Click + to add a note
-              </Typography>
+                  {tasks.map((task) => (
+                    <ListItem
+                      key={task.id}
+                      alignItems="center"
+                      disableGutters
+                      sx={{ padding: 0 }}
+                    >
+                      <Box
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: 2,
+                          transition:
+                            "transform 0.2s ease-in-out, background-color 0.2s",
+                          "&:hover": {
+                            transform: "scale(1.01)",
+                            backgroundColor: "action.hover",
+                          },
+                          overflowX: "hidden",
+                        }}
+                      >
+                        <ListItemText
+                          primary={task.title}
+                          secondary={
+                            <Box
+                              display="flex"
+                              flexDirection="column"
+                              gap={0.5}
+                            >
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                {task.description}
+                              </Typography>
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                              >
+                                Due: {new Date(task.due_date).toDateString()}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                        <Stack direction="row" alignItems="center">
+                          <IconButton
+                            aria-label="mark as complete"
+                            onClick={() => toggleStatus(task.id, true)}
+                          >
+                            <CheckCircleOutline color="success" />
+                          </IconButton>
+                          <IconButton
+                            aria-label="edit"
+                            onClick={() => handleOpen(task)}
+                            sx={{ ml: 1 }}
+                          >
+                            <EditOutlined color="primary" />
+                          </IconButton>
+                          <IconButton
+                            aria-label="delete"
+                            onClick={() => deleteTask(task.id)}
+                            sx={{ ml: 1 }}
+                          >
+                            <DeleteOutline color="error" />
+                          </IconButton>
+                        </Stack>
+                      </Box>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
             )}
+
+            {tasks.length > 0 && completedTasks.length > 0 && <Divider />}
+
             {completedTasks.length > 0 && (
-              <>
-                <Divider textAlign="center">✔️ Completed Tasks</Divider>
-                {completedTasks.map((task) => (
-                  <ListItem
-                    key={task.id}
-                    style={{ textDecoration: "line-through", color: "#999" }}
-                    secondaryAction={
-                      <>
-                        <IconButton
-                          onClick={() => toggleStatus(task.id, false)}
-                        >
-                          <Replay color="secondary" />
-                        </IconButton>
-                        <IconButton onClick={() => deleteTask(task.id)}>
-                          <DeleteOutline color="error" />
-                        </IconButton>
-                      </>
-                    }
-                  >
-                    <ListItemText
-                      primary={task.title}
-                      secondary={
-                        <>
-                          {task.description}
-                          <br />
-                          <small>
-                            {new Date(task.due_date).toDateString()}
-                          </small>
-                        </>
-                      }
-                    />
-                  </ListItem>
-                ))}
-              </>
+              <Box>
+                <Box px={2} py={1} display="flex" justifyContent="center">
+                  <Typography variant="overline" color="text.secondary">
+                    ✔️ Completed Tasks
+                  </Typography>
+                </Box>
+                <List
+                  sx={{
+                    maxHeight: fixedHeight,
+                    overflowY: "auto",
+                    overflowX: "hidden",
+                    pr: 1,
+                  }}
+                >
+                  {completedTasks.map((task) => (
+                    <ListItem
+                      key={task.id}
+                      alignItems="center"
+                      disableGutters
+                      sx={{
+                        padding: 0,
+                        textDecoration: "line-through",
+                        color: "#999",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: 2,
+                          transition:
+                            "transform 0.2s ease-in-out, background-color 0.2s",
+                          "&:hover": {
+                            transform: "scale(1.01)",
+                            backgroundColor: "action.hover",
+                          },
+                          overflowX: "hidden",
+                        }}
+                      >
+                        <ListItemText
+                          primary={task.title}
+                          secondary={
+                            <Box
+                              display="flex"
+                              flexDirection="column"
+                              gap={0.5}
+                            >
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                {task.description}
+                              </Typography>
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                              >
+                                Due: {new Date(task.due_date).toDateString()}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                        <Stack direction="row" alignItems="center">
+                          <IconButton
+                            aria-label="mark as incomplete"
+                            onClick={() => toggleStatus(task.id, false)}
+                          >
+                            <Replay color="secondary" />
+                          </IconButton>
+                          <IconButton
+                            aria-label="delete"
+                            onClick={() => deleteTask(task.id)}
+                            sx={{ ml: 1 }}
+                          >
+                            <DeleteOutline color="error" />
+                          </IconButton>
+                        </Stack>
+                      </Box>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
             )}
-          </List>
+
+            {!tasks.length && !completedTasks.length && (
+              <Box py={3} textAlign="center">
+                <Typography color="text.secondary">
+                  Click + to add a note
+                </Typography>
+              </Box>
+            )}
+          </Paper>
 
           <Dialog open={open} onClose={handleClose} fullWidth>
             <DialogTitle>

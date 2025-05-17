@@ -5,28 +5,39 @@ html {
   padding: 0;
   height: 100%;
   min-width: 320px;
-  /* Use full viewport height */
   min-height: 100vh;
-  /* Use a font color and background that will match your design */
-  color: #213547;
-  background-color: #f4f4f4f4;
-  /* Use a font stack you prefer */
+
+  /* Dark mode colors */
+  color: #e0e0e0;
+  background-color: #121212;
+
   font-family: "Roboto", sans-serif;
-  /* Prevent horizontal overflow caused by fixed sidebar */
+
   overflow-x: hidden;
 }
 
 /* Light mode overrides */
 @media (prefers-color-scheme: light) {
+  body,
+  html {
+    color: #213547;
+    background-color: #f4f4f4;
+  }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }
+
+  footer {
+    background-color: #f0f0f0;
+  }
 }
 
-/* Main wrapper/container styles if needed */
+/* Main wrapper/container styles */
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -36,14 +47,15 @@ html {
 /* Main content area */
 main {
   flex-grow: 1;
-  padding: 24px; /* consistent padding */
-  margin-left: 240px; /* push content right to clear sidebar */
-  margin-top: 64px; /* push content down to clear fixed topbar */
+  padding: 24px;
+  margin-left: 240px;
+  margin-top: 64px;
 }
 
-/* You can add footer styles here */
+/* Footer (dark mode) */
 footer {
   padding: 16px;
-  background-color: #f0f0f0;
+  background-color: #1e1e1e;
   text-align: center;
+  color: #aaaaaa;
 }
