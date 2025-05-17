@@ -43,13 +43,25 @@ export default function RemindersCard() {
 
   const handleOpen = (task = null) => {
     setEditingTask(task);
-    setForm(
-      task || {
+
+    if (task) {
+      const formattedDate = task.due_date
+        ? new Date(task.due_date).toISOString().split("T")[0]
+        : "";
+
+      setForm({
+        title: task.title || "",
+        description: task.description || "",
+        date: formattedDate,
+      });
+    } else {
+      setForm({
         title: "",
         description: "",
         date: "",
-      }
-    );
+      });
+    }
+
     setOpen(true);
   };
 
@@ -117,9 +129,7 @@ export default function RemindersCard() {
                       <>
                         {task.description}
                         <br />
-                        <small>
-                          {new Date(task.created_at).toDateString()}
-                        </small>
+                        <small>{new Date(task.due_date).toDateString()}</small>
                       </>
                     }
                   />
@@ -157,7 +167,7 @@ export default function RemindersCard() {
                           {task.description}
                           <br />
                           <small>
-                            {new Date(task.created_at).toDateString()}
+                            {new Date(task.due_date).toDateString()}
                           </small>
                         </>
                       }
