@@ -201,7 +201,7 @@ export default function TransactionFormModal({
               id="transaction-type"
               fullWidth
               select
-              label="Type"
+              label="💳 Type"
               name="type"
               value={form.type}
               onChange={onFormChange}
