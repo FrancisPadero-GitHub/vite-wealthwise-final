@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase";
-
+// Fetches all transactions and calculate totals
 export function useTransactions() {
   return useQuery({
     queryKey: ["transactions"],

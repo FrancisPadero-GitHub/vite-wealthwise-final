@@ -11,6 +11,9 @@ import {
   Avatar,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase";
 import { useProfile } from "../../hooks/useProfile";
@@ -47,7 +50,7 @@ export default function Topbar({ onDrawerToggle }) {
 
   return (
     <>
-      <AppBar 
+      <AppBar
         position="fixed"
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
@@ -59,7 +62,12 @@ export default function Topbar({ onDrawerToggle }) {
             <img
               src={wealthwise}
               alt="WealthWise"
-              style={{ width: "40px", height: "40px", marginRight: "10px", marginBottom: "10px" }}
+              style={{
+                width: "40px",
+                height: "40px",
+                marginRight: "10px",
+                marginBottom: "10px",
+              }}
             />
             <Typography
               variant="h1"
@@ -67,7 +75,6 @@ export default function Topbar({ onDrawerToggle }) {
               noWrap
               sx={{ mr: 5, fontSize: "1.5rem", fontWeight: "bold" }}
               color="primary"
-              
             >
               WealthWise
             </Typography>
@@ -124,6 +131,7 @@ export default function Topbar({ onDrawerToggle }) {
                   setIsSettingsOpen(true);
                 }}
               >
+                <SettingsOutlinedIcon sx={{ mr: 1 }} />
                 Settings
               </MenuItem>
               <MenuItem onClick={handleSignOut} disabled={isLoggingOut}>
@@ -133,7 +141,10 @@ export default function Topbar({ onDrawerToggle }) {
                     Logging out...
                   </Box>
                 ) : (
-                  "Logout"
+                  <>
+                    <LogoutOutlinedIcon sx={{ mr: 1 }} />
+                    Logout
+                  </>
                 )}
               </MenuItem>
             </Menu>

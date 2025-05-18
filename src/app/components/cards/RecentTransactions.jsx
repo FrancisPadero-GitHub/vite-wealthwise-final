@@ -104,7 +104,6 @@ export default function TransactionTable() {
         tx.title,
         tx.category,
         tx.description,
-        tx.account,
         tx.date,
         tx.type,
         tx.amount.toString(),
@@ -185,9 +184,7 @@ export default function TransactionTable() {
                           size="small"
                           color={tx.type === "income" ? "success" : "error"}
                         />
-                        <Typography variant="caption" color="textSecondary">
-                          {tx.account}
-                        </Typography>
+                        
                       </Box>
                     </Box>
 

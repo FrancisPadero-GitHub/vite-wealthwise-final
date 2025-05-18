@@ -29,17 +29,10 @@ export const AuthProvider = ({ children }) => {
       }
     );
 
-    // if (user) {
-
-    //   console.log("User id founded: ", user);
-    // } else {
-    //   console.log("User ID not found");
-    // }
-
     return () => {
       listener.subscription.unsubscribe();
     };
-  }, [user]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, session, loading }}>

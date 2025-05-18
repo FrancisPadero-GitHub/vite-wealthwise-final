@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 
 import { useBalance } from "../../../hooks/useBalance";
 import { useUpdateBalance } from "../../../hooks/useUpdateBalance"; // Import your mutation hook
@@ -114,18 +114,18 @@ export default function BalanceCard() {
         <CardContent sx={{ display: "flex", alignItems: "center" }}>
           <Box
             sx={{
-              bgcolor: "#1976d2",
+              bgcolor: "#f6f6fe",
               borderRadius: "50%",
               width: 56,
               height: 56,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "white",
+              color: "#4154f1",
               mr: 2,
             }}
           >
-            <AccountBalanceWalletIcon fontSize="large" />
+            <AccountBalanceWalletOutlinedIcon fontSize="large" />
           </Box>
           <Box>
             {isLoading ? (

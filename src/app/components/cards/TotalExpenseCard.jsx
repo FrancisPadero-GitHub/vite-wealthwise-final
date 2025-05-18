@@ -8,7 +8,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import TrendingDownIcon from "@mui/icons-material/TrendingDown";
+import CreditCardOffOutlinedIcon from "@mui/icons-material/CreditCardOffOutlined";
 import { useTransactionTotals } from "../../../hooks/useTransactions";
 
 function TotalExpenseCard() {
@@ -27,18 +27,18 @@ function TotalExpenseCard() {
       <CardContent sx={{ display: "flex", alignItems: "center" }}>
         <Box
           sx={{
-            bgcolor: "#d32f2f",
+            bgcolor: "#ffecdf",
             borderRadius: "50%",
             width: 56,
             height: 56,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "white",
+            color: "#ff771d",
             mr: 2,
           }}
         >
-          <TrendingDownIcon fontSize="large" />
+          <CreditCardOffOutlinedIcon fontSize="large" />
         </Box>
         <Box>
           {isLoading ? (
