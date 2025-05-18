@@ -35,7 +35,8 @@ export default function SettingsModal({ open, onClose }) {
             <Typography variant="subtitle1" gutterBottom>
               <strong>Username:</strong> {profile?.username}
             </Typography>
-            {/* Add more profile fields as needed */}
+
+            <Typography>Change Password will be added here</Typography>
           </Box>
         )}
       </DialogContent>

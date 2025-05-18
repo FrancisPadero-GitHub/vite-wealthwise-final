@@ -115,7 +115,7 @@ function IncomeTable() {
   if (error) return <Typography color="error">{error.message}</Typography>;
 
   return (
-    <Box sx={{ gap: 2, pt: 2 }}>
+    <Box sx={{ gap: 2 }}>
       <Paper
         sx={{
           maxHeight: 650,
