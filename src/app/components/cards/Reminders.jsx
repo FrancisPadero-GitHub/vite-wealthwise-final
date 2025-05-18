@@ -103,13 +103,13 @@ export default function RemindersCard() {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            mb={2}
+            mb={1}
           >
             <Box display="flex" alignItems="center">
               <img
                 src={reminders}
                 alt="Reminders"
-                style={{ width: "40px", height: "40px", marginRight: "10px" }}
+                style={{ width: "30px", height: "30px", marginRight: "10px" }}
               />
               <Typography variant="h6" fontWeight="bold">
                 Reminders

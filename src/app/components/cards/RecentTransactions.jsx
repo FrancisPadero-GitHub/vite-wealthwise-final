@@ -117,40 +117,44 @@ export default function TransactionTable() {
   return (
     <>
       <Card elevation={2}>
-        <CardContent>
+        <CardContent sx={{ p: 2 }}>
           <Box
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            mb={2}
+            mb={1}
           >
-            <Typography variant="h6">📊 Recent Transactions</Typography>
+            <Typography variant="h6" fontWeight="bold">
+              📊 Recent Transactions
+            </Typography>
             <IconButton color="success" onClick={openAddModal}>
               <AddIcon />
             </IconButton>
           </Box>
+
           <Paper
             sx={{
               maxHeight: 650,
               overflowY: "auto",
               borderRadius: 2,
               boxShadow: 2,
-              p: 2,
+              p: 1.5,
             }}
           >
-            <Box display="flex" flexDirection="column" gap={1}>
+            <Box display="flex" flexDirection="column" gap={0.5}>
               {filteredTransactions.map((tx, index) => (
                 <React.Fragment key={tx.id}>
                   <Box
                     onClick={() => openEditModal(tx)}
                     sx={{
-                      p: 2,
+                      p: 1.5,
                       backgroundColor: "background.paper",
                       cursor: "pointer",
                       transition: "transform 0.2s ease-in-out",
                       display: "flex",
                       flexDirection: "column",
-                      gap: 1,
+                      justifyContent: "center",
+                      gap: 0.5,
                       "&:hover": {
                         transform: "scale(1.01)",
                         backgroundColor: "action.hover",
@@ -163,39 +167,30 @@ export default function TransactionTable() {
                       alignItems="center"
                     >
                       <Box flexGrow={1}>
-                        <Typography variant="h6" gutterBottom>
-                          {tx.title}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                          gutterBottom
-                        >
-                          {tx.category}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                          {tx.description}
+                        <Typography variant="h6">{tx.title}</Typography>
+                        <Typography variant="caption" color="textSecondary">
+                          {tx.category} • {tx.description}
                         </Typography>
                       </Box>
+
                       <Box
                         display="flex"
                         flexDirection="column"
                         alignItems="flex-end"
-                        gap={1}
+                        gap={0.5}
                       >
-                        <Typography variant="subtitle1">
-                          ₱ {tx.amount}
-                        </Typography>
-                        {tx.type === "income" ? (
-                          <Chip label="Income" size="small" color="success" />
-                        ) : (
-                          <Chip label="Expense" size="small" color="error" />
-                        )}
+                        <Typography variant="body1">₱ {tx.amount}</Typography>
+                        <Chip
+                          label={tx.type === "income" ? "Income" : "Expense"}
+                          size="small"
+                          color={tx.type === "income" ? "success" : "error"}
+                        />
                         <Typography variant="caption" color="textSecondary">
                           {tx.account}
                         </Typography>
                       </Box>
                     </Box>
+
                     <Typography
                       variant="caption"
                       color="textSecondary"
@@ -204,6 +199,7 @@ export default function TransactionTable() {
                       {tx.date}
                     </Typography>
                   </Box>
+
                   {index < filteredTransactions.length - 1 && <Divider />}
                 </React.Fragment>
               ))}

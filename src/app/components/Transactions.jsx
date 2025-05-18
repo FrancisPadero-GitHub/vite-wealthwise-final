@@ -30,7 +30,10 @@ export default function Transactions() {
         </Typography>
       </Breadcrumbs>
 
-      <Grid container spacing={2}>
+      <Grid container
+        columnSpacing={{ xs: 2, sm: 2, md: 3, lg: 3, xl: 3 }}
+        rowSpacing={{ xs: 2, sm: 2, md: 3, lg: 3, xl: 3 }}
+      >
         <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
           <Expenses />
         </Grid>
