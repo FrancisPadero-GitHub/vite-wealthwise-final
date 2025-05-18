@@ -114,7 +114,7 @@ export default function BalanceCard() {
         <CardContent sx={{ display: "flex", alignItems: "center" }}>
           <Box
             sx={{
-              bgcolor: "primary.main",
+              bgcolor: "#1976d2",
               borderRadius: "50%",
               width: 56,
               height: 56,
@@ -139,7 +139,7 @@ export default function BalanceCard() {
                   variant="body2"
                   sx={{
                     fontWeight: "bold",
-                    color: amount >= 0 ? "success.main" : "error.main",
+                    color: amount >= 0 ? "#2e7d32" : "#d32f2f",
                   }}
                 >
                   {status}

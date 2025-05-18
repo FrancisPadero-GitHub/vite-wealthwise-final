@@ -48,7 +48,7 @@ export default function Register() {
       options: {
         data: {
           full_name: `${firstname} ${lastname}`,
-          avatar_url: "https://static.wikia.nocookie.net/gensin-impact/images/2/2d/Character_Kaedehara_Kazuha_Thumb.png",
+          avatar_url: " ",
         },
       },
     });
@@ -78,9 +78,9 @@ export default function Register() {
       component="form"
       onSubmit={handleRegistration}
       sx={{
-        bgcolor: "background.paper",
+        bgcolor: "#ffffff",
         "& .MuiTextField-root": {
-          bgcolor: "background.paper",
+          bgcolor: "#ffffff",
         },
       }}
     >

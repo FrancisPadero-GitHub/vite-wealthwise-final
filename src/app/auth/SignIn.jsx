@@ -52,9 +52,9 @@ export default function Login() {
       component="form"
       onSubmit={handleSubmit}
       sx={{
-        bgcolor: "background.paper",
+        bgcolor: "#ffffff",
         "& .MuiTextField-root": {
-          bgcolor: "background.paper",
+          bgcolor: "#ffffff",
         },
       }}
     >

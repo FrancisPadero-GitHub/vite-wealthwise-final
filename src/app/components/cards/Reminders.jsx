@@ -142,7 +142,7 @@ export default function RemindersCard() {
                           transition: "transform 0.2s, background-color 0.2s",
                           "&:hover": {
                             transform: "scale(1.01)",
-                            backgroundColor: "action.hover",
+                            backgroundColor: "rgba(0, 0, 0, 0.04)",
                           },
                         }}
                       >
@@ -256,7 +256,7 @@ export default function RemindersCard() {
                           <IconButton
                             onClick={() => toggleStatus(task.id, false)}
                           >
-                            <Replay color="secondary" />
+                            <Replay color="action" />
                           </IconButton>
                           <IconButton
                             onClick={() => deleteTask(task.id)}

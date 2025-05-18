@@ -17,9 +17,8 @@ const drawerWidth = 250;
 const minimizedDrawerWidth = 65;
 
 const menuItems = [
-  { text: "📊 Dashboard", icon: <DashboardIcon />, path: "/" },
-  { text: "💸 Transactions", icon: <ReceiptIcon />, path: "/transactions" },
-  { text: "👤 Profile", icon: <PersonIcon />, path: "/profile" },
+  { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
+  { text: "Transactions", icon: <ReceiptIcon />, path: "/transactions" },
 ];
 
 export default function Sidebar({ open }) {
@@ -43,6 +42,9 @@ export default function Sidebar({ open }) {
           boxSizing: "border-box",
           transition: "width 0.2s ease-in-out",
           overflowX: "hidden",
+          position: "fixed",
+          height: "100%",
+          zIndex: (theme) => theme.zIndex.drawer,
         },
       }}
     >

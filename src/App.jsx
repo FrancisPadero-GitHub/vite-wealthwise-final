@@ -6,7 +6,6 @@ import { Box } from "@mui/material";
 import Footer from "./app/structure/Footer";
 import Sidebar from "./app/structure/Sidebar";
 import Topbar from "./app/structure/Topbar";
-import { ThemeProvider } from "./contexts/ThemeContext";
 
 import SignIn from "./app/auth/SignIn";
 import SignUp from "./app/auth/SignUp";
@@ -15,7 +14,6 @@ import ProtectedRoute from "./app/components/ProtectedRoutes";
 import { AuthProvider } from "./contexts/AuthProvider";
 
 import Dashboard from "./app/components/Dashboard";
-import Profile from "./app/components/Profile";
 import Transactions from "./app/components/Transactions";
 
 const queryClient = new QueryClient();
@@ -41,7 +39,7 @@ function Layout() {
           padding: 3,
           marginTop: "64px",
           minHeight: "calc(100vh - 64px - 48px)",
-          backgroundColor: (theme) => theme.palette.background.default,
+          backgroundColor: "#f5f5f5",
         }}
       >
         <Outlet />
@@ -62,7 +60,6 @@ function App() {
       ),
       children: [
         { path: "/", element: <Dashboard /> },
-        { path: "/profile", element: <Profile /> },
         { path: "/transactions", element: <Transactions /> },
       ],
     },
@@ -77,13 +74,11 @@ function App() {
   ]);
 
   return (
-    <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <RouterProvider router={router} />
-        </AuthProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 

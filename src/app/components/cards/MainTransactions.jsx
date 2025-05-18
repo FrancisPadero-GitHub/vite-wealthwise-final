@@ -12,7 +12,6 @@ import {
   Button,
   Box,
   TextField,
-  useTheme,
 } from "@mui/material";
 import { useTransactions } from "../../../hooks/useTransactions";
 import { useAddTransaction } from "../../../hooks/useAddTransaction";
@@ -31,7 +30,6 @@ const defaultFormValues = {
 };
 
 function TransactionTable() {
-  const theme = useTheme();
   const [loading, setLoading] = useState(false);
 
   const { data: transactions, isLoading, error } = useTransactions();
@@ -44,11 +42,11 @@ function TransactionTable() {
   const [form, setForm] = useState(defaultFormValues);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
 
-  const openAddModal = useCallback(() => {
-    setSelectedTransaction(null);
-    setForm(defaultFormValues);
-    setModalOpen(true);
-  }, []);
+  // const openAddModal = useCallback(() => {
+  //   setSelectedTransaction(null);
+  //   setForm(defaultFormValues);
+  //   setModalOpen(true);
+  // }, []);
 
   const openEditModal = useCallback((transaction) => {
     setSelectedTransaction(transaction);
@@ -128,9 +126,9 @@ function TransactionTable() {
         mb={2}
       >
         <Typography variant="h6">💸 My Transactions</Typography>
-        <Button variant="contained" onClick={openAddModal}>
+        {/* <Button variant="contained" onClick={openAddModal}>
           Add Transaction
-        </Button>
+        </Button> */}
       </Box>
 
       <TextField
@@ -149,38 +147,35 @@ function TransactionTable() {
           borderRadius: 2,
           boxShadow: 3,
           overflowY: "auto",
-          backgroundColor: theme.palette.background.paper,
+          backgroundColor: "#ffffff",
         }}
       >
         <Table stickyHeader>
           <TableHead>
             <TableRow
               sx={{
-                backgroundColor:
-                  theme.palette.mode === "dark"
-                    ? "rgba(255, 255, 255, 0.05)"
-                    : "#f5f5f5",
+                backgroundColor: "#f5f5f5",
               }}
             >
-              <TableCell sx={{ color: theme.palette.text.primary }}>
+              <TableCell sx={{ color: "#000000" }}>
                 <strong>Title</strong>
               </TableCell>
-              <TableCell sx={{ color: theme.palette.text.primary }}>
+              <TableCell sx={{ color: "#000000" }}>
                 <strong>Amount</strong>
               </TableCell>
-              <TableCell sx={{ color: theme.palette.text.primary }}>
+              <TableCell sx={{ color: "#000000" }}>
                 <strong>Category</strong>
               </TableCell>
-              <TableCell sx={{ color: theme.palette.text.primary }}>
+              <TableCell sx={{ color: "#000000" }}>
                 <strong>Description</strong>
               </TableCell>
-              <TableCell sx={{ color: theme.palette.text.primary }}>
+              <TableCell sx={{ color: "#000000" }}>
                 <strong>Account</strong>
               </TableCell>
-              <TableCell sx={{ color: theme.palette.text.primary }}>
+              <TableCell sx={{ color: "#000000" }}>
                 <strong>Date</strong>
               </TableCell>
-              <TableCell sx={{ color: theme.palette.text.primary }}>
+              <TableCell sx={{ color: "#000000" }}>
                 <strong>Type</strong>
               </TableCell>
             </TableRow>
@@ -193,21 +188,13 @@ function TransactionTable() {
                 onClick={() => openEditModal(tx)}
                 sx={{
                   cursor: "pointer",
-                  backgroundColor:
-                    index % 2 === 0
-                      ? theme.palette.background.paper
-                      : theme.palette.mode === "dark"
-                      ? "rgba(255, 255, 255, 0.05)"
-                      : "#fafafa",
+                  backgroundColor: index % 2 === 0 ? "#ffffff" : "#fafafa",
                   transition: "background-color 0.3s",
                   "&:hover": {
-                    backgroundColor:
-                      theme.palette.mode === "dark"
-                        ? "rgba(255, 255, 255, 0.1)"
-                        : "#e0f7fa",
+                    backgroundColor: "#e0f7fa",
                   },
                   "& td": {
-                    color: theme.palette.text.primary,
+                    color: "#000000",
                   },
                 }}
               >

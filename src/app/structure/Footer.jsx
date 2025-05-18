@@ -9,10 +9,7 @@ export default function Footer() {
         py: 2,
         px: 3,
         mt: "auto",
-        backgroundColor: (theme) =>
-          theme.palette.mode === "light"
-            ? theme.palette.grey[200]
-            : theme.palette.grey[800],
+        backgroundColor: "#f5f5f5",
         textAlign: "center",
       }}
     >
