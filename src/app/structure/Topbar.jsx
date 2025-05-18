@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase";
 import { useProfile } from "../../hooks/useProfile";
 import SettingsModal from "../components/cards/SettingsModal";
+import wealthwise from "../../assets/img/wealthwise.png";
 
 export default function Topbar({ onDrawerToggle }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -46,7 +47,7 @@ export default function Topbar({ onDrawerToggle }) {
 
   return (
     <>
-      <AppBar
+      <AppBar 
         position="fixed"
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
@@ -55,12 +56,18 @@ export default function Topbar({ onDrawerToggle }) {
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
+            <img
+              src={wealthwise}
+              alt="WealthWise"
+              style={{ width: "40px", height: "40px", marginRight: "10px", marginBottom: "10px" }}
+            />
             <Typography
-              variant="h6"
+              variant="h1"
               component="div"
               noWrap
-              sx={{ mr: 15 }}
+              sx={{ mr: 5, fontSize: "1.5rem", fontWeight: "bold" }}
               color="primary"
+              
             >
               WealthWise
             </Typography>

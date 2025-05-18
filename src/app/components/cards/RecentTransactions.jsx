@@ -115,7 +115,7 @@ export default function TransactionTable() {
   if (error) return <Typography color="error">{error.message}</Typography>;
 
   return (
-    <Grid size={7}>
+    <>
       <Card elevation={2}>
         <CardContent>
           <Box
@@ -222,6 +222,6 @@ export default function TransactionTable() {
         loading={loading}
         selectedTransaction={selectedTransaction}
       />
-    </Grid>
+    </>
   );
 }

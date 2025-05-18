@@ -1,9 +1,43 @@
-import TransactionsTable from "./cards/MainTransactions";
-import { Box } from "@mui/material";
+import Expenses from "./cards/ExpensesTable";
+import {
+  Grid,
+  Box,
+  Typography,
+  Breadcrumbs,
+  Link as MuiLink,
+} from "@mui/material";
+import { Link } from "react-router-dom";
+import IncomeTable from "./cards/IncomeTable";
 export default function Transactions() {
   return (
     <Box>
-      <TransactionsTable />
+      <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
+        <MuiLink
+          component={Link}
+          to="/"
+          underline="hover"
+          color="inherit"
+          sx={{ display: "flex", alignItems: "center" }}
+        >
+          Home
+        </MuiLink>
+
+        <Typography
+          color="text.primary"
+          sx={{ display: "flex", alignItems: "center" }}
+        >
+          Transactions
+        </Typography>
+      </Breadcrumbs>
+
+      <Grid container spacing={2}>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
+          <Expenses />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
+          <IncomeTable />
+        </Grid>
+      </Grid>
     </Box>
   );
 }

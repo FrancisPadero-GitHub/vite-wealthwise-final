@@ -29,6 +29,7 @@ import {
 } from "@mui/icons-material";
 import { useReminders } from "../../../hooks/useReminders";
 import dayjs from "dayjs";
+import reminders from "../../../assets/img/icon.png";
 
 const modalStyle = {
   position: "absolute",
@@ -95,7 +96,7 @@ export default function RemindersCard() {
   };
 
   return (
-    <Grid size={5}>
+    <>
       <Card elevation={2}>
         <CardContent>
           <Box
@@ -104,9 +105,17 @@ export default function RemindersCard() {
             alignItems="center"
             mb={2}
           >
-            <Typography variant="h6" fontWeight="bold">
-              Reminders
-            </Typography>
+            <Box display="flex" alignItems="center">
+              <img
+                src={reminders}
+                alt="Reminders"
+                style={{ width: "40px", height: "40px", marginRight: "10px" }}
+              />
+              <Typography variant="h6" fontWeight="bold">
+                Reminders
+              </Typography>
+            </Box>
+
             <IconButton color="success" onClick={() => handleOpen()}>
               <AddIcon />
             </IconButton>
@@ -371,6 +380,6 @@ export default function RemindersCard() {
           </Modal>
         </CardContent>
       </Card>
-    </Grid>
+    </>
   );
 }
