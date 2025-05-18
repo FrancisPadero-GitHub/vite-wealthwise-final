@@ -124,15 +124,27 @@ export default function SettingsModal({ open, onClose }) {
     const dummyReminders = generateDummyReminders();
 
     try {
-      // Generate transactions
-      for (const transaction of dummyTransactions) {
-        await addTransaction.mutateAsync(transaction);
-      }
+      // Create separate loading states for transactions and reminders
+      const transactionPromises = dummyTransactions.map(async (transaction) => {
+        try {
+          await addTransaction.mutateAsync(transaction);
+        } catch (error) {
+          console.error("Transaction error:", error);
+          throw error;
+        }
+      });
 
-      // Generate reminders
-      for (const reminder of dummyReminders) {
-        await addTask(reminder);
-      }
+      const reminderPromises = dummyReminders.map(async (reminder) => {
+        try {
+          await addTask(reminder);
+        } catch (error) {
+          console.error("Reminder error:", error);
+          throw error;
+        }
+      });
+
+      // Wait for all operations to complete
+      await Promise.all([...transactionPromises, ...reminderPromises]);
 
       setSnackbar({
         open: true,
@@ -147,20 +159,19 @@ export default function SettingsModal({ open, onClose }) {
         severity: "error",
       });
     } finally {
+      // Only set isGenerating to false after all operations are complete
       setIsGenerating(false);
     }
   };
 
   const handleDeleteAllTransactions = async () => {
     try {
-      // Delete all transactions
-      await deleteAllTransactions.mutateAsync();
-
-      // Reset balance
-      await updateBalance.mutateAsync(0);
-
-      // Delete all reminders
-      await deleteAllReminders();
+      // Run all delete operations in parallel
+      await Promise.all([
+        deleteAllTransactions.mutateAsync(),
+        updateBalance.mutateAsync(0),
+        deleteAllReminders(),
+      ]);
 
       setSnackbar({
         open: true,
