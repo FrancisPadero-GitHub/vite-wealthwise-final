@@ -86,6 +86,20 @@ export const useReminders = () => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reminders"] }),
   });
 
+  const deleteAllReminders = useMutation({
+    mutationFn: async () => {
+      if (!user?.id) throw new Error("User not authenticated");
+
+      const { error } = await supabase
+        .from("reminders")
+        .delete()
+        .eq("user_id", user.id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reminders"] }),
+  });
+
   return {
     tasks,
     completedTasks,
@@ -95,6 +109,7 @@ export const useReminders = () => {
     toggleStatus: async (id, status) => {
       await toggleStatus.mutateAsync({ id, is_completed: status });
     },
+    deleteAllReminders: deleteAllReminders.mutateAsync,
     isLoading,
   };
 };

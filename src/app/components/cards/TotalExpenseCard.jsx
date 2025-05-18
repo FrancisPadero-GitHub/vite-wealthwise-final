@@ -8,6 +8,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import CreditCardOffOutlinedIcon from "@mui/icons-material/CreditCardOffOutlined";
 import { useTransactionTotals } from "../../../hooks/useTransactions";
 
@@ -18,7 +19,7 @@ function TotalExpenseCard() {
   const isPositive = expenseChange <= 0; // For expenses, a decrease is positive
 
   return (
-    <Card sx={{ minWidth: 280, position: "relative" }}>
+    <Card sx={{ minWidth: 280, height: 160, position: "relative", pl: 2 }}>
       <CardHeader
         title={
           <Typography sx={{ fontSize: "1.2rem" }}>Monthly Expenses</Typography>
@@ -47,7 +48,9 @@ function TotalExpenseCard() {
             <Typography color="error">Error loading expenses</Typography>
           ) : (
             <>
-              <Typography variant="h6">₱ {expense.toFixed(2)}</Typography>
+              <Typography variant="h6" sx={{ color: "#ff771d" }}>
+                ₱ {expense.toFixed(2)}
+              </Typography>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 {isPositive ? (
                   <TrendingDownIcon sx={{ color: "#2e7d32" }} />

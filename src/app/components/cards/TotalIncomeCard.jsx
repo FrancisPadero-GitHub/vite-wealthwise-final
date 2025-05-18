@@ -19,7 +19,7 @@ function TotalIncomeCard() {
   const isPositive = incomeChange >= 0;
 
   return (
-    <Card sx={{ minWidth: 280, position: "relative" }}>
+    <Card sx={{ minWidth: 280, height: 160, position: "relative", pl: 2 }}>
       <CardHeader
         title={
           <Typography sx={{ fontSize: "1.2rem" }}>Monthly Income</Typography>
@@ -48,7 +48,9 @@ function TotalIncomeCard() {
             <Typography color="error">Error loading income</Typography>
           ) : (
             <>
-              <Typography variant="h6">₱ {income.toFixed(2)}</Typography>
+              <Typography variant="h6" sx={{ color: "#2eca6a" }}>
+                ₱ {income.toFixed(2)}
+              </Typography>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 {isPositive ? (
                   <TrendingUpIcon sx={{ color: "#2e7d32" }} />

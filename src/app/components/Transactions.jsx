@@ -41,6 +41,7 @@ export default function Transactions() {
         <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
           <ExpenseChart />
         </Grid>
+        
         <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
           <IncomeChart />
         </Grid>

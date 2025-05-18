@@ -78,7 +78,7 @@ export default function BalanceCard() {
 
   return (
     <>
-      <Card sx={{ minWidth: 280, position: "relative" }}>
+      <Card sx={{ minWidth: 280, height: 160, position: "relative", pl: 2 }}>
         <CardHeader
           title={<Typography sx={{ fontSize: "1.2rem" }}>Balance</Typography>}
           action={
