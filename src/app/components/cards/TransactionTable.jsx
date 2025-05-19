@@ -258,7 +258,7 @@ function TransactionTable() {
                 <TableRow>
                   <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
                     <Typography variant="body1" color="text.secondary">
-                      Found Nothing
+                      Click + to add a transaction on dashboard
                     </Typography>
                   </TableCell>
                 </TableRow>

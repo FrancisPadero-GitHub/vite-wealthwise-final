@@ -29,7 +29,7 @@ export default function Dashboard() {
           justifyContent: "space-evenly",
           alignItems: "center",
         }}
-        columnSpacing={{ xs: 2, sm: 2, md: 2, lg: 2, xl: 3 }}
+        columnSpacing={{ xs: 2, sm: 2, md: 2, lg: 2, xl: 2 }}
         rowSpacing={{ xs: 2, sm: 2, md: 2, lg: 2, xl: 3 }}
       >
         <Grid size={{ xs: 12, sm: 12, md: 4, lg: 4, xl: 4 }}>
@@ -46,15 +46,15 @@ export default function Dashboard() {
 
       <Grid
         container
-        columnSpacing={{ xs: 2, sm: 2, md: 2, lg: 2, xl: 3 }}
+        columnSpacing={{ xs: 2, sm: 2, md: 2, lg: 2, xl: 2 }}
         rowSpacing={{ xs: 2, sm: 2, md: 2, lg: 2, xl: 3 }}
         sx={{ mt: 2 }}
       >
-        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 7, xl: 8 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6, xl: 6 }}>
           <TransactionsTable />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 5, xl: 4 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6, xl: 6 }}>
           <Reminders />
         </Grid>
       </Grid>

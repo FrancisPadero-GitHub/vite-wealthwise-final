@@ -92,7 +92,7 @@ export default function TransactionTable() {
 
   const handleDelete = useCallback(() => {
     if (selectedTransaction?.id) {
-      deleteTransaction.mutateAsync (selectedTransaction.id);
+      deleteTransaction.mutateAsync(selectedTransaction.id);
       handleCloseModal();
     }
   }, [selectedTransaction, deleteTransaction, handleCloseModal]);
@@ -140,64 +140,79 @@ export default function TransactionTable() {
             }}
           >
             <Box display="flex" flexDirection="column" gap={0.5}>
-              {filteredTransactions.map((tx, index) => (
-                <React.Fragment key={tx.id}>
-                  <Box
-                    onClick={() => openEditModal(tx)}
-                    sx={{
-                      p: 1.5,
-                      backgroundColor: "background.paper",
-                      cursor: "pointer",
-                      transition: "transform 0.2s ease-in-out",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      gap: 0.5,
-                      "&:hover": {
-                        transform: "scale(1.01)",
-                        backgroundColor: "action.hover",
-                      },
-                    }}
-                  >
+              {filteredTransactions.length === 0 ? (
+                <Box
+                  sx={{
+                    p: 4,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="body1" color="text.secondary">
+                    Click + to add a record
+                  </Typography>
+                </Box>
+              ) : (
+                filteredTransactions.map((tx, index) => (
+                  <React.Fragment key={tx.id}>
                     <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      alignItems="center"
+                      onClick={() => openEditModal(tx)}
+                      sx={{
+                        p: 1.5,
+                        backgroundColor: "background.paper",
+                        cursor: "pointer",
+                        transition: "transform 0.2s ease-in-out",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        gap: 0.5,
+                        "&:hover": {
+                          transform: "scale(1.01)",
+                          backgroundColor: "action.hover",
+                        },
+                      }}
                     >
-                      <Box flexGrow={1}>
-                        <Typography variant="h6">{tx.title}</Typography>
-                        <Typography variant="caption" color="textSecondary">
-                          {tx.category} • {tx.description}
-                        </Typography>
-                      </Box>
-
                       <Box
                         display="flex"
-                        flexDirection="column"
-                        alignItems="flex-end"
-                        gap={0.5}
+                        justifyContent="space-between"
+                        alignItems="center"
                       >
-                        <Typography variant="body1">₱ {tx.amount}</Typography>
-                        <Chip
-                          label={tx.type === "income" ? "Income" : "Expense"}
-                          size="small"
-                          color={tx.type === "income" ? "success" : "error"}
-                        />
+                        <Box flexGrow={1}>
+                          <Typography variant="h6">{tx.title}</Typography>
+                          <Typography variant="caption" color="textSecondary">
+                            {tx.category} • {tx.description}
+                          </Typography>
+                        </Box>
+
+                        <Box
+                          display="flex"
+                          flexDirection="column"
+                          alignItems="flex-end"
+                          gap={0.5}
+                        >
+                          <Typography variant="body1">₱ {tx.amount}</Typography>
+                          <Chip
+                            label={tx.type === "income" ? "Income" : "Expense"}
+                            size="small"
+                            color={tx.type === "income" ? "success" : "error"}
+                          />
+                        </Box>
                       </Box>
+
+                      <Typography
+                        variant="caption"
+                        color="textSecondary"
+                        align="right"
+                      >
+                        {tx.date}
+                      </Typography>
                     </Box>
 
-                    <Typography
-                      variant="caption"
-                      color="textSecondary"
-                      align="right"
-                    >
-                      {tx.date}
-                    </Typography>
-                  </Box>
-
-                  {index < filteredTransactions.length - 1 && <Divider />}
-                </React.Fragment>
-              ))}
+                    {index < filteredTransactions.length - 1 && <Divider />}
+                  </React.Fragment>
+                ))
+              )}
             </Box>
           </Paper>
         </CardContent>

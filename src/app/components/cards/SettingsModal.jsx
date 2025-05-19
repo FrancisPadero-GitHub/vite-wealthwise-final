@@ -43,7 +43,7 @@ const generateDummyReminders = () => {
   ];
 
   const reminders = [];
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 20; i++) {
     const date = new Date();
     date.setDate(date.getDate() + Math.floor(Math.random() * 30)); // Random date within next 30 days
 
@@ -72,7 +72,7 @@ const generateDummyTransactions = () => {
     "Dining Out",
   ];
   const types = ["expense", "income"];
-  const accounts = ["Cash", "Bank Account", "Credit Card"];
+  const accounts = ["Cash", "Cred", "Gcash"];
   const descriptions = [
     "Monthly payment",
     "Regular expense",
@@ -82,9 +82,10 @@ const generateDummyTransactions = () => {
   ];
 
   const transactions = [];
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 20; i++) {
     const type = types[Math.floor(Math.random() * types.length)];
-    const amount = Math.abs(Math.floor(Math.random() * 10000) + 100); // Always positive
+    const amount = Math.abs(Math.floor(Math.random() * 4900) + 100); // Random amount between 100 and 5000
+
     const date = new Date();
     date.setDate(date.getDate() - Math.floor(Math.random() * 30));
 
@@ -149,7 +150,7 @@ export default function SettingsModal({ open, onClose }) {
       setSnackbar({
         open: true,
         message:
-          "Successfully generated 50 dummy transactions and 10 reminders!",
+          "Successfully generated 20 dummy transactions and 20 reminders!",
         severity: "success",
       });
     } catch (error) {
@@ -252,7 +253,7 @@ export default function SettingsModal({ open, onClose }) {
                           Generating...
                         </>
                       ) : (
-                        "Generate 50 Dummy Transactions"
+                        "Generate 20 Dummy Transactions and 20 Reminders"
                       )}
                     </Button>
 
@@ -268,7 +269,7 @@ export default function SettingsModal({ open, onClose }) {
                           Deleting...
                         </>
                       ) : (
-                        "Delete All Transactions"
+                        "Reset Transactions and Reminders"
                       )}
                     </Button>
                   </Stack>
@@ -289,11 +290,11 @@ export default function SettingsModal({ open, onClose }) {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle>Confirm Delete All Transactions</DialogTitle>
+        <DialogTitle>Confirm Reset</DialogTitle>
         <DialogContent>
           <Alert severity="warning" sx={{ mb: 2 }}>
-            This action cannot be undone. All your transaction history will be
-            permanently deleted.
+            This action cannot be undone. All your transaction & reminder
+            history will be permanently deleted.
           </Alert>
           <Typography>
             Are you sure you want to delete all transactions?
