@@ -1,127 +1,138 @@
-import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase";
+import { useAuth } from "../contexts/AuthProvider";
 
-export const useBudgeting = () => {
-  const [budgets, setBudgets] = useState([]);
-  const [remainingBudgets, setRemainingBudgets] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export function useBudgeting() {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
 
-  // Fetch budgets
-  const fetchBudgets = async () => {
-    try {
-      setLoading(true);
+  // Fetch all budgets for the user
+  const {
+    data: budgets,
+    isLoading: loading,
+    error,
+  } = useQuery({
+    queryKey: ["budgets", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+
       const { data, error } = await supabase
         .from("budgetingTbl")
         .select("*")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      setBudgets(data || []);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+      return data;
+    },
+    enabled: !!user?.id,
+  });
 
   // Fetch remaining budgets
-  const fetchRemainingBudgets = async () => {
-    try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData?.user?.id) return;
+  const { data: remainingBudgets } = useQuery({
+    queryKey: ["remaining_budgets", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
 
       const { data, error } = await supabase
         .from("remaining_budgets")
         .select("*")
-        .eq("user_id", userData.user.id);
+        .eq("user_id", user.id);
 
       if (error) throw error;
-      setRemainingBudgets(data || []);
-      console.log(data);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
+      return data;
+    },
+    enabled: !!user?.id,
+  });
 
   // Add new budget
-  const addBudget = async (budgetData) => {
-    try {
-      const { data, error } = await supabase
-        .from("budgetingTbl")
-        .insert([
-          {
-            ...budgetData,
-            amount: parseInt(budgetData.amount),
-            user_id: (await supabase.auth.getUser()).data.user.id,
-          },
-        ])
-        .select();
+  const addBudgetMutation = useMutation({
+    mutationFn: async (budget) => {
+      if (!user?.id) throw new Error("User not authenticated");
+
+      const { error } = await supabase.from("budgetingTbl").insert([
+        {
+          ...budget,
+          user_id: user.id,
+          created_at: new Date().toISOString(),
+        },
+      ]);
 
       if (error) throw error;
-      setBudgets((prev) => [data[0], ...prev]);
-      await fetchRemainingBudgets(); // Refresh remaining budgets
-    } catch (error) {
-      setError(error.message);
-      throw error;
-    }
-  };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["budgets"] });
+      queryClient.invalidateQueries({ queryKey: ["remaining_budgets"] });
+    },
+  });
 
-  // Update budget
-  const updateBudget = async (id, budgetData) => {
-    try {
-      const { data, error } = await supabase
+  // Update existing budget
+  const updateBudgetMutation = useMutation({
+    mutationFn: async ({ id, updatedData }) => {
+      if (!user?.id) throw new Error("User not authenticated");
+
+      const { error } = await supabase
         .from("budgetingTbl")
         .update({
-          ...budgetData,
-          amount: parseInt(budgetData.amount),
+          ...updatedData,
         })
         .eq("id", id)
-        .select();
+        .eq("user_id", user.id);
 
       if (error) throw error;
-      setBudgets((prev) =>
-        prev.map((budget) => (budget.id === id ? data[0] : budget))
-      );
-      await fetchRemainingBudgets(); // Refresh remaining budgets
-    } catch (error) {
-      setError(error.message);
-      throw error;
-    }
-  };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["budgets"] });
+      queryClient.invalidateQueries({ queryKey: ["remaining_budgets"] });
+    },
+  });
 
-  // Delete budget
-  const deleteBudget = async (id) => {
-    try {
+  // Delete a budget
+  const deleteBudgetMutation = useMutation({
+    mutationFn: async (id) => {
+      if (!user?.id) throw new Error("User not authenticated");
+
       const { error } = await supabase
         .from("budgetingTbl")
         .delete()
-        .eq("id", id);
+        .eq("id", id)
+        .eq("user_id", user.id);
 
       if (error) throw error;
-      setBudgets((prev) => prev.filter((budget) => budget.id !== id));
-      await fetchRemainingBudgets(); // Refresh remaining budgets
-    } catch (error) {
-      setError(error.message);
-      throw error;
-    }
-  };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["budgets"] });
+      queryClient.invalidateQueries({ queryKey: ["remaining_budgets"] });
+    },
+  });
 
-  // Initial fetch
-  useEffect(() => {
-    fetchBudgets();
-    fetchRemainingBudgets();
-  }, []);
+  // Delete all budgets
+  const deleteAllBudgetsMutation = useMutation({
+    mutationFn: async () => {
+      if (!user?.id) throw new Error("User not authenticated");
+
+      const { error } = await supabase
+        .from("budgetingTbl")
+        .delete()
+        .eq("user_id", user.id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["budgets"] });
+      queryClient.invalidateQueries({ queryKey: ["remaining_budgets"] });
+    },
+  });
 
   return {
     budgets,
     remainingBudgets,
     loading,
     error,
-    addBudget,
-    updateBudget,
-    deleteBudget,
-    refreshBudgets: fetchBudgets,
-    refreshRemainingBudgets: fetchRemainingBudgets,
+    addBudget: addBudgetMutation.mutateAsync,
+    updateBudget: (id, updatedData) =>
+      updateBudgetMutation.mutateAsync({ id, updatedData }),
+    deleteBudget: deleteBudgetMutation.mutateAsync,
+    deleteAllBudgets: deleteAllBudgetsMutation.mutateAsync,
   };
-};
+}
