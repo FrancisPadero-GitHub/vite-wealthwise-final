@@ -10,7 +10,6 @@ import TransactionsTable from "./cards/RecentTransactions";
 import Reminders from "./cards/Reminders";
 import TotalIncomeCard from "./cards/TotalIncomeCard";
 import TotalExpenseCard from "./cards/TotalExpenseCard";
-import { Link } from "react-router-dom";
 export default function Dashboard() {
   return (
     <Box>

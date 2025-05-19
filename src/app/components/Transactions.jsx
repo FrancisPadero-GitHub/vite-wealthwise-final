@@ -1,4 +1,3 @@
-import Expenses from "./cards/ExpensesTable";
 import {
   Grid,
   Box,
@@ -7,7 +6,7 @@ import {
   Link as MuiLink,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import IncomeTable from "./cards/IncomeTable";
+import TransactionTable from "./cards/TransactionTable";
 import IncomeChart from "./cards/IncomeChart";
 import ExpenseChart from "./cards/ExpenseChart";
 
@@ -41,17 +40,13 @@ export default function Transactions() {
         <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
           <ExpenseChart />
         </Grid>
-        
+
         <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
           <IncomeChart />
         </Grid>
 
         <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
-          <Expenses />
-        </Grid>
-
-        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
-          <IncomeTable />
+          <TransactionTable />
         </Grid>
       </Grid>
     </Box>

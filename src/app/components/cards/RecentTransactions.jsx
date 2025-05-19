@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   Box,
-  Grid,
   Divider,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -16,7 +15,7 @@ import { useTransactions } from "../../../hooks/useTransactions";
 import { useAddTransaction } from "../../../hooks/useAddTransaction";
 import { useEditTransaction } from "../../../hooks/useEditTransaction";
 import { useDeleteTransaction } from "../../../hooks/useDeleteTransaction";
-import TransactionFormModal from "../TransactionFormModal";
+import TransactionFormModal from "./TransactionFormModal";
 
 const defaultFormValues = {
   title: "",
@@ -34,7 +33,7 @@ export default function TransactionTable() {
   const { data: transactions, isLoading, error } = useTransactions();
   const { mutateAsync: addTransaction } = useAddTransaction();
   const { mutateAsync: editTransaction } = useEditTransaction();
-  const { mutate: deleteTransaction } = useDeleteTransaction();
+  const { deleteTransaction } = useDeleteTransaction();
 
   const [searchQuery] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
@@ -93,7 +92,7 @@ export default function TransactionTable() {
 
   const handleDelete = useCallback(() => {
     if (selectedTransaction?.id) {
-      deleteTransaction(selectedTransaction.id);
+      deleteTransaction.mutateAsync (selectedTransaction.id);
       handleCloseModal();
     }
   }, [selectedTransaction, deleteTransaction, handleCloseModal]);
@@ -184,7 +183,6 @@ export default function TransactionTable() {
                           size="small"
                           color={tx.type === "income" ? "success" : "error"}
                         />
-                        
                       </Box>
                     </Box>
 

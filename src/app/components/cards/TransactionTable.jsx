@@ -12,32 +12,37 @@ import {
   Box,
   TextField,
   Chip,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { useTransactions } from "../../../hooks/useTransactions";
 import { useAddTransaction } from "../../../hooks/useAddTransaction";
 import { useEditTransaction } from "../../../hooks/useEditTransaction";
 import { useDeleteTransaction } from "../../../hooks/useDeleteTransaction";
-import TransactionFormModal from "../TransactionFormModal";
+import TransactionFormModal from "./TransactionFormModal";
 
 const defaultFormValues = {
   title: "",
   amount: "",
   category: "",
-  type: "income",
+  type: "",
   account: "",
   date: "",
   description: "",
 };
 
-function IncomeTable() {
+function TransactionTable() {
   const [loading, setLoading] = useState(false);
 
   const { data: transactions, isLoading, error } = useTransactions();
   const { mutateAsync: addTransaction } = useAddTransaction();
   const { mutateAsync: editTransaction } = useEditTransaction();
-  const { mutate: deleteTransaction } = useDeleteTransaction();
+  const { deleteTransaction } = useDeleteTransaction();
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState(defaultFormValues);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
@@ -90,7 +95,7 @@ function IncomeTable() {
 
   const handleDelete = useCallback(() => {
     if (selectedTransaction?.id) {
-      deleteTransaction(selectedTransaction.id);
+      deleteTransaction.mutateAsync(selectedTransaction.id);
       handleCloseModal();
     }
   }, [deleteTransaction, selectedTransaction, handleCloseModal]);
@@ -98,7 +103,7 @@ function IncomeTable() {
   const filteredTransactions =
     transactions?.filter(
       (tx) =>
-        tx.type === "income" &&
+        (typeFilter === "all" || tx.type === typeFilter) &&
         [
           tx.title,
           tx.category,
@@ -119,27 +124,51 @@ function IncomeTable() {
       <Paper
         sx={{
           maxHeight: 650,
-          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
           borderRadius: 2,
           boxShadow: 2,
           p: 2,
         }}
       >
-        <Typography variant="h6">💰 Income</Typography>
-        <TextField
-          label="🔍 Search transactions"
-          variant="standard"
-          margin="normal"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Typography variant="h6">💸 Transactions</Typography>
+          <Box sx={{ display: "flex", gap: 5 }}>
+            <FormControl variant="standard" sx={{ minWidth: 120 }}>
+              <InputLabel>Type</InputLabel>
+              <Select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                label="Type"
+              >
+                <MenuItem value="all">All Transactions</MenuItem>
+                <MenuItem value="income">Income</MenuItem>
+                <MenuItem value="expense">Expense</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              label="🔍 Search transactions"
+              variant="standard"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              sx={{ width: 200}}
+            />
+          </Box>
+        </Box>
+
         <TableContainer
           component={Paper}
           sx={{
-            maxHeight: 650,
-            borderRadius: 2,
+            flex: 1,
             overflowY: "auto",
-            backgroundColor: "#fff",
+            borderRadius: 2,
           }}
         >
           <Table stickyHeader>
@@ -173,7 +202,8 @@ function IncomeTable() {
                       cursor: "pointer",
                       backgroundColor: index % 2 === 0 ? "#fff" : "#fafafa",
                       "&:hover": {
-                        backgroundColor: "#e8f5e9",
+                        backgroundColor:
+                          tx.type === "income" ? "#e8f5e9" : "#e0f7fa",
                       },
                     }}
                   >
@@ -184,7 +214,11 @@ function IncomeTable() {
                     <TableCell align="center">{tx.account}</TableCell>
                     <TableCell align="center">{tx.date}</TableCell>
                     <TableCell align="right">
-                      <Chip label={tx.type} size="small" color="success" />
+                      <Chip
+                        label={tx.type}
+                        size="small"
+                        color={tx.type === "income" ? "success" : "error"}
+                      />
                     </TableCell>
                   </TableRow>
                 ))
@@ -208,4 +242,4 @@ function IncomeTable() {
   );
 }
 
-export default IncomeTable;
+export default TransactionTable;
