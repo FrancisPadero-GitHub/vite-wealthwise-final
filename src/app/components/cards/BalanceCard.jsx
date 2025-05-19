@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -7,12 +7,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Button,
   CircularProgress,
   Box,
 } from "@mui/material";
@@ -21,11 +15,11 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 
 import { useBalance } from "../../../hooks/useBalance";
-import { useUpdateBalance } from "../../../hooks/useUpdateBalance"; // Import your mutation hook
+import EditBalanceModal from "../modals/EditBalanceModal";
 
 export default function BalanceCard() {
-  const { data, isLoading, isError } = useBalance();
-  const amount = data?.amount ?? 0;
+  const { data: balanceData, isLoading, isError } = useBalance();
+  const amount = balanceData?.amount ?? 0;
   const status = amount >= 0 ? "Debt Free" : "In Debt";
 
   // Dropdown menu state
@@ -36,45 +30,11 @@ export default function BalanceCard() {
 
   // Modal dialog state
   const [openModal, setOpenModal] = useState(false);
-  const [newBalance, setNewBalance] = useState(amount);
-
-  // Reset input value when modal opens/closes or amount changes
-  useEffect(() => {
-    if (openModal) {
-      setNewBalance(amount);
-    }
-  }, [openModal, amount]);
-
   const handleOpenModal = () => {
     setOpenModal(true);
     handleMenuClose();
   };
   const handleCloseModal = () => setOpenModal(false);
-
-  const handleBalanceChange = (event) => {
-    setNewBalance(event.target.value);
-  };
-
-  // Use your mutation hook
-  const updateBalanceMutation = useUpdateBalance();
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    // Optional: Validate input here (e.g. ensure number)
-    const parsedAmount = parseFloat(newBalance);
-    if (isNaN(parsedAmount)) {
-      alert("Please enter a valid number");
-      return;
-    }
-
-    try {
-      await updateBalanceMutation.mutateAsync(parsedAmount);
-      setOpenModal(false);
-    } catch (error) {
-      alert(error.message || "Failed to update balance");
-    }
-  };
 
   return (
     <>
@@ -165,48 +125,11 @@ export default function BalanceCard() {
         </CardContent>
       </Card>
 
-      {/*Edit Modal but Dialog */}
-      <Dialog
+      <EditBalanceModal
         open={openModal}
         onClose={handleCloseModal}
-        maxWidth="xs"
-        fullWidth
-      >
-        <DialogTitle>Edit Balance</DialogTitle>
-        <form onSubmit={handleSubmit}>
-          <DialogContent dividers>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="New Balance Amount"
-              type="number"
-              fullWidth
-              variant="outlined"
-              step="0.01"
-              value={newBalance}
-              onChange={handleBalanceChange}
-              disabled={updateBalanceMutation.isLoading}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={handleCloseModal}
-              color="primary"
-              disabled={updateBalanceMutation.isLoading}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={updateBalanceMutation.isLoading}
-            >
-              {updateBalanceMutation.isLoading ? "Saving..." : "Save Changes"}
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
+        currentAmount={amount}
+      />
     </>
   );
 }
