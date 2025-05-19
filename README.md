@@ -1,5 +1,5 @@
 # WealthWise
-Simple personal budget monitoring app for your daily simple spendings you wanna track of
+Simple personal budget monitoring app for your daily simple daily spendings you wanna track off.
 
 ## Features to be added
 
