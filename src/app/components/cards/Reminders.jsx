@@ -383,7 +383,6 @@ export default function RemindersCard() {
                 fullWidth
                 multiline
                 minRows={4}
-                required
                 margin="normal"
               />
             </Grid>

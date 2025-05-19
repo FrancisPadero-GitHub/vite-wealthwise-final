@@ -123,14 +123,14 @@ export default function BalanceCard() {
         <CardContent sx={{ display: "flex", alignItems: "center" }}>
           <Box
             sx={{
-              bgcolor: "#f6f6fe",
+              bgcolor: "#CBD0FB",
               borderRadius: "50%",
               width: 56,
               height: 56,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#4154f1",
+              color: "#5465F2",
               mr: 2,
             }}
           >

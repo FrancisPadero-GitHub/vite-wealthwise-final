@@ -38,7 +38,7 @@ function Layout() {
         sx={{
           transition: "margin 0.2s",
           marginLeft: open ? `${drawerWidth}px` : `${minimizedDrawerWidth}px`,
-          padding: 3,
+          padding: 2,
           marginTop: "64px",
           minHeight: "calc(100vh - 64px - 48px)",
           backgroundColor: "#f5f5f5",

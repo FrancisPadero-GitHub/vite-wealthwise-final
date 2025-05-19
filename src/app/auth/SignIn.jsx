@@ -1,7 +1,8 @@
 import { useState } from "react";
-
+import wealthwise from "../../assets/img/wealthwise.png";
 import { useNavigate, Link } from "react-router-dom";
 import {
+  Card,
   Box,
   Button,
   TextField,
@@ -10,6 +11,10 @@ import {
   IconButton,
   CircularProgress,
   Alert,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  FormHelperText,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { supabase } from "../../supabase";
@@ -21,9 +26,45 @@ export default function Login() {
   const [errorMsg, setErrorMsg] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+    if (!value) {
+      setEmailError("Email is required");
+    } else if (!validateEmail(value)) {
+      setEmailError("Please enter a valid email address");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+    if (!value) {
+      setPasswordError("Password is required");
+    } else if (value.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
+    } else {
+      setPasswordError("");
+    }
+  };
 
   async function handleSubmit(event) {
     event.preventDefault();
+
+    if (emailError || passwordError) {
+      return;
+    }
+
     setLoading(true);
     setErrorMsg(null);
 
@@ -46,53 +87,66 @@ export default function Login() {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      height="100vh"
+      height="80vh"
     >
-      <Box
-        maxWidth={400}
-        p={4}
-        boxShadow={3}
-        borderRadius={2}
-        component="form"
-        onSubmit={handleSubmit}
+      <Card
+        elevation={3}
         sx={{
-      
+          maxWidth: 380,
+          p: 3,
+          borderRadius: 2,
           bgcolor: "#ffffff",
           "& .MuiTextField-root": {
             bgcolor: "#ffffff",
           },
         }}
+        component="form"
+        onSubmit={handleSubmit}
       >
-        
-        <Typography variant="h5" mb={3} align="center">
+        <Box display="flex" alignItems="center" justifyContent="center">
+          <img
+            src={wealthwise}
+            alt="logo"
+            style={{
+              width: "90px",
+              height: "90px",
+              marginRight: "10px",
+              marginBottom: "10px",
+            }}
+          />
+          <Typography variant="h2" color="primary" sx={{ marginTop: "6%" }}>
+            WealthWise
+          </Typography>
+        </Box>
+        <Typography variant="body1" fontWeight="bold" align="center">
           🔐 Login
         </Typography>
-        {errorMsg && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {errorMsg}
-          </Alert>
-        )}
-        <TextField
-          label="📧 Email"
-          type="email"
-          fullWidth
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          margin="normal"
-          disabled={loading}
-        />
-        <TextField
-          label="🔑 Password"
-          type={showPassword ? "text" : "password"}
-          fullWidth
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          margin="normal"
-          disabled={loading}
-          InputProps={{
-            endAdornment: (
+
+        <FormControl fullWidth margin="normal" error={!!emailError}>
+          <InputLabel htmlFor="email-input">📧 Email</InputLabel>
+          <OutlinedInput
+            id="email-input"
+            type="email"
+            value={email}
+            onChange={handleEmailChange}
+            label="📧 Email"
+            disabled={loading}
+            required
+          />
+          {emailError && <FormHelperText>{emailError}</FormHelperText>}
+        </FormControl>
+
+        <FormControl fullWidth margin="normal" error={!!passwordError}>
+          <InputLabel htmlFor="password-input">🔑 Password</InputLabel>
+          <OutlinedInput
+            id="password-input"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={handlePasswordChange}
+            label="🔑 Password"
+            disabled={loading}
+            required
+            endAdornment={
               <InputAdornment position="end">
                 <IconButton
                   onClick={() => setShowPassword(!showPassword)}
@@ -103,15 +157,22 @@ export default function Login() {
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
-            ),
-          }}
-        />
-        <Box mt={3} textAlign="center">
+            }
+          />
+          {passwordError && <FormHelperText>{passwordError}</FormHelperText>}
+        </FormControl>
+
+        {errorMsg && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {errorMsg}
+          </Alert>
+        )}
+        <Box mt={2} textAlign="center">
           <Button
             type="submit"
             variant="contained"
             color="primary"
-            disabled={loading}
+            disabled={loading || !!emailError || !!passwordError}
             fullWidth
             size="large"
             startIcon={loading ? <CircularProgress size={20} /> : null}
@@ -132,7 +193,7 @@ export default function Login() {
             </Button>
           </Typography>
         </Box>
-      </Box>
+      </Card>
     </Box>
   );
 }

@@ -178,14 +178,9 @@ export default function BudgetingCard() {
             💰 Budget Management
           </Typography>
 
-          <Button
-            variant="contained"
-            onClick={() => handleOpenModal()}
-            disabled={operationLoading}
-            startIcon={<AddIcon />}
-          >
-            Add Budget
-          </Button>
+          <IconButton color="success" onClick={() => handleOpenModal()}>
+            <AddIcon />
+          </IconButton>
         </Box>
 
         {/* Remaining Budgets */}

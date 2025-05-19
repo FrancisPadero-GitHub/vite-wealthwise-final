@@ -253,7 +253,7 @@ export default function BudgetModal({
                 startAdornment: (
                   <InputAdornment position="start">₱</InputAdornment>
                 ),
-                inputProps: { min: 0, step: "0.01" },
+                inputProps: { min: 0, step: "5" },
               }}
             />
           </Grid>
