@@ -43,6 +43,8 @@ function TransactionTable() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
+  const [yearFilter, setYearFilter] = useState("all");
+  const [monthFilter, setMonthFilter] = useState("all");
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState(defaultFormValues);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
@@ -100,21 +102,53 @@ function TransactionTable() {
     }
   }, [deleteTransaction, selectedTransaction, handleCloseModal]);
 
+  const getUniqueYears = useCallback(() => {
+    if (!transactions) return [];
+    const years = transactions.map((tx) => new Date(tx.date).getFullYear());
+    return ["all", ...new Set(years)].sort((a, b) => {
+      if (a === "all") return -1;
+      if (b === "all") return 1;
+      return b - a;
+    });
+  }, [transactions]);
+
+  const getMonthsForYear = useCallback(
+    (year) => {
+      if (!transactions || year === "all") return [];
+      const months = transactions
+        .filter((tx) => new Date(tx.date).getFullYear() === year)
+        .map((tx) => new Date(tx.date).getMonth());
+      return ["all", ...new Set(months)].sort((a, b) => {
+        if (a === "all") return -1;
+        if (b === "all") return 1;
+        return a - b;
+      });
+    },
+    [transactions]
+  );
+
   const filteredTransactions =
-    transactions?.filter(
-      (tx) =>
-        (typeFilter === "all" || tx.type === typeFilter) &&
-        [
-          tx.title,
-          tx.category,
-          tx.description,
-          tx.account,
-          tx.date,
-          tx.amount.toString(),
-        ].some((field) =>
-          field.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-    ) || [];
+    transactions?.filter((tx) => {
+      const matchesType = typeFilter === "all" || tx.type === typeFilter;
+      const matchesSearch = [
+        tx.title,
+        tx.category,
+        tx.description,
+        tx.account,
+        tx.date,
+        tx.amount.toString(),
+      ].some((field) =>
+        field.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      const txDate = new Date(tx.date);
+      const matchesYear =
+        yearFilter === "all" || txDate.getFullYear() === yearFilter;
+      const matchesMonth =
+        monthFilter === "all" || txDate.getMonth() === monthFilter;
+
+      return matchesType && matchesSearch && matchesYear && matchesMonth;
+    }) || [];
 
   if (isLoading) return <CircularProgress />;
   if (error) return <Typography color="error">{error.message}</Typography>;
@@ -140,7 +174,7 @@ function TransactionTable() {
           }}
         >
           <Typography variant="h6">💸 Transactions</Typography>
-          <Box sx={{ display: "flex", gap: 5 }}>
+          <Box sx={{ display: "flex", gap: 2 }}>
             <FormControl variant="standard" sx={{ minWidth: 120 }}>
               <InputLabel>Type</InputLabel>
               <Select
@@ -153,12 +187,48 @@ function TransactionTable() {
                 <MenuItem value="expense">Expense</MenuItem>
               </Select>
             </FormControl>
+            <FormControl variant="standard" sx={{ minWidth: 120 }}>
+              <InputLabel>Year</InputLabel>
+              <Select
+                value={yearFilter}
+                onChange={(e) => {
+                  setYearFilter(e.target.value);
+                  setMonthFilter("all"); // Reset month when year changes
+                }}
+                label="Year"
+              >
+                {getUniqueYears().map((year) => (
+                  <MenuItem key={year} value={year}>
+                    {year === "all" ? "All Years" : year}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl variant="standard" sx={{ minWidth: 120 }}>
+              <InputLabel>Month</InputLabel>
+              <Select
+                value={monthFilter}
+                onChange={(e) => setMonthFilter(e.target.value)}
+                label="Month"
+                disabled={yearFilter === "all"}
+              >
+                {getMonthsForYear(yearFilter).map((month) => (
+                  <MenuItem key={month} value={month}>
+                    {month === "all"
+                      ? "All Months"
+                      : new Date(2000, month, 1).toLocaleDateString("en-US", {
+                          month: "long",
+                        })}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               label="🔍 Search transactions"
               variant="standard"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              sx={{ width: 200}}
+              sx={{ width: 200 }}
             />
           </Box>
         </Box>
