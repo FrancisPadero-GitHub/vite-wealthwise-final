@@ -72,7 +72,7 @@ const generateDummyTransactions = () => {
     "Dining Out",
   ];
   const types = ["expense", "income"];
-  const accounts = ["Cash", "Cred", "Gcash"];
+  const accounts = ["Cash", "Credit", "Gcash"];
   const descriptions = [
     "Monthly payment",
     "Regular expense",
