@@ -18,7 +18,7 @@ import Dashboard from "./app/components/Dashboard";
 import Transactions from "./app/components/Transactions";
 import "./assets/css/main.css";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient(); // Used for tanstack query
 const drawerWidth = 240;
 const minimizedDrawerWidth = 60;
 

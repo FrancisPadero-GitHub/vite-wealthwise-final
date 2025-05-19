@@ -3,6 +3,8 @@ import { supabase } from "../supabase";
 import { useAuth } from "../contexts/AuthProvider";
 import { useQueryClient } from "@tanstack/react-query";
 
+// para ni live and value mo change if naay update sa balance
+
 const RealtimeBalanceListener = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
