@@ -152,6 +152,8 @@ export default function TransactionFormModal({
             <Autocomplete
               id="transaction-category"
               fullWidth
+              disableClearable
+              freeSolo={false}
               groupBy={(option) => option.category}
               getOptionLabel={(option) => option.label}
               options={categoryOptions.sort(
@@ -175,6 +177,10 @@ export default function TransactionFormModal({
                   label="🏷️ Category"
                   required
                   margin="normal"
+                  inputProps={{
+                    ...params.inputProps,
+                    readOnly: true, // Disables typing
+                  }}
                 />
               )}
             />
@@ -223,6 +229,7 @@ export default function TransactionFormModal({
               value={form.date}
               onChange={onFormChange}
               margin="normal"
+              required
             />
           </Grid>
           <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>

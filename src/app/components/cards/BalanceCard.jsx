@@ -78,9 +78,18 @@ export default function BalanceCard() {
 
   return (
     <>
-      <Card sx={{ minWidth: 280, height: 160, position: "relative", pl: 2 }}>
+      <Card
+        sx={{
+          minWidth: 280,
+          height: 160,
+          position: "relative",
+          pl: 2,
+          transition: "transform 0.5s",
+          "&:hover": { transform: "scale(1.02)" },
+        }}
+      >
         <CardHeader
-          title={<Typography sx={{ fontSize: "1.2rem" }}>Balance</Typography>}
+          title={<Typography variant="h6">Balance</Typography>}
           action={
             <>
               <IconButton
@@ -134,7 +143,13 @@ export default function BalanceCard() {
               <Typography color="error">Error loading balance</Typography>
             ) : (
               <>
-                <Typography variant="h6">₱ {amount.toFixed(2)}</Typography>
+                <Typography
+                  variant="h6"
+                  color={amount >= 0 ? "success" : "error"}
+                >
+                  ₱ {amount.toFixed(2)}
+                </Typography>
+
                 <Typography
                   variant="body2"
                   sx={{

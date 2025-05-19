@@ -1,7 +1,8 @@
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
-import { Box } from "@mui/material";
+import { Box, ThemeProvider } from "@mui/material";
+import theme from "./theme";
 
 import Footer from "./app/structure/Footer";
 import Sidebar from "./app/structure/Sidebar";
@@ -15,6 +16,7 @@ import { AuthProvider } from "./contexts/AuthProvider";
 
 import Dashboard from "./app/components/Dashboard";
 import Transactions from "./app/components/Transactions";
+import "./assets/css/main.css";
 
 const queryClient = new QueryClient();
 const drawerWidth = 240;
@@ -75,9 +77,11 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <ThemeProvider theme={theme}>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

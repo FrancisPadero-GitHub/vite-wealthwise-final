@@ -318,7 +318,6 @@ export default function RemindersCard() {
               )}
             </Paper>
             {/* End of Completed Tasks Paper */}
-
           </Box>
         </CardContent>
       </Card>
@@ -347,7 +346,7 @@ export default function RemindersCard() {
             </IconButton>
           </Box>
 
-          <Grid container spacing={2} columns={12}>
+          <Grid container>
             <Grid size={12}>
               <TextField
                 id="reminder-title"

@@ -286,6 +286,7 @@ function TransactionTable() {
                     <TableCell align="right">
                       <Chip
                         label={tx.type}
+                        sx={{ fontSize: "0.7rem" }}
                         size="small"
                         color={tx.type === "income" ? "success" : "error"}
                       />

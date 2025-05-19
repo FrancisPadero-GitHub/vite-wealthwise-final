@@ -8,7 +8,6 @@ import {
   Typography,
   Button,
   Grid,
-  Paper,
   CircularProgress,
   Alert,
   Chip,
@@ -22,11 +21,14 @@ import {
   LinearProgress,
 } from "@mui/material";
 import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
+  EditOutlined,
+  DeleteOutline,
   Add as AddIcon,
-  DeleteSweep as DeleteSweepIcon,
+  Category as CategoryIcon,
+  CalendarToday as CalendarTodayIcon,
+  AttachMoney as AttachMoneyIcon,
 } from "@mui/icons-material";
+
 import { format } from "date-fns";
 
 export default function BudgetingCard() {
@@ -38,14 +40,12 @@ export default function BudgetingCard() {
     addBudget,
     updateBudget,
     deleteBudget,
-    deleteAllBudgets,
   } = useBudgeting();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [deleteAllConfirmOpen, setDeleteAllConfirmOpen] = useState(false);
   const [budgetToDelete, setBudgetToDelete] = useState(null);
   const [operationLoading, setOperationLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
@@ -149,27 +149,6 @@ export default function BudgetingCard() {
     }
   };
 
-  const handleDeleteAllConfirm = async () => {
-    try {
-      setOperationLoading(true);
-      await deleteAllBudgets();
-      setSnackbar({
-        open: true,
-        message: "All budgets deleted successfully",
-        severity: "success",
-      });
-    } catch (error) {
-      setSnackbar({
-        open: true,
-        message: error.message || "Failed to delete all budgets",
-        severity: "error",
-      });
-    } finally {
-      setOperationLoading(false);
-      setDeleteAllConfirmOpen(false);
-    }
-  };
-
   const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
 
   if (!hasMounted) return null;
@@ -196,165 +175,259 @@ export default function BudgetingCard() {
           mb={2}
         >
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-             💰 Budget Management
+            💰 Budget Management
           </Typography>
-          <Box>
-            <Tooltip title="Delete All Budgets">
-              <IconButton
-                onClick={() => setDeleteAllConfirmOpen(true)}
-                disabled={!budgets?.length || operationLoading}
-                color="error"
-                sx={{ mr: 1 }}
-              >
-                <DeleteSweepIcon />
-              </IconButton>
-            </Tooltip>
-            <Button
-              variant="contained"
-              onClick={() => handleOpenModal()}
-              disabled={operationLoading}
-              startIcon={<AddIcon />}
-            >
-              Add Budget
-            </Button>
-          </Box>
+
+          <Button
+            variant="contained"
+            onClick={() => handleOpenModal()}
+            disabled={operationLoading}
+            startIcon={<AddIcon />}
+          >
+            Add Budget
+          </Button>
         </Box>
 
         {/* Remaining Budgets */}
-        <Typography variant="h6" gutterBottom>
-          Remaining Budgets
+        <Typography variant="body1" gutterBottom>
+          Remaining Funds
         </Typography>
-        <Grid container spacing={2} mb={4}>
-          {remainingBudgets?.length > 0 ? (
-            remainingBudgets.map((budget) => {
-              const total = Number(budget.budgeted_amount || 0);
-              const spent = Number(budget.spent_amount || 0);
-              const percent = total ? Math.min((spent / total) * 100, 100) : 0;
-              return (
-                <Grid item xs={12} sm={6} md={4} key={budget.id}>
+        <Box sx={{ overflowX: "auto", mb: 3 }}>
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              minWidth: "max-content",
+              pb: 2,
+              px: 2,
+            }}
+          >
+            {remainingBudgets?.length > 0 ? (
+              remainingBudgets.map((budget) => {
+                const total = Number(budget.budgeted_amount || 0);
+                const spent = Number(budget.spent_amount || 0);
+                const percent = total
+                  ? Math.min((spent / total) * 100, 100)
+                  : 0;
+                return (
+                  <Grid item key={budget.budget_id}>
+                    <Card
+                      elevation={4}
+                      sx={{
+                        borderLeft: 4,
+                        width: 425,
+                        borderColor:
+                          budget.remaining <= 0 ? "error.main" : "success.main",
+                        transition: "transform 0.5s",
+                        "&:hover": { transform: "scale(1.02)" },
+                      }}
+                    >
+                      <CardContent>
+                        <Box mb={1}>
+                          <Typography variant="h6">
+                            {budget.name || "Untitled"}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 0.5,
+                            }}
+                          >
+                            <CategoryIcon fontSize="small" />
+                            {budget.category || "Uncategorized"}
+                          </Typography>
+                        </Box>
+
+                        <Typography
+                          variant="h6"
+                          color={budget.remaining <= 0 ? "error" : "success"}
+                        >
+                          {/* budget_amount */}₱{" "}
+                          {budget.remaining.toLocaleString()}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {budget.remaining < 0 ? "Over Budget" : "Remaining"}
+                        </Typography>
+
+                        <Box display="flex" justifyContent="center">
+                          <Chip
+                            size="medium"
+                            color={percent >= 100 ? "error" : "primary"}
+                            variant="outlined"
+                            label={`Total Spent: ₱ ${spent.toLocaleString()}`}
+                          />
+                        </Box>
+
+                        <Box mt={2}>
+                          <LinearProgress
+                            variant="determinate"
+                            value={percent}
+                            sx={{ height: 10, borderRadius: 5 }}
+                            color={percent >= 100 ? "error" : "primary"}
+                          />
+
+                          <Typography
+                            variant="caption"
+                            align="right"
+                            display="block"
+                          >
+                            {Math.round(percent)}% used
+                          </Typography>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                );
+              })
+            ) : (
+              <Grid xs={12}>
+                <Typography align="center" color="text.secondary">
+                  No remaining budgets to display
+                </Typography>
+              </Grid>
+            )}
+          </Grid>
+        </Box>
+
+        {/* All Budgets List */}
+        <Typography variant="body1" gutterBottom>
+          Budgets
+        </Typography>
+        <Box sx={{ overflowX: "auto" }}>
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              minWidth: "max-content",
+              pb: 2,
+              px: 2,
+            }}
+          >
+            {budgets?.length > 0 ? (
+              budgets.map((budget) => (
+                <Grid item key={budget.id}>
                   <Card
+                    elevation={4}
                     sx={{
-                      p: 2,
-                      borderLeft: 4,
-                      borderColor:
-                        budget.remaining < 0 ? "error.main" : "success.main",
-                      transition: "transform 0.2s",
+                      width: 425,
+                      transition: "transform 0.5s",
                       "&:hover": { transform: "scale(1.02)" },
+                      background:
+                        "linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)",
+                      borderLeft: "4px solid #2196f3",
                     }}
                   >
                     <CardContent>
-                      <Typography variant="subtitle1">
-                        {budget.category || "Uncategorized"}
-                      </Typography>
-                      <Typography
-                        variant="h6"
-                        color={budget.remaining < 0 ? "error" : "success"}
+                      <Box
+                        display="flex"
+                        justifyContent="space-between"
+                        alignItems="end"
                       >
-                        ₱ {Math.abs(budget.remaining).toLocaleString()}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {budget.remaining < 0 ? "Over Budget" : "Remaining"}
-                      </Typography>
-                      <Box mt={1}>
-                        <Chip
-                          size="small"
-                          label={`Spent: ₱ ${spent.toLocaleString()}`}
-                        />
-                      </Box>
-                      <Box mt={2}>
-                        <LinearProgress
-                          variant="determinate"
-                          value={percent}
-                          sx={{ height: 10, borderRadius: 5 }}
-                          color={percent >= 100 ? "error" : "primary"}
-                        />
-                        <Typography
-                          variant="caption"
-                          align="right"
-                          display="block"
-                        >
-                          {Math.round(percent)}% used
-                        </Typography>
+                        <Box>
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight="bold"
+                            sx={{
+                              color: "#1976d2",
+                              fontSize: "1.2rem",
+                              mb: 1,
+                            }}
+                          >
+                            {budget.name}
+                          </Typography>
+
+                          <Typography
+                            variant="body1"
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            ₱ {Number(budget.amount).toLocaleString()}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: "#666",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 0.5,
+                              mb: 0.5,
+                            }}
+                          >
+                            <CategoryIcon
+                              sx={{ color: "#4caf50", fontSize: "1rem" }}
+                            />
+                            {budget.category || "Uncategorized"}
+                          </Typography>
+
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: "#666",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 0.5,
+                              mb: 0.5,
+                            }}
+                          >
+                            <CalendarTodayIcon
+                              sx={{ color: "#ff9800", fontSize: "1rem" }}
+                            />
+                            {format(new Date(budget.start_date), "MMM d, yyyy")}{" "}
+                            - {format(new Date(budget.end_date), "MMM d, yyyy")}
+                          </Typography>
+                        </Box>
+
+                        <Box>
+                          <Tooltip title="Edit Budget">
+                            <IconButton
+                              onClick={() => handleOpenModal(budget)}
+                              sx={{
+                                mr: 1,
+                                color: "#2196f3",
+                                "&:hover": {
+                                  backgroundColor: "rgba(33, 150, 243, 0.1)",
+                                },
+                              }}
+                              disabled={operationLoading}
+                            >
+                              <EditOutlined />
+                            </IconButton>
+                          </Tooltip>
+
+                          <Tooltip title="Delete Budget">
+                            <IconButton
+                              onClick={() => handleDeleteClick(budget)}
+                              sx={{
+                                color: "#f44336",
+                                "&:hover": {
+                                  backgroundColor: "rgba(244, 67, 54, 0.1)",
+                                },
+                              }}
+                              disabled={operationLoading}
+                            >
+                              <DeleteOutline />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
                       </Box>
                     </CardContent>
                   </Card>
                 </Grid>
-              );
-            })
-          ) : (
-            <Grid item xs={12}>
-              <Typography align="center" color="text.secondary">
-                No remaining budgets to display
-              </Typography>
-            </Grid>
-          )}
-        </Grid>
-
-        {/* All Budgets List */}
-        <Typography variant="h6" gutterBottom>
-          Your Budgets
-        </Typography>
-        <Grid container spacing={2}>
-          {budgets?.length > 0 ? (
-            budgets.map((budget) => (
-              <Grid item xs={12} key={budget.id}>
-                <Card sx={{ p: 2 }}>
-                  <CardContent>
-                    <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      alignItems="center"
-                    >
-                      <Box>
-                        <Typography variant="subtitle1" fontWeight="bold">
-                          {budget.name}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Category: {budget.category || "Uncategorized"}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Period:{" "}
-                          {format(new Date(budget.start_date), "MMM d, yyyy")} -{" "}
-                          {format(new Date(budget.end_date), "MMM d, yyyy")}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Amount: ₱ {Number(budget.amount).toLocaleString()}
-                        </Typography>
-                      </Box>
-
-                      <Box>
-                        <Tooltip title="Edit Budget">
-                          <IconButton
-                            onClick={() => handleOpenModal(budget)}
-                            sx={{ mr: 1 }}
-                            disabled={operationLoading}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete Budget">
-                          <IconButton
-                            onClick={() => handleDeleteClick(budget)}
-                            disabled={operationLoading}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                      
-                    </Box>
-                  </CardContent>
-                </Card>
+              ))
+            ) : (
+              <Grid xs={12}>
+                <Typography align="center" color="text.secondary">
+                  No budgets found. Add a new budget to get started.
+                </Typography>
               </Grid>
-            ))
-          ) : (
-            <Grid item xs={12}>
-              <Typography align="center" color="text.secondary">
-                No budgets found. Add a new budget to get started.
-              </Typography>
-            </Grid>
-          )}
-        </Grid>
+            )}
+          </Grid>
+        </Box>
       </CardContent>
 
       {/* Modals and Snackbars */}
@@ -392,34 +465,6 @@ export default function BudgetingCard() {
             disabled={operationLoading}
           >
             {operationLoading ? "Deleting..." : "Delete"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog
-        open={deleteAllConfirmOpen}
-        onClose={() => setDeleteAllConfirmOpen(false)}
-      >
-        <DialogTitle>Confirm Delete All</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Are you sure you want to delete all budgets? This cannot be undone.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setDeleteAllConfirmOpen(false)}
-            disabled={operationLoading}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleDeleteAllConfirm}
-            color="error"
-            variant="contained"
-            disabled={operationLoading}
-          >
-            {operationLoading ? "Deleting..." : "Delete All"}
           </Button>
         </DialogActions>
       </Dialog>

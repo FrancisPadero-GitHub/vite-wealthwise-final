@@ -54,7 +54,7 @@ export default function Topbar({ onDrawerToggle }) {
         position="fixed"
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: "#ffffff",
+          backgroundColor: "#FAF9F6",
         }}
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>

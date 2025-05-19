@@ -37,6 +37,7 @@ export function useBudgeting() {
       const { data, error } = await supabase
         .from("remaining_budgets")
         .select("*")
+        .order("budget_id", { ascending: false })
         .eq("user_id", user.id);
 
       if (error) throw error;

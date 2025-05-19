@@ -195,6 +195,7 @@ export default function TransactionTable() {
                           <Chip
                             label={tx.type === "income" ? "Income" : "Expense"}
                             size="small"
+                            sx={{ fontSize: "0.7rem" }}
                             color={tx.type === "income" ? "success" : "error"}
                           />
                         </Box>

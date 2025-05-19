@@ -19,10 +19,19 @@ function TotalExpenseCard() {
   const isPositive = expenseChange <= 0; // For expenses, a decrease is positive
 
   return (
-    <Card sx={{ minWidth: 280, height: 160, position: "relative", pl: 2 }}>
+    <Card
+      sx={{
+        minWidth: 280,
+        height: 160,
+        position: "relative",
+        pl: 2,
+        transition: "transform 0.5s",
+        "&:hover": { transform: "scale(1.02)" },
+      }}
+    >
       <CardHeader
         title={
-          <Typography sx={{ fontSize: "1.2rem" }}>Monthly Expenses</Typography>
+          <Typography variant="h6">Monthly Expenses</Typography>
         }
       />
       <CardContent sx={{ display: "flex", alignItems: "center" }}>
