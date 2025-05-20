@@ -13,12 +13,18 @@ import {
   Stack,
   Alert,
   Snackbar,
+  Divider,
+  TextField,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
 import { useProfile } from "../../../hooks/useProfile";
 import { useAddTransaction } from "../../../hooks/useAddTransaction";
 import { useDeleteTransaction } from "../../../hooks/useDeleteTransaction";
 import { useUpdateBalance } from "../../../hooks/useUpdateBalance";
 import { useReminders } from "../../../hooks/useReminders";
+import { useChangePassword } from "../../../hooks/useChangePassword";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const generateDummyReminders = () => {
   const titles = [
@@ -113,11 +119,22 @@ export default function SettingsModal({ open, onClose }) {
     message: "",
     severity: "info",
   });
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [showPasswords, setShowPasswords] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
 
   const addTransaction = useAddTransaction();
   const { deleteAllTransactions } = useDeleteTransaction();
   const updateBalance = useUpdateBalance();
   const { addTask, deleteAllReminders } = useReminders();
+  const { changePassword, isChanging } = useChangePassword();
 
   const handleGenerateDummyData = async () => {
     setIsGenerating(true);
@@ -194,10 +211,59 @@ export default function SettingsModal({ open, onClose }) {
     setSnackbar({ ...snackbar, open: false });
   };
 
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setSnackbar({
+        open: true,
+        message: "New passwords do not match",
+        severity: "error",
+      });
+      return;
+    }
+
+    try {
+      await changePassword({
+        currentPassword: passwordForm.currentPassword,
+        newPassword: passwordForm.newPassword,
+      });
+
+      setSnackbar({
+        open: true,
+        message: "Password updated successfully",
+        severity: "success",
+      });
+
+      // Clear form
+      setPasswordForm({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: error.message,
+        severity: "error",
+      });
+    }
+  };
+
+  const handleTogglePasswordVisibility = (field) => {
+    setShowPasswords((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
   return (
     <>
       <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-        <DialogTitle variant="h6">Profile Settings</DialogTitle>
+        <DialogTitle variant="h6" cor>
+          {" "}
+          👤 Profile Settings
+        </DialogTitle>
         <DialogContent dividers>
           {isLoading ? (
             <Box display="flex" justifyContent="center" p={3}>
@@ -207,38 +273,152 @@ export default function SettingsModal({ open, onClose }) {
             <Typography color="error">Error loading profile data</Typography>
           ) : (
             <Stack spacing={3}>
-              <Card variant="outlined">
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    User Information
-                  </Typography>
+              <Box
+                sx={{
+                  border: "1px solid",
+                  borderColor: "divider",
+                  borderRadius: 2,
+                  p: 3,
+                  backgroundColor: "background.paper",
+                  boxShadow: 1,
+                }}
+              >
+                <Typography variant="h6" color="primary" gutterBottom>
+                  📃 User Information
+                </Typography>
+
+                <Stack spacing={1}>
                   <Typography variant="body1">
-                    <strong>Full Name:</strong> {profile?.full_name}
+                    📛 {profile?.full_name}
                   </Typography>
-                  <Typography variant="body1">
-                    <strong>Email:</strong> {profile?.email}
-                  </Typography>
-                  <Typography variant="body1">
-                    <strong>Username:</strong> {profile?.username}
-                  </Typography>
-                </CardContent>
-              </Card>
+                  <Typography variant="body1">📧 {profile?.email}</Typography>
+                </Stack>
+              </Box>
 
               <Card variant="outlined">
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Security
+                  <Typography variant="h6" color="primary" gutterBottom>
+                    🔒 Security
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Change Password feature will be added here.
-                  </Typography>
+                  <form onSubmit={handlePasswordChange}>
+                    <Stack spacing={2}>
+                      <TextField
+                        label="Current Password"
+                        type={showPasswords.current ? "text" : "password"}
+                        value={passwordForm.currentPassword}
+                        onChange={(e) =>
+                          setPasswordForm({
+                            ...passwordForm,
+                            currentPassword: e.target.value,
+                          })
+                        }
+                        required
+                        fullWidth
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={() =>
+                                  handleTogglePasswordVisibility("current")
+                                }
+                                edge="end"
+                              >
+                                {showPasswords.current ? (
+                                  <VisibilityOff />
+                                ) : (
+                                  <Visibility />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      <TextField
+                        label="New Password"
+                        type={showPasswords.new ? "text" : "password"}
+                        value={passwordForm.newPassword}
+                        onChange={(e) =>
+                          setPasswordForm({
+                            ...passwordForm,
+                            newPassword: e.target.value,
+                          })
+                        }
+                        required
+                        fullWidth
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={() =>
+                                  handleTogglePasswordVisibility("new")
+                                }
+                                edge="end"
+                              >
+                                {showPasswords.new ? (
+                                  <VisibilityOff />
+                                ) : (
+                                  <Visibility />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      <TextField
+                        label="Confirm New Password"
+                        type={showPasswords.confirm ? "text" : "password"}
+                        value={passwordForm.confirmPassword}
+                        onChange={(e) =>
+                          setPasswordForm({
+                            ...passwordForm,
+                            confirmPassword: e.target.value,
+                          })
+                        }
+                        required
+                        fullWidth
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={() =>
+                                  handleTogglePasswordVisibility("confirm")
+                                }
+                                edge="end"
+                              >
+                                {showPasswords.confirm ? (
+                                  <VisibilityOff />
+                                ) : (
+                                  <Visibility />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={isChanging}
+                      >
+                        {isChanging ? (
+                          <>
+                            <CircularProgress size={20} sx={{ mr: 1 }} />
+                            Changing Password...
+                          </>
+                        ) : (
+                          "Change Password"
+                        )}
+                      </Button>
+                    </Stack>
+                  </form>
                 </CardContent>
               </Card>
 
               <Card variant="outlined" sx={{ backgroundColor: "#f9f9f9" }}>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Developer Tools
+                  <Typography variant="h6" color="primary" gutterBottom>
+                    🔧 Developer Tools
                   </Typography>
                   <Stack spacing={2}>
                     <Button
