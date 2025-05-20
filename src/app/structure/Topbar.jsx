@@ -13,11 +13,11 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-
-import { supabase } from "../../supabase";
-import { useProfile } from "../../hooks/useProfile";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import SettingsModal from "../components/cards/SettingsModal";
 import wealthwise from "../../assets/img/wealthwise.png";
+import { supabase } from "../../supabase";
+import { useProfile } from "../../hooks/useProfile";
 
 export default function Topbar({ onDrawerToggle }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -89,24 +89,28 @@ export default function Topbar({ onDrawerToggle }) {
               sx={{
                 display: "flex",
                 alignItems: "center",
-                cursor: "pointer",
+                gap: 2,
                 color: "#000000",
               }}
-              onClick={handleMenuClick}
             >
               <Avatar
                 sx={{
                   width: 32,
                   height: 32,
-                  mr: 1,
                   bgcolor: "#1976d2",
                 }}
               >
                 {profile?.full_name?.[0] || "U"}
               </Avatar>
-              <Typography variant="subtitle1">
+              <Typography variant="body1">
                 {isLoading ? "Loading..." : profile?.full_name || "User"}
               </Typography>
+
+              <ArrowDropDownIcon
+                color="primary"
+                sx={{ cursor: "pointer" }}
+                onClick={handleMenuClick}
+              />
             </Box>
 
             <Menu
@@ -126,8 +130,10 @@ export default function Topbar({ onDrawerToggle }) {
                   setIsSettingsOpen(true);
                 }}
               >
-                <SettingsOutlinedIcon sx={{ mr: 1 }} />
-                Settings
+                <SettingsOutlinedIcon sx={{ mr: 1 }} color="primary" />
+                <Typography variant="body2" color="primary">
+                  Settings
+                </Typography>
               </MenuItem>
               <MenuItem onClick={handleSignOut} disabled={isLoggingOut}>
                 {isLoggingOut ? (
@@ -137,8 +143,10 @@ export default function Topbar({ onDrawerToggle }) {
                   </Box>
                 ) : (
                   <>
-                    <LogoutOutlinedIcon sx={{ mr: 1 }} />
-                    Logout
+                    <LogoutOutlinedIcon sx={{ mr: 1 }} color="warning" />
+                    <Typography variant="body2" color="warning">
+                      Logout
+                    </Typography>
                   </>
                 )}
               </MenuItem>

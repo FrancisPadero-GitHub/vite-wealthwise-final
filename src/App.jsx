@@ -82,6 +82,7 @@ function App() {
     },
   ]);
   // SpeedInsights is used to track the performance of the app for the VERCEL deployment
+  // Analytics is used to track the usage of the app
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>

@@ -38,6 +38,11 @@ const theme = createTheme({
       fontWeight: 400,
       lineHeight: 1.43,
     },
+    subtitle1: {
+      fontSize: "0.6rem",
+      fontWeight: 400,
+      lineHeight: 1.43,
+    },
     button: {
       textTransform: "none",
       fontWeight: 500,
