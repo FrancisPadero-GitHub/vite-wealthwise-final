@@ -23,7 +23,13 @@ export function useBalance() {
       if (error?.code === "PGRST116") {
         const { data: newData, error: insertError } = await supabase
           .from("BalanceTbl")
-          .insert([{ user_id: user.id, amount: 0, cash_balance: "cash" }])
+          .insert([
+            {
+              user_id: user.id,
+              amount: 0,
+              cash_balance: "CINDY CLAIRE PC WEB LOOP",
+            },
+          ])
           .select()
           .single();
 

@@ -48,7 +48,6 @@ export default function Register() {
       options: {
         data: {
           full_name: `${firstname} ${lastname}`,
-          avatar_url: " ",
         },
       },
     });
