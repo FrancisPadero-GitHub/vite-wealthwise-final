@@ -50,7 +50,7 @@ export default function ReminderModal({
           mb={2}
         >
           <Typography variant="h6">
-            {editingTask ? "Edit Reminder" : "New Reminder"}
+            {editingTask ? "✏️ Edit Reminder" : "🔔 New Reminder"}
           </Typography>
           <IconButton aria-label="close" onClick={handleClose}>
             <CloseIcon />
@@ -62,7 +62,7 @@ export default function ReminderModal({
             <TextField
               id="reminder-title"
               name="title"
-              label="Title"
+              label="📝 Title"
               value={form.title}
               onChange={handleChange}
               fullWidth
@@ -75,7 +75,7 @@ export default function ReminderModal({
               id="reminder-date"
               name="date"
               type="date"
-              label="Due Date"
+              label="📅 Due Date"
               InputLabelProps={{ shrink: true }}
               value={form.date}
               onChange={handleChange}
@@ -88,7 +88,7 @@ export default function ReminderModal({
             <TextField
               id="reminder-description"
               name="description"
-              label="Description"
+              label="📋 Description"
               value={form.description}
               onChange={handleChange}
               fullWidth
@@ -99,13 +99,19 @@ export default function ReminderModal({
           </Grid>
         </Grid>
 
-        <Grid>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            gap: 2,
+            mt: 2,
+          }}
+        >
           <Button
             type="submit"
             variant="contained"
             color="success"
-            sx={{ mt: 2 }}
-            fullWidth
             disabled={loading}
             startIcon={
               loading ? (
@@ -117,7 +123,7 @@ export default function ReminderModal({
           >
             {editingTask ? "Save Changes" : "Add"}
           </Button>
-        </Grid>
+        </Box>
       </Box>
     </Modal>
   );

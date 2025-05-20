@@ -21,7 +21,7 @@ function TotalIncomeCard() {
   return (
     <Card
       sx={{
-        minWidth: 280,
+        minWidth: 250,
         height: 160,
         position: "relative",
         pl: 2,
@@ -56,7 +56,7 @@ function TotalIncomeCard() {
             <Typography color="error">Error loading income</Typography>
           ) : (
             <>
-              <Typography variant="h6" sx={{ color: "#2eca6a" }}>
+              <Typography variant="h5" sx={{ color: "#2eca6a" }}>
                 ₱ {income.toFixed(2)}
               </Typography>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

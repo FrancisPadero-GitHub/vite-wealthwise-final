@@ -9,8 +9,8 @@ import {
   Box,
 } from "@mui/material";
 
-import EditIcon from "@mui/icons-material/Edit";
-import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
+import EditIcon from "@mui/icons-material/EditOutlined";
+import AccountBalanceWallet from "@mui/icons-material/AccountBalanceWallet";
 
 import { useBalance } from "../../../hooks/useBalance";
 import EditBalanceModal from "../modals/EditBalanceModal";
@@ -31,7 +31,7 @@ export default function BalanceCard() {
       <RealtimeBalanceListener />
       <Card
         sx={{
-          minWidth: 280,
+          minWidth: 250,
           height: 160,
           position: "relative",
           pl: 2,
@@ -42,7 +42,11 @@ export default function BalanceCard() {
         <CardHeader
           title={<Typography variant="h6">Balance</Typography>}
           action={
-            <IconButton aria-label="edit balance" onClick={handleOpenModal}>
+            <IconButton
+              color="primary"
+              aria-label="edit balance"
+              onClick={handleOpenModal}
+            >
               <EditIcon />
             </IconButton>
           }
@@ -61,7 +65,7 @@ export default function BalanceCard() {
               mr: 2,
             }}
           >
-            <AccountBalanceWalletOutlinedIcon fontSize="large" />
+            <AccountBalanceWallet fontSize="large" />
           </Box>
           <Box>
             {isLoading ? (
@@ -73,8 +77,8 @@ export default function BalanceCard() {
             ) : (
               <>
                 <Typography
-                  variant="h6"
-                  color={amount >= 0 ? "success" : "error"}
+                  variant="h5"
+                  color={amount >= 0 ? "primary" : "error"}
                 >
                   ₱ {amount.toFixed(2)}
                 </Typography>

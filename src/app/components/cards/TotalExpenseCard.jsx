@@ -21,7 +21,7 @@ function TotalExpenseCard() {
   return (
     <Card
       sx={{
-        minWidth: 280,
+        minWidth: 250,
         height: 160,
         position: "relative",
         pl: 2,
@@ -57,7 +57,7 @@ function TotalExpenseCard() {
             <Typography color="error">Error loading expenses</Typography>
           ) : (
             <>
-              <Typography variant="h6" sx={{ color: "#ff771d" }}>
+              <Typography variant="h5" sx={{ color: "#ff771d" }}>
                 ₱ {expense.toFixed(2)}
               </Typography>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

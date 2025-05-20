@@ -263,13 +263,6 @@ export default function TransactionFormModal({
               color="error"
               sx={{ mt: 2 }}
               disabled={loading}
-              startIcon={
-                loading ? (
-                  <CircularProgress size={20} color="inherit" />
-                ) : (
-                  <DeleteIcon />
-                )
-              }
             >
               Delete
             </Button>

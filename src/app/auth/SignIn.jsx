@@ -51,8 +51,6 @@ export default function Login() {
     setPassword(value);
     if (!value) {
       setPasswordError("Password is required");
-    } else if (value.length < 6) {
-      setPasswordError("Password must be at least 6 characters");
     } else {
       setPasswordError("");
     }
