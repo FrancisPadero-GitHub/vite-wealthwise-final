@@ -33,7 +33,7 @@ const defaultFormValues = {
   description: "",
 };
 
-function TransactionTable() {
+export default function TransactionTable() {
   const [loading, setLoading] = useState(false);
 
   const { data: transactions, isLoading, error } = useTransactions();
@@ -68,32 +68,28 @@ function TransactionTable() {
     }));
   }, []);
 
-  const handleSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
-      setLoading(true);
+  const handleSubmit = useCallback(async () => {
+    setLoading(true);
 
-      try {
-        if (selectedTransaction) {
-          await editTransaction(form);
-        } else {
-          await addTransaction(form);
-        }
-        handleCloseModal();
-      } catch (error) {
-        console.error("Transaction failed:", error);
-      } finally {
-        setLoading(false);
+    try {
+      if (selectedTransaction) {
+        await editTransaction(form);
+      } else {
+        await addTransaction(form);
       }
-    },
-    [
-      selectedTransaction,
-      form,
-      addTransaction,
-      editTransaction,
-      handleCloseModal,
-    ]
-  );
+      handleCloseModal();
+    } catch (error) {
+      console.error("Transaction failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    selectedTransaction,
+    form,
+    addTransaction,
+    editTransaction,
+    handleCloseModal,
+  ]);
 
   const handleDelete = useCallback(() => {
     if (selectedTransaction?.id) {
@@ -301,10 +297,10 @@ function TransactionTable() {
         </Paper>
         <TransactionFormModal
           open={modalOpen}
-          onClose={handleCloseModal}
+          handleClose={handleCloseModal}
           form={form}
-          onFormChange={handleFormChange}
-          onSubmit={handleSubmit}
+          handleChange={handleFormChange}
+          handleSubmit={handleSubmit}
           onDelete={handleDelete}
           loading={loading}
           selectedTransaction={selectedTransaction}
@@ -313,5 +309,3 @@ function TransactionTable() {
     </>
   );
 }
-
-export default TransactionTable;

@@ -10,12 +10,9 @@ import {
   IconButton,
   ListItem,
   ListItemText,
-  Grid,
-  Modal,
-  TextField,
-  Button,
   Divider,
-  CircularProgress,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import {
   Add as AddIcon,
@@ -23,9 +20,6 @@ import {
   DeleteOutline,
   EditOutlined,
   Replay,
-  Close as CloseIcon,
-  Save as SaveIcon,
-  Delete as DeleteIcon,
 } from "@mui/icons-material";
 import { useReminders } from "../../../hooks/useReminders";
 import dayjs from "dayjs";
@@ -47,6 +41,11 @@ export default function RemindersCard() {
   const [open, setOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [form, setForm] = useState({ title: "", description: "", date: "" });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   const handleOpen = (task = null) => {
     setEditingTask(task);
@@ -81,6 +80,28 @@ export default function RemindersCard() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDeleteTask = async (taskId) => {
+    try {
+      await deleteTask(taskId);
+      setSnackbar({
+        open: true,
+        message: "Task deleted successfully",
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      setSnackbar({
+        open: true,
+        message: "Failed to delete task",
+        severity: "error",
+      });
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }));
   };
 
   return (
@@ -190,7 +211,7 @@ export default function RemindersCard() {
                                 <EditOutlined color="primary" />
                               </IconButton>
                               <IconButton
-                                onClick={() => deleteTask(task.id)}
+                                onClick={() => handleDeleteTask(task.id)}
                                 sx={{ ml: 1 }}
                               >
                                 <DeleteOutline color="error" />
@@ -292,7 +313,7 @@ export default function RemindersCard() {
                                 <Replay color="action" />
                               </IconButton>
                               <IconButton
-                                onClick={() => deleteTask(task.id)}
+                                onClick={() => handleDeleteTask(task.id)}
                                 sx={{ ml: 1 }}
                               >
                                 <DeleteOutline color="error" />
@@ -320,6 +341,16 @@ export default function RemindersCard() {
         loading={loading}
         editingTask={editingTask}
       />
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

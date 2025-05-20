@@ -345,6 +345,7 @@ export default function BudgetingCard() {
                             sx={{
                               display: "flex",
                               alignItems: "center",
+                              mb: 1,
                             }}
                           >
                             ₱ {Number(budget.amount).toLocaleString()}
@@ -355,12 +356,16 @@ export default function BudgetingCard() {
                               color: "#666",
                               display: "flex",
                               alignItems: "center",
-                              gap: 0.5,
-                              mb: 0.5,
+                              gap: 1,
+                              mb: 1,
                             }}
                           >
                             <CategoryIcon
-                              sx={{ color: "#4caf50", fontSize: "1rem" }}
+                              sx={{
+                                color: "#4caf50",
+                                fontSize: "1rem",
+                                pb: 0.5,
+                              }}
                             />
                             {budget.category || "Uncategorized"}
                           </Typography>
@@ -371,12 +376,16 @@ export default function BudgetingCard() {
                               color: "#666",
                               display: "flex",
                               alignItems: "center",
-                              gap: 0.5,
-                              mb: 0.5,
+                              gap: 1,
+                              mb: 1,
                             }}
                           >
                             <CalendarTodayIcon
-                              sx={{ color: "#ff9800", fontSize: "1rem" }}
+                              sx={{
+                                color: "#ff9800",
+                                fontSize: "1rem",
+                                pb: 0.5,
+                              }}
                             />
                             {format(new Date(budget.start_date), "MMM d, yyyy")}{" "}
                             - {format(new Date(budget.end_date), "MMM d, yyyy")}

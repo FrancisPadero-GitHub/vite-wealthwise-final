@@ -6,14 +6,20 @@ import {
   DialogActions,
   TextField,
   Button,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { useUpdateBalance } from "../../../hooks/useUpdateBalance";
 
 export default function EditBalanceModal({ open, onClose, currentAmount }) {
   const [newBalance, setNewBalance] = useState(currentAmount);
   const updateBalanceMutation = useUpdateBalance();
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
-  // Reset input value when modal opens/closes or amount changes
   useEffect(() => {
     if (open) {
       setNewBalance(currentAmount);
@@ -24,64 +30,91 @@ export default function EditBalanceModal({ open, onClose, currentAmount }) {
     setNewBalance(event.target.value);
   };
 
+  const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const parsedAmount = parseFloat(newBalance);
     if (isNaN(parsedAmount)) {
-      alert("Please enter a valid number");
+      setSnackbar({
+        open: true,
+        message: "Please enter a valid number",
+        severity: "error",
+      });
       return;
     }
 
     try {
       await updateBalanceMutation.mutateAsync(parsedAmount);
+      setSnackbar({
+        open: true,
+        message: "Balance updated successfully",
+        severity: "success",
+      });
       onClose();
     } catch (error) {
-      alert(error.message || "Failed to update balance");
+      setSnackbar({
+        open: true,
+        message: error.message || "Failed to update balance",
+        severity: "error",
+      });
     }
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="xs"
-      fullWidth
-    >
-      <DialogTitle>Edit Balance</DialogTitle>
-      <form onSubmit={handleSubmit}>
-        <DialogContent dividers>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="New Balance Amount"
-            type="number"
-            fullWidth
-            variant="outlined"
-            step="0.01"
-            value={newBalance}
-            onChange={handleBalanceChange}
-            disabled={updateBalanceMutation.isLoading}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={onClose}
-            color="primary"
-            disabled={updateBalanceMutation.isLoading}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={updateBalanceMutation.isLoading}
-          >
-            {updateBalanceMutation.isLoading ? "Saving..." : "Save Changes"}
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
+    <>
+      <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
+        <DialogTitle>Edit Balance</DialogTitle>
+        <form onSubmit={handleSubmit}>
+          <DialogContent dividers>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="New Balance Amount"
+              type="number"
+              fullWidth
+              variant="outlined"
+              step="0.01"
+              value={newBalance}
+              onChange={handleBalanceChange}
+              disabled={updateBalanceMutation.isLoading}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={onClose}
+              color="primary"
+              disabled={updateBalanceMutation.isLoading}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={updateBalanceMutation.isLoading}
+            >
+              {updateBalanceMutation.isLoading ? "Saving..." : "Save Changes"}
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }

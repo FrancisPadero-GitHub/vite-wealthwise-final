@@ -63,32 +63,27 @@ export default function TransactionTable() {
     setForm((prev) => ({ ...prev, [name]: value }));
   }, []);
 
-  const handleSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
-      setLoading(true);
-
-      try {
-        if (selectedTransaction) {
-          await editTransaction(form);
-        } else {
-          await addTransaction(form);
-        }
-        handleCloseModal();
-      } catch (error) {
-        console.error("Transaction failed:", error);
-      } finally {
-        setLoading(false);
+  const handleSubmit = useCallback(async () => {
+    setLoading(true);
+    try {
+      if (selectedTransaction) {
+        await editTransaction(form);
+      } else {
+        await addTransaction(form);
       }
-    },
-    [
-      selectedTransaction,
-      form,
-      addTransaction,
-      editTransaction,
-      handleCloseModal,
-    ]
-  );
+      handleCloseModal();
+    } catch (error) {
+      console.error("Transaction failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    selectedTransaction,
+    form,
+    addTransaction,
+    editTransaction,
+    handleCloseModal,
+  ]);
 
   const handleDelete = useCallback(() => {
     if (selectedTransaction?.id) {
@@ -222,10 +217,10 @@ export default function TransactionTable() {
 
       <TransactionFormModal
         open={modalOpen}
-        onClose={handleCloseModal}
+        handleClose={handleCloseModal}
         form={form}
-        onFormChange={handleFormChange}
-        onSubmit={handleSubmit}
+        handleChange={handleFormChange}
+        handleSubmit={handleSubmit}
         onDelete={handleDelete}
         loading={loading}
         selectedTransaction={selectedTransaction}
