@@ -18,7 +18,7 @@ export function useUpdateBalance() {
       if (error) throw new Error(error.message);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["balance"] });
+      queryClient.invalidateQueries({ queryKey: ["balance", user.id] });
     },
   });
 }

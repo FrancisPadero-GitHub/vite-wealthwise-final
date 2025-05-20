@@ -16,6 +16,7 @@ import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalance
 
 import { useBalance } from "../../../hooks/useBalance";
 import EditBalanceModal from "../modals/EditBalanceModal";
+import RealtimeBalanceListener from "../../../api/BalanceRealtime";
 
 export default function BalanceCard() {
   const { data: balanceData, isLoading, isError } = useBalance();
@@ -38,6 +39,7 @@ export default function BalanceCard() {
 
   return (
     <>
+      <RealtimeBalanceListener />
       <Card
         sx={{
           minWidth: 280,
@@ -98,7 +100,9 @@ export default function BalanceCard() {
           </Box>
           <Box>
             {isLoading ? (
-              <CircularProgress size={24} />
+              <Box display="flex" alignItems="center">
+                <CircularProgress size={24} />
+              </Box>
             ) : isError ? (
               <Typography color="error">Error loading balance</Typography>
             ) : (

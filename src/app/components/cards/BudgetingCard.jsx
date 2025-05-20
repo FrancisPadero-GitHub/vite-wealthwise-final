@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useBudgeting } from "../../../hooks/useBudgeting";
 import BudgetModal from "./BudgetModal";
+import BudgetRealtime from "../../../api/BudgetRealtime";
 import {
   Box,
   Card,
@@ -167,6 +168,7 @@ export default function BudgetingCard() {
 
   return (
     <Card>
+      <BudgetRealtime />
       <CardContent>
         <Box
           display="flex"
@@ -175,7 +177,7 @@ export default function BudgetingCard() {
           mb={2}
         >
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-            💰 Budget Management
+            💰 Recent Budgets
           </Typography>
 
           <IconButton color="success" onClick={() => handleOpenModal()}>
@@ -185,7 +187,7 @@ export default function BudgetingCard() {
 
         {/* Remaining Budgets */}
         <Typography variant="body1" gutterBottom>
-          Remaining Funds
+          Remaining Amounts
         </Typography>
         <Box sx={{ overflowX: "auto", mb: 3 }}>
           <Grid
@@ -293,7 +295,7 @@ export default function BudgetingCard() {
 
         {/* All Budgets List */}
         <Typography variant="body1" gutterBottom>
-          Budgets
+          All Budgets
         </Typography>
         <Box sx={{ overflowX: "auto" }}>
           <Grid
@@ -451,7 +453,8 @@ export default function BudgetingCard() {
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete the budget "{budgetToDelete?.name}"?
+            Are you sure you want to delete the budget "{budgetToDelete?.name}
+            "?
           </Typography>
         </DialogContent>
         <DialogActions>

@@ -16,7 +16,7 @@ import { useAddTransaction } from "../../../hooks/useAddTransaction";
 import { useEditTransaction } from "../../../hooks/useEditTransaction";
 import { useDeleteTransaction } from "../../../hooks/useDeleteTransaction";
 import TransactionFormModal from "./TransactionFormModal";
-
+import TransactionRealtime from "../../../api/TransactionRealtime";
 const defaultFormValues = {
   title: "",
   amount: "",
@@ -114,6 +114,7 @@ export default function TransactionTable() {
 
   return (
     <>
+      <TransactionRealtime />
       <Card elevation={2}>
         <CardContent sx={{ p: 2 }}>
           <Box

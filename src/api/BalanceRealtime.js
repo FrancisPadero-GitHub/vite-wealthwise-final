@@ -22,9 +22,8 @@ const RealtimeBalanceListener = () => {
           table: "BalanceTbl",
           filter: `user_id=eq.${user.id}`,
         },
-        (payload) => {
-          console.log("Realtime update on BalanceTbl:", payload);
-          queryClient.invalidateQueries({ queryKey: ["balance"] });
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["balance", user.id] });
         }
       )
       .subscribe();

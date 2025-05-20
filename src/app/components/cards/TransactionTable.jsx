@@ -22,7 +22,7 @@ import { useAddTransaction } from "../../../hooks/useAddTransaction";
 import { useEditTransaction } from "../../../hooks/useEditTransaction";
 import { useDeleteTransaction } from "../../../hooks/useDeleteTransaction";
 import TransactionFormModal from "./TransactionFormModal";
-
+import TransactionRealtime from "../../../api/TransactionRealtime";
 const defaultFormValues = {
   title: "",
   amount: "",
@@ -154,162 +154,163 @@ function TransactionTable() {
   if (error) return <Typography color="error">{error.message}</Typography>;
 
   return (
-    <Box sx={{ gap: 2 }}>
-      <Paper
-        sx={{
-          maxHeight: 650,
-          display: "flex",
-          flexDirection: "column",
-          borderRadius: 2,
-          boxShadow: 2,
-          p: 2,
-        }}
-      >
-        <Box
+    <>
+      <TransactionRealtime />
+      <Box sx={{ gap: 2 }}>
+        <Paper
           sx={{
+            maxHeight: 650,
             display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            mb: 2,
-          }}
-        >
-          <Typography variant="h6">💸 Transactions</Typography>
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <FormControl variant="standard" sx={{ minWidth: 120 }}>
-              <InputLabel>Type</InputLabel>
-              <Select
-                value={typeFilter}
-                onChange={(e) => setTypeFilter(e.target.value)}
-                label="Type"
-              >
-                <MenuItem value="all">All Transactions</MenuItem>
-                <MenuItem value="income">Income</MenuItem>
-                <MenuItem value="expense">Expense</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl variant="standard" sx={{ minWidth: 120 }}>
-              <InputLabel>Year</InputLabel>
-              <Select
-                value={yearFilter}
-                onChange={(e) => {
-                  setYearFilter(e.target.value);
-                  setMonthFilter("all"); // Reset month when year changes
-                }}
-                label="Year"
-              >
-                {getUniqueYears().map((year) => (
-                  <MenuItem key={year} value={year}>
-                    {year === "all" ? "All Years" : year}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl variant="standard" sx={{ minWidth: 120 }}>
-              <InputLabel>Month</InputLabel>
-              <Select
-                value={monthFilter}
-                onChange={(e) => setMonthFilter(e.target.value)}
-                label="Month"
-                disabled={yearFilter === "all"}
-              >
-                {getMonthsForYear(yearFilter).map((month) => (
-                  <MenuItem key={month} value={month}>
-                    {month === "all"
-                      ? "All Months"
-                      : new Date(2000, month, 1).toLocaleDateString("en-US", {
-                          month: "long",
-                        })}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <TextField
-              label="🔍 Search transactions"
-              variant="standard"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              sx={{ width: 200 }}
-            />
-          </Box>
-        </Box>
-
-        <TableContainer
-          component={Paper}
-          sx={{
-            flex: 1,
-            overflowY: "auto",
+            flexDirection: "column",
             borderRadius: 2,
+            boxShadow: 2,
+            p: 2,
           }}
         >
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell>Title</TableCell>
-                <TableCell align="center">Amount</TableCell>
-                <TableCell align="center">Category</TableCell>
-                <TableCell align="center">Description</TableCell>
-                <TableCell align="center">Account</TableCell>
-                <TableCell align="center">Date</TableCell>
-                <TableCell align="right">Type</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredTransactions.length === 0 ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 2,
+            }}
+          >
+            <Typography variant="h6">💸 Transactions</Typography>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <FormControl variant="standard" sx={{ minWidth: 120 }}>
+                <InputLabel>Type</InputLabel>
+                <Select
+                  value={typeFilter}
+                  onChange={(e) => setTypeFilter(e.target.value)}
+                  label="Type"
+                >
+                  <MenuItem value="all">All Transactions</MenuItem>
+                  <MenuItem value="income">Income</MenuItem>
+                  <MenuItem value="expense">Expense</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl variant="standard" sx={{ minWidth: 120 }}>
+                <InputLabel>Year</InputLabel>
+                <Select
+                  value={yearFilter}
+                  onChange={(e) => {
+                    setYearFilter(e.target.value);
+                    setMonthFilter("all"); // Reset month when year changes
+                  }}
+                  label="Year"
+                >
+                  {getUniqueYears().map((year) => (
+                    <MenuItem key={year} value={year}>
+                      {year === "all" ? "All Years" : year}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl variant="standard" sx={{ minWidth: 120 }}>
+                <InputLabel>Month</InputLabel>
+                <Select
+                  value={monthFilter}
+                  onChange={(e) => setMonthFilter(e.target.value)}
+                  label="Month"
+                  disabled={yearFilter === "all"}
+                >
+                  {getMonthsForYear(yearFilter).map((month) => (
+                    <MenuItem key={month} value={month}>
+                      {month === "all"
+                        ? "All Months"
+                        : new Date(2000, month, 1).toLocaleDateString("en-US", {
+                            month: "long",
+                          })}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <TextField
+                label="🔍 Search transactions"
+                variant="standard"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                sx={{ width: 200 }}
+              />
+            </Box>
+          </Box>
+          <TableContainer
+            component={Paper}
+            sx={{
+              flex: 1,
+              overflowY: "auto",
+              borderRadius: 2,
+            }}
+          >
+            <Table stickyHeader>
+              <TableHead>
                 <TableRow>
-                  <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
-                    <Typography variant="body1" color="text.secondary">
-                      Click + to add a transaction on dashboard
-                    </Typography>
-                  </TableCell>
+                  <TableCell>Title</TableCell>
+                  <TableCell align="center">Amount</TableCell>
+                  <TableCell align="center">Category</TableCell>
+                  <TableCell align="center">Description</TableCell>
+                  <TableCell align="center">Account</TableCell>
+                  <TableCell align="center">Date</TableCell>
+                  <TableCell align="right">Type</TableCell>
                 </TableRow>
-              ) : (
-                filteredTransactions.map((tx, index) => (
-                  <TableRow
-                    key={tx.id}
-                    hover
-                    onClick={() => openEditModal(tx)}
-                    sx={{
-                      cursor: "pointer",
-                      backgroundColor: index % 2 === 0 ? "#fff" : "#fafafa",
-                      "&:hover": {
-                        backgroundColor:
-                          tx.type === "income" ? "#e8f5e9" : "#e0f7fa",
-                      },
-                    }}
-                  >
-                    <TableCell>{tx.title}</TableCell>
-                    <TableCell align="center">{tx.amount}</TableCell>
-                    <TableCell align="center">{tx.category}</TableCell>
-                    <TableCell align="center">{tx.description}</TableCell>
-                    <TableCell align="center">{tx.account}</TableCell>
-                    <TableCell align="center">{tx.date}</TableCell>
-                    <TableCell align="right">
-                      <Chip
-                        label={tx.type}
-                        sx={{ fontSize: "0.7rem" }}
-                        size="small"
-                        color={tx.type === "income" ? "success" : "error"}
-                      />
+              </TableHead>
+              <TableBody>
+                {filteredTransactions.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
+                      <Typography variant="body1" color="text.secondary">
+                        Click + to add a transaction on dashboard
+                      </Typography>
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
-
-      <TransactionFormModal
-        open={modalOpen}
-        onClose={handleCloseModal}
-        form={form}
-        onFormChange={handleFormChange}
-        onSubmit={handleSubmit}
-        onDelete={handleDelete}
-        loading={loading}
-        selectedTransaction={selectedTransaction}
-      />
-    </Box>
+                ) : (
+                  filteredTransactions.map((tx, index) => (
+                    <TableRow
+                      key={tx.id}
+                      hover
+                      onClick={() => openEditModal(tx)}
+                      sx={{
+                        cursor: "pointer",
+                        backgroundColor: index % 2 === 0 ? "#fff" : "#fafafa",
+                        "&:hover": {
+                          backgroundColor:
+                            tx.type === "income" ? "#e8f5e9" : "#e0f7fa",
+                        },
+                      }}
+                    >
+                      <TableCell>{tx.title}</TableCell>
+                      <TableCell align="center">{tx.amount}</TableCell>
+                      <TableCell align="center">{tx.category}</TableCell>
+                      <TableCell align="center">{tx.description}</TableCell>
+                      <TableCell align="center">{tx.account}</TableCell>
+                      <TableCell align="center">{tx.date}</TableCell>
+                      <TableCell align="right">
+                        <Chip
+                          label={tx.type}
+                          sx={{ fontSize: "0.7rem" }}
+                          size="small"
+                          color={tx.type === "income" ? "success" : "error"}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+        <TransactionFormModal
+          open={modalOpen}
+          onClose={handleCloseModal}
+          form={form}
+          onFormChange={handleFormChange}
+          onSubmit={handleSubmit}
+          onDelete={handleDelete}
+          loading={loading}
+          selectedTransaction={selectedTransaction}
+        />
+      </Box>
+    </>
   );
 }
 

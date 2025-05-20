@@ -14,7 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import SettingsModal from "../components/cards/SettingsModal";
+import Profile from "../components/modals/ProfileModal";
 import wealthwise from "../../assets/img/wealthwise.png";
 import { supabase } from "../../supabase";
 import { useProfile } from "../../hooks/useProfile";
@@ -155,10 +155,7 @@ export default function Topbar({ onDrawerToggle }) {
         </Toolbar>
       </AppBar>
 
-      <SettingsModal
-        open={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-      />
+      <Profile open={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
     </>
   );
 }

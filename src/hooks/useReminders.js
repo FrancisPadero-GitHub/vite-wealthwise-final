@@ -8,7 +8,7 @@ export const useReminders = () => {
   const { user } = useAuth();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["reminders"],
+    queryKey: ["reminders", user.id],
     queryFn: async () => {
       if (!user?.id) return [];
 
@@ -44,7 +44,8 @@ export const useReminders = () => {
       ]);
       if (error) throw error;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reminders"] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["reminders", user.id] }),
   });
 
   const updateTask = useMutation({
@@ -60,7 +61,8 @@ export const useReminders = () => {
 
       if (error) throw error;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reminders"] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["reminders", user.id] }),
   });
 
   const deleteTask = useMutation({
@@ -68,7 +70,8 @@ export const useReminders = () => {
       const { error } = await supabase.from("reminders").delete().eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reminders"] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["reminders", user.id] }),
   });
 
   const toggleStatus = useMutation({
@@ -83,7 +86,8 @@ export const useReminders = () => {
 
       if (error) throw error;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reminders"] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["reminders", user.id] }),
   });
 
   const deleteAllReminders = useMutation({
@@ -97,7 +101,8 @@ export const useReminders = () => {
 
       if (error) throw error;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reminders"] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["reminders", user.id] }),
   });
 
   return {

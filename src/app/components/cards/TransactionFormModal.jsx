@@ -101,7 +101,7 @@ export default function TransactionFormModal({
   selectedTransaction,
 }) {
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={onClose} disableEnforceFocus>
       <Box component="form" sx={modalStyle} onSubmit={onSubmit}>
         <Box
           display="flex"

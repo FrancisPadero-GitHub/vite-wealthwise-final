@@ -6,7 +6,7 @@ export function useBalance() {
   const { user } = useAuth();
 
   return useQuery({
-    queryKey: ["balance"],
+    queryKey: ["balance", user.id],
     queryFn: async () => {
       if (!user?.id) {
         throw new Error("User ID is undefined");

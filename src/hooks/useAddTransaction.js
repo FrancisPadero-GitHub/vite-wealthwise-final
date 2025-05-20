@@ -26,8 +26,8 @@ export function useAddTransaction() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["transactions"] });
-      queryClient.invalidateQueries(["balance"]); // ✅ Refresh balance after adding
+      queryClient.invalidateQueries({ queryKey: ["transactions", user.id] });
+      queryClient.invalidateQueries({ queryKey: ["balance", user.id] });
     },
   });
 }

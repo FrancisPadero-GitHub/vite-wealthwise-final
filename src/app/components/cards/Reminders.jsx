@@ -30,7 +30,7 @@ import {
 import { useReminders } from "../../../hooks/useReminders";
 import dayjs from "dayjs";
 import reminders from "../../../assets/img/icon.png";
-
+import RemindersRealtime from "../../../api/RemindersRealtime";
 const modalStyle = {
   position: "absolute",
   top: "50%",
@@ -97,6 +97,7 @@ export default function RemindersCard() {
 
   return (
     <>
+      <RemindersRealtime />
       <Card elevation={2}>
         <CardContent>
           <Box

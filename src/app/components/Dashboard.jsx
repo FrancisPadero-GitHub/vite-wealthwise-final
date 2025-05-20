@@ -49,11 +49,11 @@ export default function Dashboard() {
           <BudgetingCard />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6, xl: 6 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
           <TransactionsTable />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6, xl: 6 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
           <Reminders />
         </Grid>
       </Grid>

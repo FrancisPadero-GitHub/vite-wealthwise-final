@@ -62,8 +62,8 @@ export function useBudgeting() {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["budgets"] });
-      queryClient.invalidateQueries({ queryKey: ["remaining_budgets"] });
+      queryClient.invalidateQueries({ queryKey: ["budgets", user.id] });
+      queryClient.invalidateQueries({ queryKey: ["remaining_budgets", user.id] });
     },
   });
 
@@ -83,8 +83,8 @@ export function useBudgeting() {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["budgets"] });
-      queryClient.invalidateQueries({ queryKey: ["remaining_budgets"] });
+      queryClient.invalidateQueries({ queryKey: ["budgets", user.id] });
+      queryClient.invalidateQueries({ queryKey: ["remaining_budgets", user.id] });
     },
   });
 
@@ -102,8 +102,8 @@ export function useBudgeting() {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["budgets"] });
-      queryClient.invalidateQueries({ queryKey: ["remaining_budgets"] });
+      queryClient.invalidateQueries({ queryKey: ["budgets", user.id] });
+      queryClient.invalidateQueries({ queryKey: ["remaining_budgets", user.id] });
     },
   });
 
@@ -120,8 +120,10 @@ export function useBudgeting() {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["budgets"] });
-      queryClient.invalidateQueries({ queryKey: ["remaining_budgets"] });
+      queryClient.invalidateQueries({ queryKey: ["budgets", user.id] });
+      queryClient.invalidateQueries({
+        queryKey: ["remaining_budgets", user.id],
+      });
     },
   });
 

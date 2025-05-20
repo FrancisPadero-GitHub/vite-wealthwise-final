@@ -197,7 +197,7 @@ export default function SettingsModal({ open, onClose }) {
   return (
     <>
       <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ fontWeight: "bold" }}>Profile Settings</DialogTitle>
+        <DialogTitle variant="h6">Profile Settings</DialogTitle>
         <DialogContent dividers>
           {isLoading ? (
             <Box display="flex" justifyContent="center" p={3}>
@@ -279,7 +279,9 @@ export default function SettingsModal({ open, onClose }) {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose}>Close</Button>
+          <Button onClick={onClose} variant="contained" color="primary">
+            Close
+          </Button>
         </DialogActions>
       </Dialog>
 
@@ -323,9 +325,9 @@ export default function SettingsModal({ open, onClose }) {
       {/* Snackbar */}
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={5000}
+        autoHideDuration={7000}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         <Alert
           onClose={handleSnackbarClose}

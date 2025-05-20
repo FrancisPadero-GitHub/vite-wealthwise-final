@@ -1,9 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase";
+import { useAuth } from "../contexts/AuthProvider";
+
 // Fetches all transactions and calculate totals
 export function useTransactions() {
+  const { user } = useAuth();
   return useQuery({
-    queryKey: ["transactions"],
+    queryKey: ["transactions", user.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("TransactionTbl")

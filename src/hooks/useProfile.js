@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase";
+import { useAuth } from "../contexts/AuthProvider";
 
 export const useProfile = () => {
+  const { user } = useAuth();
   return useQuery({
-    queryKey: ["profile"],
+    queryKey: ["profile", user.id],
     queryFn: async () => {
       const {
         data: { user },

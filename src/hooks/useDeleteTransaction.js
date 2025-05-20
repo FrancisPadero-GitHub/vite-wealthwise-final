@@ -45,8 +45,8 @@ export function useDeleteTransaction() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["transactions"] });
-      queryClient.invalidateQueries(["balance"]);
+      queryClient.invalidateQueries({ queryKey: ["transactions", user.id] });
+      queryClient.invalidateQueries({ queryKey: ["balance", user.id] });
     },
   });
 
