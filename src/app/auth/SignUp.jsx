@@ -40,7 +40,7 @@ export default function Register() {
     }
 
     const {
-      data: { session },
+      data: { session, user },
       error,
     } = await supabase.auth.signUp({
       email: email,
@@ -55,11 +55,40 @@ export default function Register() {
     if (error) {
       setErrorMsg(error.message);
       setLoading(false);
+      return;
     }
 
+    // Insert initial balance row
+    if (user) {
+      const { error: balanceError } = await supabase.from("BalanceTbl").insert([
+        {
+          user_id: user.id,
+          amount: 0,
+          cash_balance: "cash",
+        },
+      ]);
+
+      if (balanceError) {
+        setErrorMsg(
+          "User created, but failed to create initial balance: " +
+            balanceError.message
+        );
+        setLoading(false);
+        return;
+      }
+    }
+
+    setLoading(false);
+    setSuccessMsg("Account created successfully!");
+
     if (session) {
-      setLoading(false);
-      setSuccessMsg("Account created successfully!");
+      // Optionally update your auth context here with session
+      // For example: authContext.setSession(session);
+
+      // Redirect to dashboard or home page right away
+      navigate("/");
+    } else {
+      // If session is null (email confirmation required), fallback to login
       setTimeout(() => {
         navigate("/login");
       }, 2500);
