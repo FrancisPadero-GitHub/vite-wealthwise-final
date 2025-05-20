@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import wealthwise from "../../assets/img/wealthwise.png";
 import {
+  Card,
   Box,
   Button,
-  TextField,
   Typography,
   InputAdornment,
   IconButton,
   CircularProgress,
   Alert,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  FormHelperText,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { supabase } from "../../supabase";
@@ -27,18 +32,103 @@ export default function Register() {
   const [successMsg, setSuccessMsg] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Form validation states
+  const [firstnameError, setFirstnameError] = useState("");
+  const [lastnameError, setLastnameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [cpasswordError, setCPasswordError] = useState("");
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleFirstnameChange = (event) => {
+    const value = event.target.value;
+    setFirstname(value);
+    if (!value) {
+      setFirstnameError("First name is required");
+    } else if (value.length < 2) {
+      setFirstnameError("First name must be at least 2 characters");
+    } else {
+      setFirstnameError("");
+    }
+  };
+
+  const handleLastnameChange = (event) => {
+    const value = event.target.value;
+    setLastname(value);
+    if (!value) {
+      setLastnameError("Last name is required");
+    } else if (value.length < 2) {
+      setLastnameError("Last name must be at least 2 characters");
+    } else {
+      setLastnameError("");
+    }
+  };
+
+  const handleEmailChange = (event) => {
+    const value = event.target.value;
+    setEmail(value);
+    if (!value) {
+      setEmailError("Email is required");
+    } else if (!validateEmail(value)) {
+      setEmailError("Please enter a valid email address");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const handlePasswordChange = (event) => {
+    const value = event.target.value;
+    setPassword(value);
+    if (!value) {
+      setPasswordError("Password is required");
+    } else if (value.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
+    } else {
+      setPasswordError("");
+    }
+    // Check confirm password match
+    if (cpassword && value !== cpassword) {
+      setCPasswordError("Passwords do not match");
+    } else {
+      setCPasswordError("");
+    }
+  };
+
+  const handleConfirmPasswordChange = (event) => {
+    const value = event.target.value;
+    setCPassword(value);
+    if (!value) {
+      setCPasswordError("Please confirm your password");
+    } else if (value !== password) {
+      setCPasswordError("Passwords do not match");
+    } else {
+      setCPasswordError("");
+    }
+  };
+
   async function handleRegistration(event) {
     event.preventDefault();
+
+    // Check for any validation errors
+    if (
+      firstnameError ||
+      lastnameError ||
+      emailError ||
+      passwordError ||
+      cpasswordError
+    ) {
+      return;
+    }
+
     setLoading(true);
     setErrorMsg(null);
     setSuccessMsg(null);
 
-    if (password !== cpassword) {
-      setErrorMsg("Passwords do not match.");
-      setLoading(false);
-      return;
-    }
-
+    // Register User in Supabase
     const {
       data: { session, user },
       error,
@@ -97,138 +187,179 @@ export default function Register() {
 
   return (
     <Box
-      maxWidth={500}
-      mx="auto"
-      mt={8}
-      p={4}
-      boxShadow={3}
-      borderRadius={2}
-      component="form"
-      onSubmit={handleRegistration}
-      sx={{
-        bgcolor: "#ffffff",
-        "& .MuiTextField-root": {
-          bgcolor: "#ffffff",
-        },
-      }}
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="100vh"
     >
-      <Typography variant="h5" mb={3} align="center">
-        ✨ Create Account
-      </Typography>
-
-      {errorMsg && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {errorMsg}
-        </Alert>
-      )}
-      {successMsg && (
-        <Alert severity="success" sx={{ mb: 2 }}>
-          {successMsg}
-        </Alert>
-      )}
-
-      <TextField
-        label="👤 First Name"
-        fullWidth
-        required
-        value={firstname}
-        onChange={(e) => setFirstname(e.target.value)}
-        margin="normal"
-        disabled={loading}
-      />
-      <TextField
-        label="👤 Last Name"
-        fullWidth
-        required
-        value={lastname}
-        onChange={(e) => setLastname(e.target.value)}
-        margin="normal"
-        disabled={loading}
-      />
-      <TextField
-        label="📧 Email"
-        type="email"
-        fullWidth
-        required
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        margin="normal"
-        disabled={loading}
-      />
-      <TextField
-        label="🔑 Password"
-        type={showPassword ? "text" : "password"}
-        fullWidth
-        required
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        margin="normal"
-        disabled={loading}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                onClick={() => setShowPassword(!showPassword)}
-                edge="end"
-                disabled={loading}
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          ),
+      <Card
+        elevation={3}
+        sx={{
+          maxWidth: 380,
+          p: 3,
+          borderRadius: 2,
+          bgcolor: "#ffffff",
+          "& .MuiTextField-root": {
+            bgcolor: "#ffffff",
+          },
         }}
-      />
-      <TextField
-        label="Confirm Password"
-        type={showPassword ? "text" : "password"}
-        fullWidth
-        required
-        value={cpassword}
-        onChange={(e) => setCPassword(e.target.value)}
-        margin="normal"
-        disabled={loading}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                onClick={() => setShowPassword(!showPassword)}
-                edge="end"
-                disabled={loading}
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
+        component="form"
+        onSubmit={handleRegistration}
+      >
+        <Box display="flex" alignItems="center" justifyContent="center">
+          <img
+            src={wealthwise}
+            alt="logo"
+            style={{
+              width: "90px",
+              height: "90px",
+              marginRight: "10px",
+              marginBottom: "10px",
+            }}
+          />
+          <Typography variant="h2" color="primary" sx={{ marginTop: "6%" }}>
+            WealthWise
+          </Typography>
+        </Box>
 
-      <Box mt={3} textAlign="center">
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={loading}
-          fullWidth
-          size="large"
-          startIcon={loading ? <CircularProgress size={20} /> : null}
-        >
-          {loading ? "Creating..." : "Register ✨"}
-        </Button>
-      </Box>
-
-      <Box mt={2} textAlign="center">
-        <Typography variant="body2">
-          Already have an account?{" "}
-          <Button
-            component={Link}
-            to="/login"
-            size="small"
-            sx={{ textTransform: "none", padding: 0 }}
-          >
-            Login 🔐
-          </Button>
+        <Typography variant="body1" fontWeight="bold" align="center">
+          ✨ Create Account
         </Typography>
-      </Box>
+        {errorMsg && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {errorMsg}
+          </Alert>
+        )}
+        {successMsg && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {successMsg}
+          </Alert>
+        )}
+
+        <FormControl fullWidth margin="normal" error={!!firstnameError}>
+          <InputLabel htmlFor="firstname-input">👤 First Name</InputLabel>
+          <OutlinedInput
+            id="firstname-input"
+            value={firstname}
+            onChange={handleFirstnameChange}
+            label="👤 First Name"
+            disabled={loading}
+            required
+          />
+          {firstnameError && <FormHelperText>{firstnameError}</FormHelperText>}
+        </FormControl>
+
+        <FormControl fullWidth margin="normal" error={!!lastnameError}>
+          <InputLabel htmlFor="lastname-input">👤 Last Name</InputLabel>
+          <OutlinedInput
+            id="lastname-input"
+            value={lastname}
+            onChange={handleLastnameChange}
+            label="👤 Last Name"
+            disabled={loading}
+            required
+          />
+          {lastnameError && <FormHelperText>{lastnameError}</FormHelperText>}
+        </FormControl>
+
+        <FormControl fullWidth margin="normal" error={!!emailError}>
+          <InputLabel htmlFor="email-input">📧 Email</InputLabel>
+          <OutlinedInput
+            id="email-input"
+            type="email"
+            value={email}
+            onChange={handleEmailChange}
+            label="📧 Email"
+            disabled={loading}
+            required
+          />
+          {emailError && <FormHelperText>{emailError}</FormHelperText>}
+        </FormControl>
+
+        <FormControl fullWidth margin="normal" error={!!passwordError}>
+          <InputLabel htmlFor="password-input">🔑 Password</InputLabel>
+          <OutlinedInput
+            id="password-input"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={handlePasswordChange}
+            label="🔑 Password"
+            disabled={loading}
+            required
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                  disabled={loading}
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+          {passwordError && <FormHelperText>{passwordError}</FormHelperText>}
+        </FormControl>
+
+        <FormControl fullWidth margin="normal" error={!!cpasswordError}>
+          <InputLabel htmlFor="cpassword-input">Confirm Password</InputLabel>
+          <OutlinedInput
+            id="cpassword-input"
+            type={showPassword ? "text" : "password"}
+            value={cpassword}
+            onChange={handleConfirmPasswordChange}
+            label="Confirm Password"
+            disabled={loading}
+            required
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                  disabled={loading}
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+          {cpasswordError && <FormHelperText>{cpasswordError}</FormHelperText>}
+        </FormControl>
+
+        <Box mt={3} textAlign="center">
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={
+              loading ||
+              !!firstnameError ||
+              !!lastnameError ||
+              !!emailError ||
+              !!passwordError ||
+              !!cpasswordError
+            }
+            fullWidth
+            size="large"
+            startIcon={loading ? <CircularProgress size={20} /> : null}
+          >
+            {loading ? "Creating..." : "Register ✨"}
+          </Button>
+        </Box>
+        <Box mt={2} textAlign="center">
+          <Typography variant="body2">
+            Already have an account?{" "}
+            <Button
+              component={Link}
+              to="/login"
+              size="small"
+              sx={{ textTransform: "none", padding: 0 }}
+            >
+              Login 🔐
+            </Button>
+          </Typography>
+        </Box>
+      </Card>
     </Box>
   );
 }

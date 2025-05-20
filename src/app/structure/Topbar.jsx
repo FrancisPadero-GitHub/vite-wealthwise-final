@@ -14,7 +14,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 
-import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase";
 import { useProfile } from "../../hooks/useProfile";
 import SettingsModal from "../components/cards/SettingsModal";
@@ -24,7 +23,7 @@ export default function Topbar({ onDrawerToggle }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const navigate = useNavigate();
+
   const { data: profile, isLoading } = useProfile();
 
   const handleMenuClick = (event) => {
@@ -41,10 +40,6 @@ export default function Topbar({ onDrawerToggle }) {
     if (error) {
       console.error("Error signing out:", error.message);
       setIsLoggingOut(false);
-    } else {
-      setTimeout(() => {
-        navigate("/login", { replace: true });
-      }, 2000);
     }
   };
 

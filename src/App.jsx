@@ -10,6 +10,7 @@ import Topbar from "./app/structure/Topbar";
 
 import SignIn from "./app/auth/SignIn";
 import SignUp from "./app/auth/SignUp";
+import PageNotFound from "./app/components/PageNotFound";
 
 import ProtectedRoute from "./app/components/ProtectedRoutes";
 import { AuthProvider } from "./contexts/AuthProvider";
@@ -72,6 +73,10 @@ function App() {
     {
       path: "/register",
       element: <SignUp />,
+    },
+    {
+      path: "*",
+      element: <PageNotFound />,
     },
   ]);
 
