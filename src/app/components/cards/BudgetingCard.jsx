@@ -278,8 +278,12 @@ export default function BudgetingCard() {
                 );
               })
             ) : (
-              <Grid xs={12} mt={1}>
-                <Typography variant="body2" align="center" color="text.secondary">
+              <Grid mt={1}>
+                <Typography
+                  variant="body2"
+                  align="center"
+                  color="text.secondary"
+                >
                   Add a budget to get started
                 </Typography>
               </Grid>
@@ -415,8 +419,12 @@ export default function BudgetingCard() {
                 </Grid>
               ))
             ) : (
-              <Grid xs={12} mt={1}>
-                <Typography variant="body2" align="center" color="text.secondary">
+              <Grid mt={1}>
+                <Typography
+                  variant="body2"
+                  align="center"
+                  color="text.secondary"
+                >
                   Click the + icon to add a new budget.
                 </Typography>
               </Grid>
