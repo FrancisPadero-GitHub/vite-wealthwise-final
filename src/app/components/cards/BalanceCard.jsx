@@ -5,13 +5,11 @@ import {
   CardContent,
   Typography,
   IconButton,
-  Menu,
-  MenuItem,
   CircularProgress,
   Box,
 } from "@mui/material";
 
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import EditIcon from "@mui/icons-material/Edit";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 
 import { useBalance } from "../../../hooks/useBalance";
@@ -23,18 +21,9 @@ export default function BalanceCard() {
   const amount = balanceData?.amount ?? 0;
   const status = amount >= 0 ? "Debt Free" : "In Debt";
 
-  // Dropdown menu state
-  const [anchorEl, setAnchorEl] = useState(null);
-  const openMenu = Boolean(anchorEl);
-  const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
-  const handleMenuClose = () => setAnchorEl(null);
-
   // Modal dialog state
   const [openModal, setOpenModal] = useState(false);
-  const handleOpenModal = () => {
-    setOpenModal(true);
-    handleMenuClose();
-  };
+  const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
   return (
@@ -53,33 +42,9 @@ export default function BalanceCard() {
         <CardHeader
           title={<Typography variant="h6">Balance</Typography>}
           action={
-            <>
-              <IconButton
-                aria-label="settings"
-                aria-controls={openMenu ? "balance-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={openMenu ? "true" : undefined}
-                onClick={handleMenuOpen}
-              >
-                <MoreVertIcon />
-              </IconButton>
-              <Menu
-                id="balance-menu"
-                anchorEl={anchorEl}
-                open={openMenu}
-                onClose={handleMenuClose}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-              >
-                <MenuItem onClick={handleOpenModal}>Edit</MenuItem>
-              </Menu>
-            </>
+            <IconButton aria-label="edit balance" onClick={handleOpenModal}>
+              <EditIcon />
+            </IconButton>
           }
         />
         <CardContent sx={{ display: "flex", alignItems: "center" }}>

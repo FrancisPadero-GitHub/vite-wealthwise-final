@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useBudgeting } from "../../../hooks/useBudgeting";
-import BudgetModal from "./BudgetModal";
+import BudgetModal from "../modals/BudgetModal";
 import BudgetRealtime from "../../../api/BudgetRealtime";
 import {
   Box,

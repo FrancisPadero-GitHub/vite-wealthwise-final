@@ -16,7 +16,7 @@ export const useReminders = () => {
         .from("reminders")
         .select("*")
         .eq("user_id", user.id)
-        .order("id", { ascending: true });
+        .order("updated_at", { ascending: false });
 
       if (error) throw error;
       return data;
@@ -40,6 +40,7 @@ export const useReminders = () => {
           user_id: user.id,
           created_at: new Date().toISOString(),
           is_completed: "false", // set default as string "false"
+          updated_at: new Date().toISOString(),
         },
       ]);
       if (error) throw error;
@@ -56,6 +57,7 @@ export const useReminders = () => {
           title,
           description,
           due_date: date,
+          updated_at: new Date().toISOString(),
         })
         .eq("id", id);
 
@@ -81,7 +83,10 @@ export const useReminders = () => {
 
       const { error } = await supabase
         .from("reminders")
-        .update({ is_completed: statusString })
+        .update({
+          is_completed: statusString,
+          updated_at: new Date().toISOString(),
+        })
         .eq("id", id);
 
       if (error) throw error;

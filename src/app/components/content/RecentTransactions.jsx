@@ -15,7 +15,7 @@ import { useTransactions } from "../../../hooks/useTransactions";
 import { useAddTransaction } from "../../../hooks/useAddTransaction";
 import { useEditTransaction } from "../../../hooks/useEditTransaction";
 import { useDeleteTransaction } from "../../../hooks/useDeleteTransaction";
-import TransactionFormModal from "./TransactionFormModal";
+import TransactionFormModal from "../modals/TransactionFormModal";
 import TransactionRealtime from "../../../api/TransactionRealtime";
 const defaultFormValues = {
   title: "",

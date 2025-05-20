@@ -42,7 +42,12 @@ export default function EditBalanceModal({ open, onClose, currentAmount }) {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="xs"
+      fullWidth
+    >
       <DialogTitle>Edit Balance</DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent dividers>

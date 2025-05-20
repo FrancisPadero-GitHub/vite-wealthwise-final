@@ -6,9 +6,9 @@ import {
   Link as MuiLink,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import TransactionTable from "./cards/TransactionTable";
-import IncomeChart from "./cards/IncomeChart";
-import ExpenseChart from "./cards/ExpenseChart";
+import TransactionTable from "./content/TransactionTable";
+import IncomeChart from "./charts/IncomeChart";
+import ExpenseChart from "./charts/ExpenseChart";
 
 export default function Transactions() {
   return (

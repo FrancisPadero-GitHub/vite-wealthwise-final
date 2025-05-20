@@ -21,7 +21,7 @@ import { useTransactions } from "../../../hooks/useTransactions";
 import { useAddTransaction } from "../../../hooks/useAddTransaction";
 import { useEditTransaction } from "../../../hooks/useEditTransaction";
 import { useDeleteTransaction } from "../../../hooks/useDeleteTransaction";
-import TransactionFormModal from "./TransactionFormModal";
+import TransactionFormModal from "../modals/TransactionFormModal";
 import TransactionRealtime from "../../../api/TransactionRealtime";
 const defaultFormValues = {
   title: "",
@@ -44,7 +44,7 @@ function TransactionTable() {
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [yearFilter, setYearFilter] = useState("all");
-  const [monthFilter, setMonthFilter] = useState("all");
+  const [monthFilter, setMonthFilter] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState(defaultFormValues);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
@@ -118,9 +118,9 @@ function TransactionTable() {
       const months = transactions
         .filter((tx) => new Date(tx.date).getFullYear() === year)
         .map((tx) => new Date(tx.date).getMonth());
-      return ["all", ...new Set(months)].sort((a, b) => {
-        if (a === "all") return -1;
-        if (b === "all") return 1;
+      return ["", ...new Set(months)].sort((a, b) => {
+        if (a === "") return -1;
+        if (b === "") return 1;
         return a - b;
       });
     },
@@ -145,7 +145,7 @@ function TransactionTable() {
       const matchesYear =
         yearFilter === "all" || txDate.getFullYear() === yearFilter;
       const matchesMonth =
-        monthFilter === "all" || txDate.getMonth() === monthFilter;
+        monthFilter === "" || txDate.getMonth() === parseInt(monthFilter);
 
       return matchesType && matchesSearch && matchesYear && matchesMonth;
     }) || [];
@@ -195,7 +195,7 @@ function TransactionTable() {
                   value={yearFilter}
                   onChange={(e) => {
                     setYearFilter(e.target.value);
-                    setMonthFilter("all"); // Reset month when year changes
+                    setMonthFilter(""); // Reset month when year changes
                   }}
                   label="Year"
                 >
@@ -216,7 +216,7 @@ function TransactionTable() {
                 >
                   {getMonthsForYear(yearFilter).map((month) => (
                     <MenuItem key={month} value={month}>
-                      {month === "all"
+                      {month === ""
                         ? "All Months"
                         : new Date(2000, month, 1).toLocaleDateString("en-US", {
                             month: "long",
