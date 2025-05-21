@@ -96,7 +96,7 @@ export default function BudgetingCard() {
                   ? Math.min((spent / total) * 100, 100)
                   : 0;
                 return (
-                  <Grid item key={budget.budget_id}>
+                  <Grid key={budget.budget_id}>
                     <Card
                       elevation={4}
                       sx={{
@@ -200,7 +200,7 @@ export default function BudgetingCard() {
           >
             {budgets?.length > 0 ? (
               budgets.map((budget) => (
-                <Grid item key={budget.id}>
+                <Grid key={budget.id}>
                   <Card
                     elevation={4}
                     sx={{

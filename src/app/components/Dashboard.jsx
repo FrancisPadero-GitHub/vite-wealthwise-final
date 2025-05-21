@@ -45,15 +45,15 @@ export default function Dashboard() {
         rowSpacing={{ xs: 2, sm: 2, md: 2, lg: 2, xl: 3 }}
         sx={{ mt: 2 }}
       >
-        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 4, xl: 4 }}>
           <Budgeting />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 4, xl: 4 }}>
           <RecentTransactions />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 12, lg: 4, xl: 4 }}>
           <Reminders />
         </Grid>
       </Grid>

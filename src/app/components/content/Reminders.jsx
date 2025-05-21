@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import {
+  Grid,
   Card,
   Paper,
   Stack,
@@ -158,205 +159,224 @@ export default function RemindersCard() {
             </IconButton>
           </Box>
 
-          <Box display="flex" flexDirection="row" gap={2}>
+          <Grid container spacing={2} rowGap={1}>
             {/* Pending Tasks Paper */}
-            <Paper
-              elevation={1}
-              sx={{
-                maxHeight: 650,
-                width: "60%",
-                borderRadius: 2,
-                boxShadow: 2,
-                px: 2,
-              }}
-            >
-              {tasks.length > 0 && (
-                <Box display="flex" flexDirection="column" height="100%">
-                  {/* Header */}
-                  <Box px={2} py={1} display="flex" justifyContent="center">
-                    <Typography variant="overline" color="text.secondary">
-                      ⏳ Pending Tasks
-                    </Typography>
-                  </Box>
+            <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
+              <Paper
+                elevation={1}
+                sx={{
+                  height: "100%",
+                  maxHeight: 650,
+                  borderRadius: 2,
+                  boxShadow: 2,
+                  px: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                {tasks.length > 0 && (
+                  <Box display="flex" flexDirection="column" height="100%">
+                    {/* Header */}
+                    <Box px={2} py={1} display="flex" justifyContent="center">
+                      <Typography variant="overline" color="text.secondary">
+                        ⏳ Pending Tasks
+                      </Typography>
+                    </Box>
 
-                  {/* Scrollable Task List */}
-                  <Box sx={{ flex: 1, overflowY: "auto", pr: 1 }}>
-                    <List disablePadding>
-                      {tasks.map((task) => (
-                        <ListItem
-                          key={task.id}
-                          disableGutters
-                          sx={{ padding: 0 }}
-                        >
-                          <Box
-                            sx={{
-                              width: "100%",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              padding: 2,
-                              transition:
-                                "transform 0.2s, background-color 0.2s",
-                              "&:hover": {
-                                transform: "scale(1.01)",
-                                backgroundColor: "rgba(0, 0, 0, 0.04)",
-                              },
-                            }}
-                          >
-                            <ListItemText
-                              primary={task.title}
-                              secondary={
-                                <>
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    component="span"
-                                  >
-                                    {task.description}
-                                  </Typography>
-                                  <br />
-                                  <Typography
-                                    variant="caption"
-                                    color="text.secondary"
-                                    component="span"
-                                  >
-                                    Due:{" "}
-                                    {dayjs(task.due_date).format("MMM D, YYYY")}
-                                  </Typography>
-                                </>
-                              }
-                            />
-                            <Stack direction="row" alignItems="center">
-                              <IconButton
-                                onClick={() => toggleStatus(task.id, true)}
+                    {/* Scrollable Task List */}
+                    <Box sx={{ flex: 1, overflowY: "auto", pr: 1 }}>
+                      <List disablePadding>
+                        {tasks.map((task) => (
+                          <ListItem key={task.id} disableGutters>
+                            <Box
+                              sx={{
+                                width: "100%",
+                                display: "flex",
+                                alignItems: "flex-start", // aligns text top left
+                                justifyContent: "space-between",
+                                padding: 2,
+                                gap: 2,
+                                transition:
+                                  "transform 0.2s, background-color 0.2s",
+                                "&:hover": {
+                                  transform: "scale(1.01)",
+                                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                                },
+                              }}
+                            >
+                              {/* Task Text */}
+                              <Box sx={{ flex: 1 }}>
+                                <Typography variant="body1" fontWeight="bold">
+                                  {task.title}
+                                </Typography>
+
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                  sx={{ mt: 0.5 }}
+                                >
+                                  {task.description}
+                                </Typography>
+
+                                <Typography
+                                  variant="caption"
+                                  color="text.secondary"
+                                  sx={{ mt: 1, display: "block" }} // space before due date
+                                >
+                                  Due:{" "}
+                                  {dayjs(task.due_date).format("MMM D, YYYY")}
+                                </Typography>
+                              </Box>
+
+                              {/* Action Buttons */}
+                              <Stack
+                                direction="row"
+                                spacing={0.5}
+                                sx={{ ml: "auto", alignSelf: "flex-start" }}
                               >
-                                <CheckCircleOutline color="success" />
-                              </IconButton>
-                              <IconButton
-                                onClick={() => handleOpen(task)}
-                                sx={{ ml: 1 }}
-                              >
-                                <EditOutlined color="primary" />
-                              </IconButton>
-                              <IconButton
-                                onClick={() => handleDeleteTask(task.id)}
-                                sx={{ ml: 1 }}
-                              >
-                                <DeleteOutline color="error" />
-                              </IconButton>
-                            </Stack>
-                          </Box>
-                        </ListItem>
-                      ))}
-                    </List>
+                                <IconButton
+                                  onClick={() => toggleStatus(task.id, true)}
+                                >
+                                  <CheckCircleOutline color="success" />
+                                </IconButton>
+                                <IconButton onClick={() => handleOpen(task)}>
+                                  <EditOutlined color="primary" />
+                                </IconButton>
+                                <IconButton
+                                  onClick={() => handleDeleteTask(task.id)}
+                                >
+                                  <DeleteOutline color="error" />
+                                </IconButton>
+                              </Stack>
+                            </Box>
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Box>
                   </Box>
-                </Box>
-              )}
-              {tasks.length > 0 && completedTasks.length > 0 && <Divider />}
-              {!tasks.length && !completedTasks.length && (
-                <Box py={3} textAlign="center">
-                  <Typography color="text.secondary">
-                    Click + to add a note
-                  </Typography>
-                </Box>
-              )}
-            </Paper>
+                )}
+              </Paper>
+            </Grid>
             {/* End of Pending Tasks Paper */}
 
-            {/* Completed Tasks Paper */}
-            <Paper
-              elevation={1}
-              sx={{
-                maxHeight: 650,
-                width: "40%",
-                borderRadius: 2,
-                boxShadow: 2,
-                px: 2,
-              }}
-            >
-              {completedTasks.length > 0 && (
-                <Box display="flex" flexDirection="column" height="100%">
-                  {/* Header */}
-                  <Box px={2} py={1} display="flex" justifyContent="center">
-                    <Typography variant="overline" color="text.secondary">
-                      ✅ Completed Tasks
-                    </Typography>
-                  </Box>
+            {tasks.length > 0 && completedTasks.length > 0 && <Divider />}
 
-                  {/* Scrollable List Area */}
-                  <Box sx={{ flex: 1, overflowY: "auto", pr: 1 }}>
-                    <List disablePadding>
-                      {completedTasks.map((task) => (
-                        <ListItem
-                          key={task.id}
-                          disableGutters
-                          sx={{
-                            padding: 0,
-                            textDecoration: "line-through",
-                            color: "#999",
-                          }}
-                        >
-                          <Box
+            {/* Completed Tasks Paper */}
+            <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
+              <Paper
+                elevation={1}
+                sx={{
+                  height: "100%",
+                  maxHeight: 400,
+                  borderRadius: 2,
+                  boxShadow: 2,
+                  px: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                {completedTasks.length > 0 && (
+                  <Box display="flex" flexDirection="column" height="100%">
+                    {/* Header */}
+                    <Box px={2} py={1} display="flex" justifyContent="center">
+                      <Typography variant="overline" color="text.secondary">
+                        ✅ Completed Tasks
+                      </Typography>
+                    </Box>
+
+                    {/* Scrollable List Area */}
+                    <Box sx={{ flex: 1, overflowY: "auto", pr: 1 }}>
+                      <List disablePadding>
+                        {completedTasks.map((task) => (
+                          <ListItem
+                            key={task.id}
+                            disableGutters
                             sx={{
-                              width: "100%",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              padding: 2,
-                              transition:
-                                "transform 0.2s, backgroundColor 0.2s",
-                              "&:hover": {
-                                transform: "scale(1.01)",
-                                backgroundColor: "rgba(0, 0, 0, 0.04)",
-                              },
+                              padding: 0,
+                              color: "#999",
+                              textDecoration: "line-through",
                             }}
                           >
-                            <ListItemText
-                              primary={task.title}
-                              secondary={
-                                <>
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    component="span"
-                                  >
-                                    {task.description}
-                                  </Typography>
-                                  <br />
-                                  <Typography
-                                    variant="caption"
-                                    color="text.secondary"
-                                    component="span"
-                                  >
-                                    Due:{" "}
-                                    {dayjs(task.due_date).format("MMM D, YYYY")}
-                                  </Typography>
-                                </>
-                              }
-                            />
-                            <Stack direction="row" alignItems="center">
-                              <IconButton
-                                onClick={() => toggleStatus(task.id, false)}
+                            <Box
+                              sx={{
+                                width: "100%",
+                                display: "flex",
+                                alignItems: "flex-start",
+                                justifyContent: "space-between",
+                                padding: 2,
+                                gap: 2,
+                                transition:
+                                  "transform 0.2s, background-color 0.2s",
+                                "&:hover": {
+                                  transform: "scale(1.01)",
+                                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                                },
+                              }}
+                            >
+                              {/* Task Text */}
+                              <Box sx={{ flex: 1 }}>
+                                <Typography
+                                  variant="body1"
+                                  fontWeight="bold"
+                                >
+                                  {task.title}
+                                </Typography>
+
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                  sx={{ mt: 0.5 }}
+                                >
+                                  {task.description}
+                                </Typography>
+
+                                <Typography
+                                  variant="caption"
+                                  color="text.secondary"
+                                  sx={{ mt: 2, display: "block" }}
+                                >
+                                  Due:{" "}
+                                  {dayjs(task.due_date).format("MMM D, YYYY")}
+                                </Typography>
+                              </Box>
+
+                              {/* Action Buttons */}
+                              <Stack
+                                direction="row"
+                                spacing={1}
+                                sx={{ ml: "auto", alignSelf: "flex-start" }}
                               >
-                                <Replay color="action" />
-                              </IconButton>
-                              <IconButton
-                                onClick={() => handleDeleteTask(task.id)}
-                                sx={{ ml: 1 }}
-                              >
-                                <DeleteOutline color="error" />
-                              </IconButton>
-                            </Stack>
-                          </Box>
-                        </ListItem>
-                      ))}
-                    </List>
+                                <IconButton
+                                  onClick={() => toggleStatus(task.id, false)}
+                                >
+                                  <Replay color="action" />
+                                </IconButton>
+                                <IconButton
+                                  onClick={() => handleDeleteTask(task.id)}
+                                >
+                                  <DeleteOutline color="error" />
+                                </IconButton>
+                              </Stack>
+                            </Box>
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Box>
                   </Box>
-                </Box>
-              )}
-            </Paper>
+                )}
+              </Paper>
+            </Grid>
             {/* End of Completed Tasks Paper */}
-          </Box>
+          </Grid>
+          {!tasks.length && !completedTasks.length && (
+            <Card elevation={2}>
+              <Box py={3} textAlign="center">
+                <Typography color="text.secondary">
+                  Click + to add a note
+                </Typography>
+              </Box>
+            </Card>
+          )}
         </CardContent>
       </Card>
 
