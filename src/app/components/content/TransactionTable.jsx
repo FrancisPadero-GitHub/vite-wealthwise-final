@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -16,6 +16,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Alert,
 } from "@mui/material";
 import { useTransactions } from "../../../hooks/useTransactions";
 import { useAddTransaction } from "../../../hooks/useAddTransaction";
@@ -35,6 +36,7 @@ const defaultFormValues = {
 
 export default function TransactionTable() {
   const [loading, setLoading] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
 
   const { data: transactions, isLoading, error } = useTransactions();
   const { mutateAsync: addTransaction } = useAddTransaction();
@@ -146,8 +148,28 @@ export default function TransactionTable() {
       return matchesType && matchesSearch && matchesYear && matchesMonth;
     }) || [];
 
-  if (isLoading) return <CircularProgress />;
-  if (error) return <Typography color="error">{error.message}</Typography>;
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted) return null;
+
+  if (isLoading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="200px"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return <Alert severity="error">Error: {error.message}</Alert>;
+  }
 
   return (
     <>

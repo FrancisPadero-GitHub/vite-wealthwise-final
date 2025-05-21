@@ -1,10 +1,10 @@
 import { Box, Grid, Breadcrumbs, Typography } from "@mui/material";
 import BalanceCard from "./cards/BalanceCard";
-import RecentTransactions from "./content/RecentTransactions";
-import Reminders from "./content/Reminders";
 import TotalIncomeCard from "./cards/TotalIncomeCard";
 import TotalExpenseCard from "./cards/TotalExpenseCard";
-import BudgetingCard from "./cards/BudgetingCard";
+import RecentTransactions from "./content/RecentTransactions";
+import Reminders from "./content/Reminders";
+import Budgeting from "./content/Budgeting";
 export default function Dashboard() {
   return (
     <Box>
@@ -46,7 +46,7 @@ export default function Dashboard() {
         sx={{ mt: 2 }}
       >
         <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
-          <BudgetingCard />
+          <Budgeting />
         </Grid>
 
         <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>

@@ -1,15 +1,45 @@
 import { useTransactions } from "../../../hooks/useTransactions";
 import { PieChart } from "@mui/x-charts";
-import { Box, Typography, Paper, useTheme, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Paper,
+  useTheme,
+  useMediaQuery,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import { useState, useEffect } from "react";
 
 export default function IncomeChart() {
+  const [hasMounted, setHasMounted] = useState(false);
   const { data: transactions, isLoading, error } = useTransactions();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  if (isLoading) return <Typography>Loading...</Typography>;
-  if (error) return <Typography color="error">Error loading data</Typography>;
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted) return null;
+
+  if (isLoading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="200px"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return <Alert severity="error">Error: {error.message}</Alert>;
+  }
 
   // Filter out income transactions and process Income by category
   const categoryData = transactions

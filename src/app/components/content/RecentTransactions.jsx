@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Chip,
   Paper,
@@ -39,6 +39,12 @@ export default function TransactionTable() {
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState(defaultFormValues);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  // For the loading animation
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   const openAddModal = useCallback(() => {
     setSelectedTransaction(null);
@@ -104,7 +110,19 @@ export default function TransactionTable() {
       ].some((field) => field.toLowerCase().includes(searchQuery.toLowerCase()))
     ) || [];
 
-  if (isLoading) return <CircularProgress />;
+  // For the loading animation
+  if (!hasMounted) return null;
+  if (isLoading)
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="200px"
+      >
+        <CircularProgress />
+      </Box>
+    );
   if (error) return <Typography color="error">{error.message}</Typography>;
 
   return (

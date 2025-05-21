@@ -7,151 +7,41 @@ import {
   Card,
   CardContent,
   Typography,
-  Button,
   Grid,
   CircularProgress,
   Alert,
   Chip,
   IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Snackbar,
   Tooltip,
   LinearProgress,
 } from "@mui/material";
 import {
   EditOutlined,
-  DeleteOutline,
   Add as AddIcon,
   Category as CategoryIcon,
   CalendarToday as CalendarTodayIcon,
-  AttachMoney as AttachMoneyIcon,
 } from "@mui/icons-material";
 
 import { format } from "date-fns";
 
 export default function BudgetingCard() {
-  const {
-    budgets,
-    remainingBudgets,
-    loading,
-    error,
-    addBudget,
-    updateBudget,
-    deleteBudget,
-  } = useBudgeting();
+  const { budgets, remainingBudgets, loading, error } = useBudgeting();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [budgetToDelete, setBudgetToDelete] = useState(null);
-  const [operationLoading, setOperationLoading] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
+  const [selectedBudget, setSelectedBudget] = useState(null);
 
-  const [formData, setFormData] = useState({
-    category: "",
-    name: "",
-    start_date: "",
-    end_date: "",
-    amount: "",
-  });
+  const handleOpenModal = (budget = null) => {
+    setSelectedBudget(budget);
+    setEditing(!!budget);
+    setModalOpen(true);
+  };
 
+  // For the loading animation
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);
   }, []);
-
-  const handleOpenModal = (budget = null) => {
-    if (budget) {
-      setFormData({
-        category: budget.category,
-        name: budget.name,
-        start_date: format(new Date(budget.start_date), "yyyy-MM-dd"),
-        end_date: format(new Date(budget.end_date), "yyyy-MM-dd"),
-        amount: budget.amount,
-      });
-      setEditing(true);
-      setEditingId(budget.id);
-    } else {
-      setFormData({
-        category: "",
-        name: "",
-        start_date: "",
-        end_date: "",
-        amount: "",
-      });
-      setEditing(false);
-      setEditingId(null);
-    }
-    setModalOpen(true);
-  };
-
-  const handleSubmit = async () => {
-    try {
-      setOperationLoading(true);
-      if (editing && editingId) {
-        await updateBudget(editingId, formData);
-        setSnackbar({
-          open: true,
-          message: "Budget updated successfully",
-          severity: "success",
-        });
-      } else {
-        await addBudget(formData);
-        setSnackbar({
-          open: true,
-          message: "Budget added successfully",
-          severity: "success",
-        });
-      }
-      setModalOpen(false);
-    } catch (error) {
-      setSnackbar({
-        open: true,
-        message: error.message || "Operation failed",
-        severity: "error",
-      });
-    } finally {
-      setOperationLoading(false);
-    }
-  };
-
-  const handleDeleteClick = (budget) => {
-    setBudgetToDelete(budget);
-    setDeleteConfirmOpen(true);
-  };
-
-  const handleDeleteConfirm = async () => {
-    try {
-      setOperationLoading(true);
-      await deleteBudget(budgetToDelete.id);
-      setSnackbar({
-        open: true,
-        message: "Budget deleted successfully",
-        severity: "success",
-      });
-    } catch (error) {
-      setSnackbar({
-        open: true,
-        message: error.message || "Failed to delete budget",
-        severity: "error",
-      });
-    } finally {
-      setOperationLoading(false);
-      setDeleteConfirmOpen(false);
-      setBudgetToDelete(null);
-    }
-  };
-
-  const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
-
   if (!hasMounted) return null;
   if (loading)
     return (
@@ -196,7 +86,6 @@ export default function BudgetingCard() {
             sx={{
               minWidth: "max-content",
               pb: 2,
-              px: 2,
             }}
           >
             {remainingBudgets?.length > 0 ? (
@@ -212,7 +101,7 @@ export default function BudgetingCard() {
                       elevation={4}
                       sx={{
                         borderLeft: 4,
-                        width: 425,
+                        width: 250,
                         borderColor:
                           budget.remaining <= 0 ? "error.main" : "success.main",
                         transition: "transform 0.5s",
@@ -242,16 +131,19 @@ export default function BudgetingCard() {
                           variant="h6"
                           color={budget.remaining <= 0 ? "error" : "success"}
                         >
-                          {/* budget_amount */}₱{" "}
-                          {budget.remaining.toLocaleString()}
+                          ₱ {budget.remaining.toLocaleString()}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          mb={2}
+                        >
                           {budget.remaining < 0 ? "Over Budget" : "Remaining"}
                         </Typography>
 
                         <Box display="flex" justifyContent="center">
                           <Chip
-                            size="medium"
+                            size="small"
                             color={percent >= 100 ? "error" : "primary"}
                             variant="outlined"
                             label={`Total Spent: ₱ ${spent.toLocaleString()}`}
@@ -304,7 +196,6 @@ export default function BudgetingCard() {
             sx={{
               minWidth: "max-content",
               pb: 2,
-              px: 2,
             }}
           >
             {budgets?.length > 0 ? (
@@ -313,7 +204,7 @@ export default function BudgetingCard() {
                   <Card
                     elevation={4}
                     sx={{
-                      width: 425,
+                      width: 250,
                       transition: "transform 0.5s",
                       "&:hover": { transform: "scale(1.02)" },
                       background:
@@ -322,23 +213,42 @@ export default function BudgetingCard() {
                     }}
                   >
                     <CardContent>
-                      <Box
-                        display="flex"
-                        justifyContent="space-between"
-                        alignItems="end"
-                      >
+                      <Box>
                         <Box>
-                          <Typography
-                            variant="subtitle1"
-                            fontWeight="bold"
-                            sx={{
-                              color: "#1976d2",
-                              fontSize: "1.2rem",
-                              mb: 1,
-                            }}
+                          <Box
+                            display="flex"
+                            justifyContent="space-between"
+                            alignItems="center"
                           >
-                            {budget.name}
-                          </Typography>
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight="bold"
+                              sx={{
+                                color: "#1976d2",
+                                fontSize: "1.2rem",
+                                mb: 1,
+                              }}
+                            >
+                              {budget.name}
+                            </Typography>
+
+                            <Box>
+                              <Tooltip title="Edit Budget">
+                                <IconButton
+                                  onClick={() => handleOpenModal(budget)}
+                                  sx={{
+                                    color: "#2196f3",
+                                    "&:hover": {
+                                      backgroundColor:
+                                        "rgba(33, 150, 243, 0.1)",
+                                    },
+                                  }}
+                                >
+                                  <EditOutlined />
+                                </IconButton>
+                              </Tooltip>
+                            </Box>
+                          </Box>
 
                           <Typography
                             variant="body1"
@@ -391,39 +301,6 @@ export default function BudgetingCard() {
                             - {format(new Date(budget.end_date), "MMM d, yyyy")}
                           </Typography>
                         </Box>
-
-                        <Box>
-                          <Tooltip title="Edit Budget">
-                            <IconButton
-                              onClick={() => handleOpenModal(budget)}
-                              sx={{
-                                mr: 1,
-                                color: "#2196f3",
-                                "&:hover": {
-                                  backgroundColor: "rgba(33, 150, 243, 0.1)",
-                                },
-                              }}
-                              disabled={operationLoading}
-                            >
-                              <EditOutlined />
-                            </IconButton>
-                          </Tooltip>
-
-                          <Tooltip title="Delete Budget">
-                            <IconButton
-                              onClick={() => handleDeleteClick(budget)}
-                              sx={{
-                                color: "#f44336",
-                                "&:hover": {
-                                  backgroundColor: "rgba(244, 67, 54, 0.1)",
-                                },
-                              }}
-                              disabled={operationLoading}
-                            >
-                              <DeleteOutline />
-                            </IconButton>
-                          </Tooltip>
-                        </Box>
                       </Box>
                     </CardContent>
                   </Card>
@@ -444,59 +321,12 @@ export default function BudgetingCard() {
         </Box>
       </CardContent>
 
-      {/* Modals and Snackbars */}
       <BudgetModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        onSubmit={handleSubmit}
-        formData={formData}
-        setFormData={setFormData}
         editing={editing}
-        loading={operationLoading}
+        initialData={selectedBudget}
       />
-
-      <Dialog
-        open={deleteConfirmOpen}
-        onClose={() => setDeleteConfirmOpen(false)}
-      >
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Are you sure you want to delete the budget "{budgetToDelete?.name}
-            "?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setDeleteConfirmOpen(false)}
-            disabled={operationLoading}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleDeleteConfirm}
-            color="error"
-            variant="contained"
-            disabled={operationLoading}
-          >
-            {operationLoading ? "Deleting..." : "Delete"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          sx={{ width: "100%" }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </Card>
   );
 }

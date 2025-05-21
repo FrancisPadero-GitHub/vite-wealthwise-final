@@ -10,17 +10,23 @@ import {
   Modal,
   Autocomplete,
   InputAdornment,
+  Card,
+  Snackbar,
+  Alert,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
+import Delete from "@mui/icons-material/Delete";
+import { useBudgeting } from "../../../hooks/useBudgeting"; 
+import { format } from "date-fns";
 
 const modalStyle = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "30%",
+
   maxHeight: "80vh",
   overflowY: "auto",
   bgcolor: "background.paper",
@@ -92,39 +98,95 @@ const categoryOptions = [
 export default function BudgetModal({
   open,
   onClose,
-  onSubmit,
-  formData,
-  setFormData,
   editing,
-  loading,
+  initialData = null,
 }) {
+  const { addBudget, updateBudget, deleteBudget } = useBudgeting();
+
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    category: "",
+    name: "",
+    start_date: "",
+    end_date: "",
+    amount: "",
+  });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  // Initialize form data when modal opens or initialData changes
+  React.useEffect(() => {
+    if (initialData) {
+      setFormData({
+        category: initialData.category,
+        name: initialData.name,
+        start_date: format(new Date(initialData.start_date), "yyyy-MM-dd"),
+        end_date: format(new Date(initialData.end_date), "yyyy-MM-dd"),
+        amount: initialData.amount,
+      });
+    } else {
+      setFormData({
+        category: "",
+        name: "",
+        start_date: "",
+        end_date: "",
+        amount: "",
+      });
+    }
+  }, [initialData]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validate form data
     if (!formData.name.trim()) {
-      alert("Please enter a budget name");
+      setSnackbar({
+        open: true,
+        message: "Please enter a budget name",
+        severity: "error",
+      });
       return;
     }
     if (!formData.category.trim()) {
-      alert("Please enter a category");
+      setSnackbar({
+        open: true,
+        message: "Please enter a category",
+        severity: "error",
+      });
       return;
     }
     if (!formData.start_date) {
-      alert("Please select a start date");
+      setSnackbar({
+        open: true,
+        message: "Please select a start date",
+        severity: "error",
+      });
       return;
     }
     if (!formData.end_date) {
-      alert("Please select an end date");
+      setSnackbar({
+        open: true,
+        message: "Please select an end date",
+        severity: "error",
+      });
       return;
     }
     if (!formData.amount || formData.amount <= 0) {
-      alert("Please enter a valid amount greater than 0");
+      setSnackbar({
+        open: true,
+        message: "Please enter a valid amount greater than 0",
+        severity: "error",
+      });
       return;
     }
 
@@ -132,159 +194,240 @@ export default function BudgetModal({
     const startDate = new Date(formData.start_date);
     const endDate = new Date(formData.end_date);
     if (endDate < startDate) {
-      alert("End date cannot be before start date");
+      setSnackbar({
+        open: true,
+        message: "End date cannot be before start date",
+        severity: "error",
+      });
       return;
     }
 
-    onSubmit();
+    try {
+      setLoading(true);
+      if (editing && initialData) {
+        await updateBudget(initialData.id, formData);
+        setSnackbar({
+          open: true,
+          message: "Budget updated successfully",
+          severity: "success",
+        });
+      } else {
+        await addBudget(formData);
+        setSnackbar({
+          open: true,
+          message: "Budget added successfully",
+          severity: "success",
+        });
+      }
+      onClose();
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: error.message || "Operation failed",
+        severity: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      await deleteBudget(initialData.id);
+      setSnackbar({
+        open: true,
+        message: "Budget deleted successfully",
+        severity: "success",
+      });
+      onClose();
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: error.message || "Failed to delete budget",
+        severity: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
-      <Box component="form" sx={modalStyle} onSubmit={handleSubmit}>
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={2}
-        >
-          <Typography variant="h6">
-            {editing ? "✏️ Edit Budget" : "💰 Add Budget"}
-          </Typography>
-          <IconButton aria-label="close" onClick={onClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-
-        <Grid container spacing={1} columns={12}>
-          <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6, xl: 6 }}>
-            <TextField
-              fullWidth
-              label="📝 Name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              margin="normal"
-              disabled={loading}
-            />
-          </Grid>
-          <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6, xl: 6 }}>
-            <Autocomplete
-              id="transaction-category"
-              fullWidth
-              disableClearable
-              freeSolo={false}
-              options={categoryOptions.sort(
-                (a, b) => -b.category.localeCompare(a.category)
-              )}
-              getOptionLabel={(option) => option.label}
-              groupBy={(option) => option.category}
-              value={
-                formData.category
-                  ? categoryOptions.find(
-                      (option) => option.label === formData.category
-                    ) || null
-                  : null
-              }
-              onChange={(event, newValue) => {
-                handleChange({
-                  target: {
-                    name: "category",
-                    value: newValue?.label || "",
-                  },
-                });
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="🏷️ Category"
-                  required
-                  margin="normal"
-                  disabled={loading}
-                  inputProps={{
-                    ...params.inputProps,
-                    readOnly: true, // Disables typing
-                  }}
-                />
-              )}
-            />
-          </Grid>
-          <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6, xl: 6 }}>
-            <TextField
-              fullWidth
-              type="date"
-              name="start_date"
-              label="📅 Start Date"
-              InputLabelProps={{ shrink: true }}
-              value={formData.start_date}
-              onChange={handleChange}
-              required
-              margin="normal"
-              disabled={loading}
-            />
-          </Grid>
-          <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6, xl: 6 }}>
-            <TextField
-              fullWidth
-              type="date"
-              name="end_date"
-              label="📅 End Date"
-              InputLabelProps={{ shrink: true }}
-              value={formData.end_date}
-              onChange={handleChange}
-              required
-              margin="normal"
-              disabled={loading}
-            />
-          </Grid>
-          <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
-            <TextField
-              fullWidth
-              label="💰 Amount"
-              name="amount"
-              type="number"
-              value={formData.amount}
-              onChange={handleChange}
-              required
-              margin="normal"
-              disabled={loading}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">₱</InputAdornment>
-                ),
-                inputProps: { min: 0, step: "1" },
-              }}
-            />
-          </Grid>
-        </Grid>
-
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            gap: 2,
-            mt: 2,
-          }}
-        >
-          <Button
-            type="submit"
-            variant="contained"
-            color="success"
-            disabled={loading}
-            startIcon={
-              loading ? (
-                <CircularProgress size={20} color="inherit" />
-              ) : (
-                <SaveIcon />
-              )
-            }
+    <>
+      <Modal open={open} onClose={onClose}>
+        <Card component="form" sx={modalStyle} onSubmit={handleSubmit}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={2}
           >
-            {loading ? "Saving..." : editing ? "Update" : "Add"}
-          </Button>
-        </Box>
-      </Box>
-    </Modal>
+            <Typography variant="h6">
+              {editing ? "✏️ Edit Budget" : "💰 Add Budget"}
+            </Typography>
+            <IconButton aria-label="close" onClick={onClose}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+
+          <Grid container spacing={1} columns={12}>
+            <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6, xl: 6 }}>
+              <TextField
+                fullWidth
+                label="📝 Name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                margin="normal"
+                disabled={loading}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6, xl: 6 }}>
+              <Autocomplete
+                id="transaction-category"
+                fullWidth
+                disableClearable
+                freeSolo={false}
+                options={categoryOptions.sort(
+                  (a, b) => -b.category.localeCompare(a.category)
+                )}
+                getOptionLabel={(option) => option.label}
+                groupBy={(option) => option.category}
+                value={
+                  formData.category
+                    ? categoryOptions.find(
+                        (option) => option.label === formData.category
+                      ) || null
+                    : null
+                }
+                onChange={(event, newValue) => {
+                  handleChange({
+                    target: {
+                      name: "category",
+                      value: newValue?.label || "",
+                    },
+                  });
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="🏷️ Category"
+                    required
+                    margin="normal"
+                    disabled={loading}
+                    inputProps={{
+                      ...params.inputProps,
+                      readOnly: true,
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6, xl: 6 }}>
+              <TextField
+                fullWidth
+                type="date"
+                name="start_date"
+                label="📅 Start Date"
+                InputLabelProps={{ shrink: true }}
+                value={formData.start_date}
+                onChange={handleChange}
+                required
+                margin="normal"
+                disabled={loading}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6, xl: 6 }}>
+              <TextField
+                fullWidth
+                type="date"
+                name="end_date"
+                label="📅 End Date"
+                InputLabelProps={{ shrink: true }}
+                value={formData.end_date}
+                onChange={handleChange}
+                required
+                margin="normal"
+                disabled={loading}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
+              <TextField
+                fullWidth
+                label="💰 Amount"
+                name="amount"
+                type="number"
+                value={formData.amount}
+                onChange={handleChange}
+                required
+                margin="normal"
+                disabled={loading}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">₱</InputAdornment>
+                  ),
+                  inputProps: { min: 0, step: "1" },
+                }}
+              />
+            </Grid>
+          </Grid>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              gap: 2,
+              mt: 2,
+            }}
+          >
+            {editing && (
+              <IconButton
+                onClick={handleDelete}
+                sx={{
+                  color: "#f44336",
+                  "&:hover": {
+                    backgroundColor: "rgba(244, 67, 54, 0.1)",
+                  },
+                }}
+                disabled={loading}
+              >
+                <Delete />
+              </IconButton>
+            )}
+            <Button
+              type="submit"
+              variant="contained"
+              color="success"
+              disabled={loading}
+              startIcon={
+                loading ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  <SaveIcon />
+                )
+              }
+            >
+              {loading ? "Saving..." : editing ? "Update" : "Add"}
+            </Button>
+          </Box>
+        </Card>
+      </Modal>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }

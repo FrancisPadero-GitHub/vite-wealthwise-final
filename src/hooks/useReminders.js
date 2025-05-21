@@ -7,8 +7,8 @@ export const useReminders = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["reminders", user.id],
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["reminders", user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
 
@@ -21,6 +21,7 @@ export const useReminders = () => {
       if (error) throw error;
       return data;
     },
+    enabled: !!user?.id, // Only run query when user is available
   });
 
   // Filter based on string values "true" / "false"
@@ -121,5 +122,6 @@ export const useReminders = () => {
     },
     deleteAllReminders: deleteAllReminders.mutateAsync,
     isLoading,
+    error,
   };
 };

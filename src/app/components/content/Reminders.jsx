@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   Paper,
@@ -13,6 +13,7 @@ import {
   Divider,
   Snackbar,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import {
   Add as AddIcon,
@@ -35,6 +36,8 @@ export default function RemindersCard() {
     updateTask,
     deleteTask,
     toggleStatus,
+    isLoading,
+    error,
   } = useReminders();
 
   const [loading, setLoading] = useState(false);
@@ -103,6 +106,31 @@ export default function RemindersCard() {
   const handleCloseSnackbar = () => {
     setSnackbar((prev) => ({ ...prev, open: false }));
   };
+
+  // For the loading animation
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted) return null;
+
+  if (isLoading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="200px"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return <Alert severity="error">Error: {error.message}</Alert>;
+  }
 
   return (
     <>
