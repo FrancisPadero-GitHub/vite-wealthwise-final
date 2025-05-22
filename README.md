@@ -4,19 +4,26 @@ Simple personal budget monitoring app for your daily simple daily spendings you 
 
 ## Features to be added
 
-- Monthly Budget **done**
-
-- Goal Settings
-- Add amount on reminders to implement the (Planned payments)
+- Planned payments on Reminders
+- Add budget history page and option to set it as "spent" or "rebudget"
+- Add an amount to reminders to implement the (Planned payments)
 - More graphs
-
-- Account separation (cash, credit, or gcash) **optional**
-- Main Transaction table **done**
-- Add filters like weekly, monthly on both recent transactions and main table trasanctions **Done**
 
 ### Things to optimize
 
-- E usa ang table sa main transaction then just put an option to toggle "income or expense" **done**
+- Budgets better over spending warnings
+- Code Maintenance, add comments and simply functions
+- DB performance
+- Logic calculation
+
+
+### Big features to implement
+
+- Bank integration
+- Own Local server version
+- Mobile App version
+- Account separation (cash, credit, or gcash) with actual bank and gcash API **optional**
+
 
 ### Things to note
 
