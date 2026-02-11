@@ -1,30 +1,36 @@
 # WealthWise
 
-Simple personal budget monitoring app for your daily simple daily spendings you wanna track off.
+Simple personal budget monitoring app to help you track your daily spending with ease.
 
-## Features to be added
+---
+
+## 📸 Screenshot
+
+![WealthWise Screenshot](sc_1.png)
+
+---
+
+## 🚀 Features to be Added
 
 - Planned payments on Reminders
 - Add budget history page and option to set it as "spent" or "rebudget"
 - Add an amount to reminders to implement the (Planned payments)
 - More graphs
 
-### Things to optimize
+## 🛠️ Things to Optimize
 
-- Budgets better over spending warnings
-- Code Maintenance, add comments and simply functions
-- DB performance
+- Budgets: better overspending warnings
+- Code maintenance: add comments and simplify functions
+- Database performance
 - Logic calculation
 
-
-### Big features to implement
+## 🌟 Big Features to Implement
 
 - Bank integration
-- Own Local server version
-- Mobile App version
-- Account separation (cash, credit, or gcash) with actual bank and gcash API **optional**
+- Own local server version
+- Mobile app version
+- Account separation (cash, credit, or GCash) with actual bank and GCash API (**optional**)
 
+## 📝 Notes
 
-### Things to note
-
-Refer always to BudgetBakers Wallet App in Google Play Store
+Refer to the BudgetBakers Wallet App in Google Play Store for inspiration.
