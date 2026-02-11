@@ -6,7 +6,7 @@ Simple personal budget monitoring app to help you track your daily spending with
 
 ## 📸 Screenshot
 
-![WealthWise Screenshot](sc_1.png)
+![WealthWise Screenshot](public/sc_1.png)
 
 ---
 
